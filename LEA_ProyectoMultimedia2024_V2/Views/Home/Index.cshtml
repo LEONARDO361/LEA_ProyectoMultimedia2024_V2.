@@ -1,8 +1,113 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿﻿
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport"
+		  content="width=device-width, initial-scale=1.0" />
+	<title>Tienda</title>
+	<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+	<header>
+		<h1>Productos Destacados</h1>
+
+		<audio src="Audios/g3ox_em - GigaChad Theme (Phonk House Version).mp3" autoplay="autoplay" loop="loop"></audio>
+
+
+		<div class="container-icon">
+			<svg xmlns="http://www.w3.org/2000/svg"
+				 fill="none"
+				 viewBox="0 0 24 24"
+				 stroke-width="1.5"
+				 stroke="currentColor"
+				 class="icon-cart">
+				<path stroke-linecap="round"
+					  stroke-linejoin="round"
+					  d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+			</svg>
+			<div class="count-products">
+				<span id="contador-productos">0</span>
+			</div>
+
+			<div class="container-cart-products hidden-cart">
+				<div class="cart-product">
+					<div class="info-cart-product">
+						<span class="cantidad-producto-carrito">???</span>
+						<p class="titulo-producto-carrito" /p>
+							<span class="precio-producto-carrito" /span>
+					</div>
+					<svg xmlns="http://www.w3.org/2000/svg"
+						 fill="none"
+						 viewBox="0 0 24 24"
+						 stroke-width="1.5"
+						 stroke="currentColor"
+						 class="icon-close">
+						<path stroke-linecap="round"
+							  stroke-linejoin="round"
+							  d="M6 18L18 6M6 6l12 12" />
+					</svg>
+				</div>
+				<div class="cart-total">
+					<h3>Total:</h3>
+					<span class="total-pagar">$???</span>
+				</div>
+			</div>
+		</div>
+	</header>
+
+
+
+	<div class="container-items">
+
+		<div class="item">
+			<figure>
+
+				<img src="https://plus.unsplash.com/premium_photo-1669243439182-00abdd2ea5ea?q=80&w=1865&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Alternate Text" />
+			</figure>
+			<div class="info-product">
+				<h2>Pesa individual 1.5KG</h2>
+				<p class="precio">$10.990</p>
+				<button>Añadir al carrito</button>
+			</div>
+		</div>
+		<div class="item">
+			<figure>
+				<img src="https://plus.unsplash.com/premium_photo-1671028546491-f70b21a32cc2?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Alternate Text" />
+
+			</figure>
+			<div class="info-product">
+				<h2>
+					Mancuernas Hexagonales 2.5kg(Par)
+					<p class="precio">$13.980</p>
+					<button>Añadir al carrito</button>
+			</div>
+		</div>
+		<div class="item">
+			<figure>
+				<img src="https://images.unsplash.com/photo-1526401485004-46910ecc8e51?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Alternate Text" />
+
+			</figure>
+			<div class="info-product">
+				<h2>Discos olimpicos 2.5KG</h2>
+				<p class="precio">$7.990</p>
+				<button>Añadir al carrito</button>
+			</div>
+		</div>
+		<div class="item">
+			<figure>
+				<img src="https://images.unsplash.com/photo-1526404079162-d93dafdeef3e?q=80&w=1771&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Alternate Text" />
+
+			</figure>
+			<div class="info-product">
+				<h2>PACK barra olimpica + discos</h2>
+				<p class="precio">$159.990</p>
+				<button>Añadir al carrito</button>
+			</div>
+
+
+
+			<script src="index.js"></script>
+</body>

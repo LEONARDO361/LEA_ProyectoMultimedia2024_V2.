@@ -1,8 +1,9 @@
+//using LEA_ProyectoMultimedia2024.Models;
 using LEA_ProyectoMultimedia2024_V2_.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace LEA_ProyectoMultimedia2024_V2_.Controllers
+namespace LEA_ProyectoMultimedia2024.Controllers
 {
     public class HomeController : Controller
     {
@@ -18,10 +19,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult About_Us()
         {
             return View();
         }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

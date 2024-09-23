@@ -1,29 +1,64 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - LEA_ProyectoMultimedia2024_V2_</title>
+    <title>@ViewData["Title"] - LEA_ProyectoMultimedia2024</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/LEA_ProyectoMultimedia2024_V2_.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/LEA_ProyectoMultimedia2024.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LEA_ProyectoMultimedia2024_V2_</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ChadStore</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About_Us">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Producto</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Tablas
+                            </a>
+                            <ul class="dropdown-menu">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Categorias</a>
+                                <li><hr class="dropdown-divider"></li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ReseñaProducto" asp-action="Index">Reseñas</a>
+                                <li><hr class="dropdown-divider"></li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Descuentoes" asp-action="Index">Productos en Descuentos</a>
+                                <li><hr class="dropdown-divider"></li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Productoes" asp-action="Index">Productos</a>
+                                <li><hr class="dropdown-divider"></li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Clientes" asp-action="Index">Clientes</a>
+                                <li><hr class="dropdown-divider"></li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="DetalleOrdens" asp-action="Index">DetalleOrden</a>
+                                <li><hr class="dropdown-divider"></li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="DireccionEnvios" asp-action="Index">Direccion Envios</a>
+                                <li><hr class="dropdown-divider"></li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="HistorialPedidoes" asp-action="Index">Historial de pedidos</a>
+                                <li><hr class="dropdown-divider"></li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="MetodoPagoes" asp-action="Index">Metodos de pago</a>
+                                <li><hr class="dropdown-divider"></li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Ordens" asp-action="Index">Orden</a>
+
+
+
+
+                            </ul>
                         </li>
                     </ul>
                 </div>
@@ -37,9 +72,6 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - LEA_ProyectoMultimedia2024_V2_ - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

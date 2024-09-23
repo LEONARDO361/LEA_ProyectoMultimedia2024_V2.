@@ -1,0 +1,53 @@
+﻿@model IEnumerable<LEA_ProyectoMultimedia2024_V2_.Models.Tables.DetalleOrden>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Cantidad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrecioTotal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orden)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Producto)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrecioTotal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Orden.OrdenId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Producto.ProductoId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.DetalleId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.DetalleId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.DetalleId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

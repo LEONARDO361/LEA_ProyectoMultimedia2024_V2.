@@ -1,4 +1,17 @@
+
+using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<GimnasioContext>(
+    options =>
+    {
+        //options => options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+        options.UseSqlServer(builder.Configuration.GetConnectionString("BD"));
+
+    });
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
