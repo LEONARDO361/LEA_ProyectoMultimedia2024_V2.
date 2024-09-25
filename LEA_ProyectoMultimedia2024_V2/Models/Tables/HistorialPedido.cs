@@ -15,18 +15,21 @@ public partial class HistorialPedido
     [Column("OrdenID")]
     public int OrdenId { get; set; }
 
+    [Required]
     [StringLength(10)]
-    public string EstadoAnterior { get; set; } = null!;
+    public string EstadoAnterior { get; set; }
 
+    [Required]
     [StringLength(10)]
-    public string NuevoEstado { get; set; } = null!;
+    public string NuevoEstado { get; set; }
 
     public DateOnly FechaCambio { get; set; }
 
+    [Required]
     [Column(TypeName = "text")]
-    public string Notas { get; set; } = null!;
+    public string Notas { get; set; }
 
     [ForeignKey("OrdenId")]
     [InverseProperty("HistorialPedido")]
-    public virtual Orden Orden { get; set; } = null!;
+    public virtual Orden Orden { get; set; }
 }

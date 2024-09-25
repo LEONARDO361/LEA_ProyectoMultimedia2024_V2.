@@ -36,6 +36,16 @@
             <th>
                 @Html.DisplayNameFor(model => model.Categoria)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Categoria.Pesokg)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descuento.PorcentajeDescuento)
+            </th>
+                        <th>
+                @Html.DisplayNameFor(model => model.Descuento.FechaFin)
+            </th>
+
             <th></th>
         </tr>
     </thead>
@@ -64,9 +74,19 @@
                 @Html.DisplayFor(modelItem => item.Marca)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Categoria.CategoriaId)
+                @Html.DisplayFor(modelItem => item.Categoria.Nombre)
             </td>
+             <td>
+                    @Html.DisplayFor(modelItem => item.Categoria.Pesokg)
+             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descuento.PorcentajeDescuento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descuento.FechaFin)
+                </td>
             <td>
+
                 <a asp-action="Edit" asp-route-id="@item.ProductoId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ProductoId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.ProductoId">Delete</a>

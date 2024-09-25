@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
+using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
@@ -19,10 +20,15 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             _context = context;
         }
 
+
+
+
+
         // GET: Clientes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Cliente.ToListAsync());
+           var  a = await _context.Cliente.ToListAsync();
+            return View(a);
         }
 
         // GET: Clientes/Details/5

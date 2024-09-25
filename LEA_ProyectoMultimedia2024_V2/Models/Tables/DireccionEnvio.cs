@@ -15,21 +15,25 @@ public partial class DireccionEnvio
     [Column("ClienteID")]
     public int ClienteId { get; set; }
 
+    [Required]
     [StringLength(100)]
-    public string Dirección { get; set; } = null!;
+    public string Dirección { get; set; }
 
+    [Required]
     [StringLength(50)]
-    public string Ciudad { get; set; } = null!;
+    public string Ciudad { get; set; }
 
+    [Required]
     [StringLength(10)]
-    public string Provincia { get; set; } = null!;
+    public string Provincia { get; set; }
 
     public int CodigoPostal { get; set; }
 
+    [Required]
     [StringLength(20)]
-    public string Pais { get; set; } = null!;
+    public string Pais { get; set; }
 
     [ForeignKey("ClienteId")]
     [InverseProperty("DireccionEnvio")]
-    public virtual Cliente Cliente { get; set; } = null!;
+    public virtual Cliente Cliente { get; set; }
 }

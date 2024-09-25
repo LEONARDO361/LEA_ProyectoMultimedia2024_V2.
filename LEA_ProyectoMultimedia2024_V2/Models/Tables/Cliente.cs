@@ -12,22 +12,27 @@ public partial class Cliente
     [Column("ClienteID")]
     public int ClienteId { get; set; }
 
+    [Required]
     [StringLength(10)]
-    public string Nombre { get; set; } = null!;
+    public string Nombre { get; set; }
 
+    [Required]
     [StringLength(100)]
-    public string Apellido { get; set; } = null!;
+    public string Apellido { get; set; }
 
+    [Required]
     [StringLength(100)]
-    public string CorreoElectronico { get; set; } = null!;
+    public string CorreoElectronico { get; set; }
 
+    [Required]
     [StringLength(100)]
-    public string Direccion { get; set; } = null!;
+    public string Direccion { get; set; }
 
     public int Telefono { get; set; }
 
+    [Required]
     [StringLength(15)]
-    public string Sexo { get; set; } = null!;
+    public string Sexo { get; set; }
 
     public int Edad { get; set; }
 

@@ -7,22 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
+using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
-    public class ProductoesController : Controller
+    public class ProductoController : Controller
+
+
     {
         private readonly GimnasioContext _context;
+        private readonly IProducto _producto;
 
-        public ProductoesController(GimnasioContext context)
+
+        public ProductoController(GimnasioContext context, IProducto producto)
         {
             _context = context;
+            _producto = producto;
         }
 
         // GET: Productoes
         public async Task<IActionResult> Index()
         {
-            var gimnasioContext = _context.Producto.Include(p => p.Categoria);
+            var gimnasioContext = _context.Producto.Include(p => p.Categoria).Include(p =>p.Descuento);
             return View(await gimnasioContext.ToListAsync());
         }
 
@@ -48,7 +54,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: Productoes/Create
         public IActionResult Create()
         {
-            ViewData["CategoriaId"] = new SelectList(_context.Categoria, "CategoriaId", "CategoriaId");
+            ViewData["CategoriaId"] = new SelectList(_context.Categoria, "CategoriaId", "Nombre");
             return View();
         }
 
@@ -82,7 +88,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoriaId"] = new SelectList(_context.Categoria, "CategoriaId", "CategoriaId", producto.CategoriaId);
+            ViewData["CategoriaId"] = new SelectList(_context.Categoria, "CategoriaId", "Nombre", producto.CategoriaId);
             return View(producto);
         }
 

@@ -26,7 +26,7 @@ public partial class GimnasioContext : DbContext
 
     public virtual DbSet<DireccionEnvio> DireccionEnvio { get; set; }
 
-    public virtual DbSet<HistorialPedido> HistorialPedido { get; set; }
+    public virtual DbSet<HistorialPedidos> HistorialPedidos { get; set; }
 
     public virtual DbSet<MetodoPago> MetodoPago { get; set; }
 
@@ -62,10 +62,6 @@ public partial class GimnasioContext : DbContext
         modelBuilder.Entity<Descuento>(entity =>
         {
             entity.Property(e => e.TipoDescuento).IsFixedLength();
-
-            entity.HasOne(d => d.Producto).WithMany(p => p.Descuento)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Descuento_Producto");
         });
 
         modelBuilder.Entity<DetalleOrden>(entity =>
@@ -91,15 +87,12 @@ public partial class GimnasioContext : DbContext
                 .HasConstraintName("FK_DireccionEnvio_Cliente");
         });
 
-        modelBuilder.Entity<HistorialPedido>(entity =>
+        modelBuilder.Entity<HistorialPedidos>(entity =>
         {
-            entity.Property(e => e.HistorialId).ValueGeneratedNever();
-            entity.Property(e => e.EstadoAnterior).IsFixedLength();
-            entity.Property(e => e.NuevoEstado).IsFixedLength();
-
-            entity.HasOne(d => d.Orden).WithMany(p => p.HistorialPedido)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_HistorialPedido_Orden");
+            entity.Property(e => e.HistorialD).ValueGeneratedNever();
+            entity.Property(e => e.EstadoAnt).IsFixedLength();
+            entity.Property(e => e.Notas).IsFixedLength();
+            entity.Property(e => e.NuevoEst).IsFixedLength();
         });
 
         modelBuilder.Entity<MetodoPago>(entity =>
@@ -133,6 +126,8 @@ public partial class GimnasioContext : DbContext
             entity.HasOne(d => d.Categoria).WithMany(p => p.Producto)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Producto_Categoria");
+
+            entity.HasOne(d => d.Descuento).WithMany(p => p.Producto).HasConstraintName("FK_Producto_Descuento");
         });
 
         modelBuilder.Entity<ReseñaProducto>(entity =>

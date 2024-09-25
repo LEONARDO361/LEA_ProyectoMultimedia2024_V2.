@@ -12,11 +12,13 @@ public partial class Categoria
     [Column("CategoriaID")]
     public int CategoriaId { get; set; }
 
+    [Required]
     [StringLength(100)]
-    public string Nombre { get; set; } = null!;
+    public string Nombre { get; set; }
 
+    [Required]
     [StringLength(100)]
-    public string Descripcion { get; set; } = null!;
+    public string Descripcion { get; set; }
 
     [Column(TypeName = "decimal(18, 2)")]
     public decimal Pesokg { get; set; }

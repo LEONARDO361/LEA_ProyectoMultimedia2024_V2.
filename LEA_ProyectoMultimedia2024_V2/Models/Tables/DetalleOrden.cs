@@ -25,9 +25,9 @@ public partial class DetalleOrden
 
     [ForeignKey("OrdenId")]
     [InverseProperty("DetalleOrden")]
-    public virtual Orden Orden { get; set; } = null!;
+    public virtual Orden Orden { get; set; }
 
     [ForeignKey("ProductoId")]
     [InverseProperty("DetalleOrden")]
-    public virtual Producto Producto { get; set; } = null!;
+    public virtual Producto Producto { get; set; }
 }

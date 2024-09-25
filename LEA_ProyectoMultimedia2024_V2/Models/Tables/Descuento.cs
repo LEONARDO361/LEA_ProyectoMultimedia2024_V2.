@@ -12,9 +12,6 @@ public partial class Descuento
     [Column("DescuentoID")]
     public int DescuentoId { get; set; }
 
-    [Column("ProductoID")]
-    public int ProductoId { get; set; }
-
     [Column(TypeName = "decimal(18, 0)")]
     public decimal PorcentajeDescuento { get; set; }
 
@@ -22,10 +19,10 @@ public partial class Descuento
 
     public DateOnly FechaFin { get; set; }
 
+    [Required]
     [StringLength(50)]
-    public string TipoDescuento { get; set; } = null!;
+    public string TipoDescuento { get; set; }
 
-    [ForeignKey("ProductoId")]
     [InverseProperty("Descuento")]
-    public virtual Producto Producto { get; set; } = null!;
+    public virtual ICollection<Producto> Producto { get; set; } = new List<Producto>();
 }

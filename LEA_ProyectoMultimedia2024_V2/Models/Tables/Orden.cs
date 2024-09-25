@@ -16,19 +16,17 @@ public partial class Orden
 
     public int Total { get; set; }
 
+    [Required]
     [StringLength(50)]
-    public string Estado { get; set; } = null!;
+    public string Estado { get; set; }
 
     [Column("ClienteID")]
     public int ClienteId { get; set; }
 
     [ForeignKey("ClienteId")]
     [InverseProperty("Orden")]
-    public virtual Cliente Cliente { get; set; } = null!;
+    public virtual Cliente Cliente { get; set; }
 
     [InverseProperty("Orden")]
     public virtual ICollection<DetalleOrden> DetalleOrden { get; set; } = new List<DetalleOrden>();
-
-    [InverseProperty("Orden")]
-    public virtual ICollection<HistorialPedido> HistorialPedido { get; set; } = new List<HistorialPedido>();
 }

@@ -15,8 +15,9 @@ public partial class MetodoPago
     [Column("ClienteID")]
     public int ClienteId { get; set; }
 
+    [Required]
     [StringLength(50)]
-    public string TipoTarjeta { get; set; } = null!;
+    public string TipoTarjeta { get; set; }
 
     public int NumeroTarjeta { get; set; }
 
@@ -27,5 +28,5 @@ public partial class MetodoPago
 
     [ForeignKey("ClienteId")]
     [InverseProperty("MetodoPago")]
-    public virtual Cliente Cliente { get; set; } = null!;
+    public virtual Cliente Cliente { get; set; }
 }

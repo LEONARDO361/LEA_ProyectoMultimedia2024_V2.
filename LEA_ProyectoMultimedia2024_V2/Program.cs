@@ -1,8 +1,16 @@
 
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
+using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
+using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
+using LEA_ProyectoMultimedia2024_V2_.Services.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IProducto, ProductoRepository>();
+builder.Services.AddScoped<ICategorias, CategoriasRepositorycs>();
+builder.Services.AddScoped<IDescuento, DescuentosRepository>();
+
 
 builder.Services.AddDbContext<GimnasioContext>(
     options =>
@@ -15,6 +23,8 @@ builder.Services.AddDbContext<GimnasioContext>(
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+
 
 var app = builder.Build();
 

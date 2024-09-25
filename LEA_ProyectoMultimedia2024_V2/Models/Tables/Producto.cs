@@ -12,34 +12,43 @@ public partial class Producto
     [Column("ProductoID")]
     public int ProductoId { get; set; }
 
+    [Required]
     [StringLength(500)]
-    public string Nombre { get; set; } = null!;
+    public string Nombre { get; set; }
 
+    [Required]
     [StringLength(500)]
-    public string Descripcion { get; set; } = null!;
+    public string Descripcion { get; set; }
 
     public int Precio { get; set; }
 
     public int Cantidad { get; set; }
 
+    [Required]
     [StringLength(500)]
-    public string Procedencia { get; set; } = null!;
+    public string Procedencia { get; set; }
 
+    [Required]
     [StringLength(100)]
-    public string Estado { get; set; } = null!;
+    public string Estado { get; set; }
 
+    [Required]
     [StringLength(500)]
-    public string Marca { get; set; } = null!;
+    public string Marca { get; set; }
 
     [Column("CategoriaID")]
     public int CategoriaId { get; set; }
 
+    [Column("DescuentoID")]
+    public int? DescuentoId { get; set; }
+
     [ForeignKey("CategoriaId")]
     [InverseProperty("Producto")]
-    public virtual Categoria Categoria { get; set; } = null!;
+    public virtual Categoria Categoria { get; set; }
 
+    [ForeignKey("DescuentoId")]
     [InverseProperty("Producto")]
-    public virtual ICollection<Descuento> Descuento { get; set; } = new List<Descuento>();
+    public virtual Descuento Descuento { get; set; }
 
     [InverseProperty("Producto")]
     public virtual ICollection<DetalleOrden> DetalleOrden { get; set; } = new List<DetalleOrden>();

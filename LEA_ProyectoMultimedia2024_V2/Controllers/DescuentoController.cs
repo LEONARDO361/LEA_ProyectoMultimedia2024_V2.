@@ -7,26 +7,33 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
+using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
-    public class HistorialPedidoesController : Controller
+    public class DescuentoController : Controller
     {
         private readonly GimnasioContext _context;
+        private readonly IDescuento _clientes;
 
-        public HistorialPedidoesController(GimnasioContext context)
+        public DescuentoController(GimnasioContext context, IDescuento clientes)
         {
             _context = context;
+            _clientes = clientes;
         }
 
-        // GET: HistorialPedidoes
+
+
+
+
+        // GET: Descuentoes
         public async Task<IActionResult> Index()
         {
-            var gimnasioContext = _context.HistorialPedido.Include(h => h.Orden);
-            return View(await gimnasioContext.ToListAsync());
+            var cl = await _context.Descuento.ToListAsync();
+            return View (cl);
         }
 
-        // GET: HistorialPedidoes/Details/5
+        // GET: Descuentoes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,42 +41,39 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var historialPedido = await _context.HistorialPedido
-                .Include(h => h.Orden)
-                .FirstOrDefaultAsync(m => m.HistorialId == id);
-            if (historialPedido == null)
+            var descuento = await _context.Descuento
+                .FirstOrDefaultAsync(m => m.DescuentoId == id);
+            if (descuento == null)
             {
                 return NotFound();
             }
 
-            return View(historialPedido);
+            return View(descuento);
         }
 
-        // GET: HistorialPedidoes/Create
+        // GET: Descuentoes/Create
         public IActionResult Create()
         {
-            ViewData["OrdenId"] = new SelectList(_context.Orden, "OrdenId", "OrdenId");
             return View();
         }
 
-        // POST: HistorialPedidoes/Create
+        // POST: Descuentoes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HistorialId,OrdenId,EstadoAnterior,NuevoEstado,FechaCambio,Notas")] HistorialPedido historialPedido)
+        public async Task<IActionResult> Create([Bind("DescuentoId,PorcentajeDescuento,FechaInicio,FechaFin,TipoDescuento")] Descuento descuento)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(historialPedido);
+                _context.Add(descuento);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrdenId"] = new SelectList(_context.Orden, "OrdenId", "OrdenId", historialPedido.OrdenId);
-            return View(historialPedido);
+            return View(descuento);
         }
 
-        // GET: HistorialPedidoes/Edit/5
+        // GET: Descuentoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,23 +81,22 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var historialPedido = await _context.HistorialPedido.FindAsync(id);
-            if (historialPedido == null)
+            var descuento = await _context.Descuento.FindAsync(id);
+            if (descuento == null)
             {
                 return NotFound();
             }
-            ViewData["OrdenId"] = new SelectList(_context.Orden, "OrdenId", "OrdenId", historialPedido.OrdenId);
-            return View(historialPedido);
+            return View(descuento);
         }
 
-        // POST: HistorialPedidoes/Edit/5
+        // POST: Descuentoes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("HistorialId,OrdenId,EstadoAnterior,NuevoEstado,FechaCambio,Notas")] HistorialPedido historialPedido)
+        public async Task<IActionResult> Edit(int id, [Bind("DescuentoId,PorcentajeDescuento,FechaInicio,FechaFin,TipoDescuento")] Descuento descuento)
         {
-            if (id != historialPedido.HistorialId)
+            if (id != descuento.DescuentoId)
             {
                 return NotFound();
             }
@@ -102,12 +105,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-                    _context.Update(historialPedido);
+                    _context.Update(descuento);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!HistorialPedidoExists(historialPedido.HistorialId))
+                    if (!DescuentoExists(descuento.DescuentoId))
                     {
                         return NotFound();
                     }
@@ -118,11 +121,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrdenId"] = new SelectList(_context.Orden, "OrdenId", "OrdenId", historialPedido.OrdenId);
-            return View(historialPedido);
+            return View(descuento);
         }
 
-        // GET: HistorialPedidoes/Delete/5
+        // GET: Descuentoes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,35 +132,34 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var historialPedido = await _context.HistorialPedido
-                .Include(h => h.Orden)
-                .FirstOrDefaultAsync(m => m.HistorialId == id);
-            if (historialPedido == null)
+            var descuento = await _context.Descuento
+                .FirstOrDefaultAsync(m => m.DescuentoId == id);
+            if (descuento == null)
             {
                 return NotFound();
             }
 
-            return View(historialPedido);
+            return View(descuento);
         }
 
-        // POST: HistorialPedidoes/Delete/5
+        // POST: Descuentoes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var historialPedido = await _context.HistorialPedido.FindAsync(id);
-            if (historialPedido != null)
+            var descuento = await _context.Descuento.FindAsync(id);
+            if (descuento != null)
             {
-                _context.HistorialPedido.Remove(historialPedido);
+                _context.Descuento.Remove(descuento);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool HistorialPedidoExists(int id)
+        private bool DescuentoExists(int id)
         {
-            return _context.HistorialPedido.Any(e => e.HistorialId == id);
+            return _context.Descuento.Any(e => e.DescuentoId == id);
         }
     }
 }

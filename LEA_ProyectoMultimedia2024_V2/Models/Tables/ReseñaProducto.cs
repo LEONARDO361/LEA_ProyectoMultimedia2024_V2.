@@ -20,17 +20,18 @@ public partial class ReseñaProducto
 
     public int Calificación { get; set; }
 
+    [Required]
     [StringLength(500)]
-    public string Comentario { get; set; } = null!;
+    public string Comentario { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime FechaReseña { get; set; }
 
     [ForeignKey("ClienteId")]
     [InverseProperty("ReseñaProducto")]
-    public virtual Cliente Cliente { get; set; } = null!;
+    public virtual Cliente Cliente { get; set; }
 
     [ForeignKey("ProductoId")]
     [InverseProperty("ReseñaProducto")]
-    public virtual Producto Producto { get; set; } = null!;
+    public virtual Producto Producto { get; set; }
 }

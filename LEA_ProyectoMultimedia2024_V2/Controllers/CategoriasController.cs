@@ -7,17 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
+using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class CategoriasController : Controller
+
+       
     {
         private readonly GimnasioContext _context;
+        
+        private readonly IProducto _categorias;
 
-        public CategoriasController(GimnasioContext context)
+        public CategoriasController(GimnasioContext context, IProducto categorias)
         {
             _context = context;
+            _categorias = categorias;
         }
+
+
 
         // GET: Categorias
         public async Task<IActionResult> Index()
