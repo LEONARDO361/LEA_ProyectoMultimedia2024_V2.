@@ -17,9 +17,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
     {
         private readonly GimnasioContext _context;
         
-        private readonly IProducto _categorias;
+        private readonly ICategorias _categorias;
 
-        public CategoriasController(GimnasioContext context, IProducto categorias)
+        public CategoriasController(GimnasioContext context, ICategorias categorias)
         {
             _context = context;
             _categorias = categorias;
@@ -30,7 +30,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: Categorias
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categoria.ToListAsync());
+            var a = await _categorias.GetCategoriasAsync();
+            return View(a);
         }
 
         // GET: Categorias/Details/5
@@ -41,8 +42,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var categoria = await _context.Categoria
-                .FirstOrDefaultAsync(m => m.CategoriaId == id);
+            var categoria = await _categorias.GetDetails(id.Value);
             if (categoria == null)
             {
                 return NotFound();
@@ -66,8 +66,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(categoria);
-                await _context.SaveChangesAsync();
+                await _categorias.AddCategoriaAsync(categoria);
                 return RedirectToAction(nameof(Index));
             }
             return View(categoria);
@@ -81,7 +80,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var categoria = await _context.Categoria.FindAsync(id);
+            var categoria = await _categorias.GetCategoriaByIdAsync(id.Value);
             if (categoria == null)
             {
                 return NotFound();
@@ -105,12 +104,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-                    _context.Update(categoria);
-                    await _context.SaveChangesAsync();
+
+                    await _categorias.UpdateCategoriaAsync(categoria);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoriaExists(categoria.CategoriaId))
+                    if (!await _categorias.CategoriaExists(categoria.CategoriaId))
                     {
                         return NotFound();
                     }
@@ -147,19 +146,13 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var categoria = await _context.Categoria.FindAsync(id);
-            if (categoria != null)
-            {
-                _context.Categoria.Remove(categoria);
-            }
-
-            await _context.SaveChangesAsync();
+           await _categorias.DeleteCategoriaAsync (id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoriaExists(int id)
+        private Task <bool> CategoriaExists(int id)
         {
-            return _context.Categoria.Any(e => e.CategoriaId == id);
+            return _categorias.CategoriaExists(id);
         }
     }
 }

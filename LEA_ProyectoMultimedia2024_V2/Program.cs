@@ -8,8 +8,14 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IProducto, ProductoRepository>();
-builder.Services.AddScoped<ICategorias, CategoriasRepositorycs>();
+builder.Services.AddScoped<ICategorias, CategoriasRepository>();
+builder.Services.AddScoped<ICliente, ClienteRepository>();
 builder.Services.AddScoped<IDescuento, DescuentosRepository>();
+builder.Services.AddScoped<IDetalleOrden, DetalleOrdenRepository>();
+builder.Services.AddScoped<IDireccionEnvios, DireccionEnviosRepository>();
+builder.Services.AddScoped<IMetodoDePago, MetodoDePagoRepository>();
+builder.Services.AddScoped<IOrden, OrdenRepository>();
+builder.Services.AddScoped<IReseñaProducto,ReseñaProductoRepository>();
 
 
 builder.Services.AddDbContext<GimnasioContext>(

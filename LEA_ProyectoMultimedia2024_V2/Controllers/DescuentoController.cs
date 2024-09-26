@@ -14,13 +14,14 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
     public class DescuentoController : Controller
     {
         private readonly GimnasioContext _context;
-        private readonly IDescuento _clientes;
+        private readonly IDescuento _Descuento;
 
-        public DescuentoController(GimnasioContext context, IDescuento clientes)
+        public DescuentoController(GimnasioContext context, IDescuento descuento)
         {
             _context = context;
-            _clientes = clientes;
+            _Descuento = descuento;
         }
+
 
 
 
@@ -29,7 +30,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: Descuentoes
         public async Task<IActionResult> Index()
         {
-            var cl = await _context.Descuento.ToListAsync();
+            var cl = await _Descuento.GetDescuentoAsync();
             return View (cl);
         }
 
@@ -41,8 +42,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var descuento = await _context.Descuento
-                .FirstOrDefaultAsync(m => m.DescuentoId == id);
+            var descuento = await _Descuento.GetDetalleDescuento(id.Value);
             if (descuento == null)
             {
                 return NotFound();
@@ -81,7 +81,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var descuento = await _context.Descuento.FindAsync(id);
+            var descuento = await _Descuento.GetDescuentoByIdAsync(id.Value);
             if (descuento == null)
             {
                 return NotFound();
@@ -105,8 +105,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-                    _context.Update(descuento);
-                    await _context.SaveChangesAsync();
+
+                    await _Descuento.UpdateDescuentoAsync(descuento);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -153,7 +153,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 _context.Descuento.Remove(descuento);
             }
 
-            await _context.SaveChangesAsync();
+            await _Descuento.DeleteDescuentoAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

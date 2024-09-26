@@ -14,11 +14,14 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
     public class ClientesController : Controller
     {
         private readonly GimnasioContext _context;
+        private readonly ICliente _cliente;
 
-        public ClientesController(GimnasioContext context)
+        public ClientesController(GimnasioContext context, ICliente cliente)
         {
             _context = context;
+            _cliente = cliente;
         }
+
 
 
 
@@ -39,8 +42,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var cliente = await _context.Cliente
-                .FirstOrDefaultAsync(m => m.ClienteId == id);
+            var cliente = await _cliente.GetClienteByIdAsync(id.Value);
+
             if (cliente == null)
             {
                 return NotFound();
@@ -79,7 +82,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var cliente = await _context.Cliente.FindAsync(id);
+            var cliente = await _cliente.GetClienteByIdAsync(id.Value);
             if (cliente == null)
             {
                 return NotFound();
@@ -103,8 +106,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-                    _context.Update(cliente);
-                    await _context.SaveChangesAsync();
+
+                    await _cliente.UpdateClienteAsync(cliente);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -151,7 +154,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 _context.Cliente.Remove(cliente);
             }
 
-            await _context.SaveChangesAsync();
+            await _cliente.DeleteClienteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

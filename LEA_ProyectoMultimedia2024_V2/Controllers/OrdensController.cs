@@ -7,17 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
+using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class OrdensController : Controller
     {
         private readonly GimnasioContext _context;
+        private readonly IOrden _Orden;
 
-        public OrdensController(GimnasioContext context)
+        public OrdensController(GimnasioContext context, IOrden orden)
         {
             _context = context;
+            _Orden = orden;
         }
+
+
 
         // GET: Ordens
         public async Task<IActionResult> Index()
@@ -34,9 +39,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var orden = await _context.Orden
-                .Include(o => o.Cliente)
-                .FirstOrDefaultAsync(m => m.OrdenId == id);
+            var orden = await _Orden.GetOrdenByIdAsync(id.Value);
+
             if (orden == null)
             {
                 return NotFound();
@@ -61,8 +65,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(orden);
-                await _context.SaveChangesAsync();
+
+                await _Orden.CreateOrdenAsync(orden);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", orden.ClienteId);
@@ -102,8 +106,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-                    _context.Update(orden);
-                    await _context.SaveChangesAsync();
+
+                    await _Orden.UpdateOrdenAsync(orden);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -152,7 +156,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 _context.Orden.Remove(orden);
             }
 
-            await _context.SaveChangesAsync();
+            await _Orden.DeleteOrdenAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

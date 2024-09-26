@@ -7,17 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
+using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class ReseñaProductoController : Controller
     {
         private readonly GimnasioContext _context;
+        private readonly IReseñaProducto _reseñaproducto;
 
-        public ReseñaProductoController(GimnasioContext context)
+        public ReseñaProductoController(GimnasioContext context, IReseñaProducto reseñaproducto)
         {
             _context = context;
+            _reseñaproducto = reseñaproducto;
         }
+
+
 
         // GET: ReseñaProducto
         public async Task<IActionResult> Index()
@@ -34,10 +39,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var reseñaProducto = await _context.ReseñaProducto
-                .Include(r => r.Cliente)
-                .Include(r => r.Producto)
-                .FirstOrDefaultAsync(m => m.ReseñaId == id);
+            var reseñaProducto = await _reseñaproducto.GetReseñaByIdAsync(id.Value);
+
             if (reseñaProducto == null)
             {
                 return NotFound();
@@ -63,8 +66,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(reseñaProducto);
-                await _context.SaveChangesAsync();
+
+                await _reseñaproducto.CreateReseñaAsync(reseñaProducto);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", reseñaProducto.ClienteId);
@@ -106,8 +109,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-                    _context.Update(reseñaProducto);
-                    await _context.SaveChangesAsync();
+
+                    await _reseñaproducto.UpdateReseñaAsync(reseñaProducto);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -158,7 +161,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 _context.ReseñaProducto.Remove(reseñaProducto);
             }
 
-            await _context.SaveChangesAsync();
+            await _reseñaproducto.DeleteReseñaAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

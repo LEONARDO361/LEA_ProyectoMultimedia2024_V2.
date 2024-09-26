@@ -68,7 +68,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(producto);
-                await _context.SaveChangesAsync();
+                await _producto.CreateProductoAsync(producto);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CategoriaId"] = new SelectList(_context.Categoria, "CategoriaId", "CategoriaId", producto.CategoriaId);
@@ -108,8 +108,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-                    _context.Update(producto);
-                    await _context.SaveChangesAsync();
+                    await _producto.UpdateProductoAsync(producto);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -152,13 +151,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var producto = await _context.Producto.FindAsync(id);
-            if (producto != null)
-            {
-                _context.Producto.Remove(producto);
-            }
 
-            await _context.SaveChangesAsync();
+
+            await _producto.DeleteProductoAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

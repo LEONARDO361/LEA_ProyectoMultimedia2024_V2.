@@ -7,17 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
+using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class DireccionEnviosController : Controller
     {
         private readonly GimnasioContext _context;
+        private readonly IDireccionEnvios _direccionEnvios;
 
-        public DireccionEnviosController(GimnasioContext context)
+        public DireccionEnviosController(GimnasioContext context, IDireccionEnvios direccionEnvios)
         {
             _context = context;
+            _direccionEnvios = direccionEnvios;
         }
+
+
 
         // GET: DireccionEnvios
         public async Task<IActionResult> Index()
@@ -34,9 +39,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var direccionEnvio = await _context.DireccionEnvio
-                .Include(d => d.Cliente)
-                .FirstOrDefaultAsync(m => m.DireccionId == id);
+            var direccionEnvio = await _direccionEnvios.GetDireccionByIdAsync(id.Value);
+
             if (direccionEnvio == null)
             {
                 return NotFound();
@@ -61,8 +65,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(direccionEnvio);
-                await _context.SaveChangesAsync();
+
+                await _direccionEnvios.CreateDireccionAsync(direccionEnvio);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", direccionEnvio.ClienteId);
@@ -102,8 +106,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-                    _context.Update(direccionEnvio);
-                    await _context.SaveChangesAsync();
+
+                    await _direccionEnvios.UpdateDireccionAsync(direccionEnvio);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -152,7 +156,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 _context.DireccionEnvio.Remove(direccionEnvio);
             }
 
-            await _context.SaveChangesAsync();
+            await _direccionEnvios.DeleteDireccionAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

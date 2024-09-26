@@ -7,17 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
+using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class MetodoPagoesController : Controller
     {
         private readonly GimnasioContext _context;
+        private readonly IMetodoDePago _metodoDePago;
 
-        public MetodoPagoesController(GimnasioContext context)
+        public MetodoPagoesController(GimnasioContext context, IMetodoDePago metodoDePago)
         {
             _context = context;
+            _metodoDePago = metodoDePago;
         }
+
+
 
         // GET: MetodoPagoes
         public async Task<IActionResult> Index()
@@ -34,9 +39,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var metodoPago = await _context.MetodoPago
-                .Include(m => m.Cliente)
-                .FirstOrDefaultAsync(m => m.MetodoPagoId == id);
+            var metodoPago = await _metodoDePago.GetMetodoPagoByIdAsync(id.Value);
+
             if (metodoPago == null)
             {
                 return NotFound();
@@ -61,8 +65,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(metodoPago);
-                await _context.SaveChangesAsync();
+
+                await _metodoDePago.CreateMetodoPagoAsync(metodoPago);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", metodoPago.ClienteId);
@@ -102,8 +106,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-                    _context.Update(metodoPago);
-                    await _context.SaveChangesAsync();
+
+                    await _metodoDePago.UpdateMetodoPagoAsync(metodoPago);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -152,7 +156,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 _context.MetodoPago.Remove(metodoPago);
             }
 
-            await _context.SaveChangesAsync();
+            await _metodoDePago.DeleteMetodoPagoAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

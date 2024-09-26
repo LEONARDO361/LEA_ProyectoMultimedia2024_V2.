@@ -7,17 +7,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
+using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class DetalleOrdensController : Controller
     {
         private readonly GimnasioContext _context;
+        private readonly IDetalleOrden _DetalleOrden;
 
-        public DetalleOrdensController(GimnasioContext context)
+        public DetalleOrdensController(GimnasioContext context, IDetalleOrden detalleOrden)
         {
             _context = context;
+            _DetalleOrden = detalleOrden;
         }
+
 
         // GET: DetalleOrdens
         public async Task<IActionResult> Index()
@@ -34,10 +38,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var detalleOrden = await _context.DetalleOrden
-                .Include(d => d.Orden)
-                .Include(d => d.Producto)
-                .FirstOrDefaultAsync(m => m.DetalleId == id);
+            var detalleOrden = await _DetalleOrden.GetDetalleOrdenByIdAsync(id.Value);
+
             if (detalleOrden == null)
             {
                 return NotFound();
@@ -63,8 +65,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(detalleOrden);
-                await _context.SaveChangesAsync();
+    
+                await _DetalleOrden.CreateDetalleOrdenAsync(detalleOrden);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["OrdenId"] = new SelectList(_context.Orden, "OrdenId", "OrdenId", detalleOrden.OrdenId);
@@ -106,6 +108,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
+
                     _context.Update(detalleOrden);
                     await _context.SaveChangesAsync();
                 }
@@ -152,13 +155,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var detalleOrden = await _context.DetalleOrden.FindAsync(id);
-            if (detalleOrden != null)
-            {
-                _context.DetalleOrden.Remove(detalleOrden);
-            }
-
-            await _context.SaveChangesAsync();
+             await _DetalleOrden.DeleteDetalleOrdenAsync(id);
+          
             return RedirectToAction(nameof(Index));
         }
 
