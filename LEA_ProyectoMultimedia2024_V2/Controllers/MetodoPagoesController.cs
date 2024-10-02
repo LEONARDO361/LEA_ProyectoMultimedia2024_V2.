@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
+using LEA_ProyectoMultimedia2024_V2_.Models.DTOs;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
@@ -21,6 +22,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             _context = context;
             _metodoDePago = metodoDePago;
         }
+
 
 
 
@@ -61,12 +63,13 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MetodoPagoId,ClienteId,TipoTarjeta,NumeroTarjeta,FechaExpiracion,Cvv")] MetodoPago metodoPago)
+        public async Task<IActionResult> Create([Bind("MetodoPagoId,ClienteId,TipoTarjeta,NumeroTarjeta,FechaExpiracion,Cvv")] MetodoPagoDTO metodoPago)
         {
             if (ModelState.IsValid)
             {
+                var DTO = metodoPago.toOriginal();
 
-                await _metodoDePago.CreateMetodoPagoAsync(metodoPago);
+                await _metodoDePago.CreateMetodoPagoAsync(DTO);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", metodoPago.ClienteId);

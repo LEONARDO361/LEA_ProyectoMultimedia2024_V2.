@@ -26,7 +26,6 @@ public partial class GimnasioContext : DbContext
 
     public virtual DbSet<DireccionEnvio> DireccionEnvio { get; set; }
 
-    public virtual DbSet<HistorialPedidos> HistorialPedidos { get; set; }
 
     public virtual DbSet<MetodoPago> MetodoPago { get; set; }
 
@@ -87,13 +86,7 @@ public partial class GimnasioContext : DbContext
                 .HasConstraintName("FK_DireccionEnvio_Cliente");
         });
 
-        modelBuilder.Entity<HistorialPedidos>(entity =>
-        {
-            entity.Property(e => e.HistorialD).ValueGeneratedNever();
-            entity.Property(e => e.EstadoAnt).IsFixedLength();
-            entity.Property(e => e.Notas).IsFixedLength();
-            entity.Property(e => e.NuevoEst).IsFixedLength();
-        });
+       
 
         modelBuilder.Entity<MetodoPago>(entity =>
         {

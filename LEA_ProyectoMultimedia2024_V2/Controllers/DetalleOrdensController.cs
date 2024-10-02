@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
+using LEA_ProyectoMultimedia2024_V2_.Models.DTOs;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
@@ -21,6 +22,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             _context = context;
             _DetalleOrden = detalleOrden;
         }
+
+
+
+
 
 
         // GET: DetalleOrdens
@@ -61,12 +66,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DetalleId,OrdenId,ProductoId,Cantidad,PrecioTotal")] DetalleOrden detalleOrden)
+        public async Task<IActionResult> Create([Bind("DetalleId,OrdenId,ProductoId,Cantidad,PrecioTotal")] DetalleOrdenDTO detalleOrden)
         {
             if (ModelState.IsValid)
             {
-    
-                await _DetalleOrden.CreateDetalleOrdenAsync(detalleOrden);
+                var DTO = detalleOrden.toOriginal();
+                await _DetalleOrden.CreateDetalleOrdenAsync(DTO);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["OrdenId"] = new SelectList(_context.Orden, "OrdenId", "OrdenId", detalleOrden.OrdenId);

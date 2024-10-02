@@ -51,4 +51,13 @@ public class DescuentosRepository : IDescuento
             await _context.SaveChangesAsync(); 
         }
     }
+    public async Task<Descuento> GetDetails(int id)
+    {
+        return await _context.Descuento
+       .FirstOrDefaultAsync(m => m.DescuentoId == id);
+    }
+    public async Task<bool> DescuentoExist(int id)
+    {
+        return await _context.Descuento.AnyAsync(e => e.DescuentoId == id);
+    }
 }

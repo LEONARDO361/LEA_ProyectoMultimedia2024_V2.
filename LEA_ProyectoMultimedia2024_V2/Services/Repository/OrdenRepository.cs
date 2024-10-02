@@ -51,6 +51,16 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Repository
         {
             return await _context.Orden.AnyAsync(o => o.OrdenId == id);
         }
+        public async Task<List<Cliente>> GetAllOrdensAsync()
+        {
+            return await _context.Cliente.ToListAsync();
+        }
+
+
+        public async Task<Orden> BuscOrden(int id)
+        {
+            return await _context.Orden.FindAsync(id);
+        }
     }
 
 }

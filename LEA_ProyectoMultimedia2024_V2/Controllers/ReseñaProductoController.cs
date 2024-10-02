@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
+using LEA_ProyectoMultimedia2024_V2_.Models.DTOs;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
@@ -62,12 +63,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ReseñaId,ProductoId,ClienteId,Calificación,Comentario,FechaReseña")] ReseñaProducto reseñaProducto)
+        public async Task<IActionResult> Create([Bind("ReseñaId,ProductoId,ClienteId,Calificación,Comentario,FechaReseña")] ReseñaProductoDTO reseñaProducto)
         {
             if (ModelState.IsValid)
             {
-
-                await _reseñaproducto.CreateReseñaAsync(reseñaProducto);
+                var DTO = reseñaProducto.toOriginal();
+                await _reseñaproducto.CreateReseñaAsync(DTO);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", reseñaProducto.ClienteId);

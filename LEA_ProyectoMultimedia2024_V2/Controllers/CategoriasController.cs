@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
+using LEA_ProyectoMultimedia2024_V2_.Models.DTOs;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
@@ -15,13 +16,13 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 
        
     {
-        private readonly GimnasioContext _context;
-        
+
         private readonly ICategorias _categorias;
 
         public CategoriasController(GimnasioContext context, ICategorias categorias)
         {
-            _context = context;
+
+         
             _categorias = categorias;
         }
 
@@ -62,11 +63,14 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoriaId,Nombre,Descripcion,Pesokg")] Categoria categoria)
+        public async Task<IActionResult> Create([Bind("CategoriaId,Nombre,Descripcion,Pesokg")] CategoriaDTO categoria)
         {
-            if (ModelState.IsValid)
+
+
+             if (ModelState.IsValid)
             {
-                await _categorias.AddCategoriaAsync(categoria);
+                var DTO = categoria.toOriginal();
+                await _categorias.AddCategoriaAsync(DTO);
                 return RedirectToAction(nameof(Index));
             }
             return View(categoria);
@@ -131,8 +135,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var categoria = await _context.Categoria
-                .FirstOrDefaultAsync(m => m.CategoriaId == id);
+            var categoria = await _categorias.GetDetails(id.Value);
+
             if (categoria == null)
             {
                 return NotFound();

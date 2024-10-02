@@ -45,8 +45,13 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Repository
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<Cliente> GetDetails(int id)
+        {
+            return await _context.Cliente
+           .FirstOrDefaultAsync(m => m.ClienteId == id);
+        }
 
-        public async Task<bool> ClienteExistsAsync(int id)
+        public async Task<bool> ClienteExists(int id)
         {
             return await _context.Cliente.AnyAsync(c => c.ClienteId == id);
         }

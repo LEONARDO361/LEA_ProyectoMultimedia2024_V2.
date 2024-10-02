@@ -8,17 +8,18 @@ using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
+using LEA_ProyectoMultimedia2024_V2_.Models.DTOs;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class OrdensController : Controller
     {
-        private readonly GimnasioContext _context;
+
         private readonly IOrden _Orden;
 
         public OrdensController(GimnasioContext context, IOrden orden)
         {
-            _context = context;
+
             _Orden = orden;
         }
 
@@ -27,8 +28,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: Ordens
         public async Task<IActionResult> Index()
         {
-            var gimnasioContext = _context.Orden.Include(o => o.Cliente);
-            return View(await gimnasioContext.ToListAsync());
+            var gimnasioContext =await _Orden.GetAllOrdenesAsync();
+            return View( gimnasioContext);
         }
 
         // GET: Ordens/Details/5
@@ -50,9 +51,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: Ordens/Create
-        public IActionResult Create()
+        public async Task <IActionResult> Create()
         {
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId");
+            ViewData["ClienteId"] = new SelectList(await _Orden.GetAllOrdensAsync(), "ClienteId", "ClienteId");
             return View();
         }
 
@@ -61,15 +62,15 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrdenId,FechaOrden,Total,Estado,ClienteId")] Orden orden)
+        public async Task<IActionResult> Create([Bind("OrdenId,FechaOrden,Total,Estado,ClienteId")] OrdenDTO orden)
         {
             if (ModelState.IsValid)
             {
-
-                await _Orden.CreateOrdenAsync(orden);
+                var DTO = orden.toOriginal();
+                await _Orden.CreateOrdenAsync(DTO);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", orden.ClienteId);
+            ViewData["ClienteId"] = new SelectList(await _Orden.GetAllOrdensAsync(), "ClienteId", "ClienteId", orden.ClienteId);
             return View(orden);
         }
 
@@ -81,12 +82,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var orden = await _context.Orden.FindAsync(id);
+            var orden = await _Orden.BuscOrden(id.Value);
             if (orden == null)
             {
                 return NotFound();
             }
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", orden.ClienteId);
+            ViewData["ClienteId"] = new SelectList(await _Orden.GetAllOrdensAsync(), "ClienteId", "ClienteId", orden.ClienteId);
             return View(orden);
         }
 
@@ -111,7 +112,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrdenExists(orden.OrdenId))
+                    if (!await _Orden.OrdenExistsAsync(orden.OrdenId))
                     {
                         return NotFound();
                     }
@@ -122,7 +123,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", orden.ClienteId);
+            ViewData["ClienteId"] = new SelectList(await _Orden.GetAllOrdensAsync(), "ClienteId", "ClienteId", orden.ClienteId);
             return View(orden);
         }
 
@@ -134,9 +135,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var orden = await _context.Orden
-                .Include(o => o.Cliente)
-                .FirstOrDefaultAsync(m => m.OrdenId == id);
+            var orden = await _Orden.GetOrdenByIdAsync(id.Value);
+
             if (orden == null)
             {
                 return NotFound();
@@ -150,19 +150,15 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var orden = await _context.Orden.FindAsync(id);
-            if (orden != null)
-            {
-                _context.Orden.Remove(orden);
-            }
+          
 
             await _Orden.DeleteOrdenAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OrdenExists(int id)
+        private Task <bool> OrdenExists(int id)
         {
-            return _context.Orden.Any(e => e.OrdenId == id);
+            return _Orden.OrdenExistsAsync(id);
         }
     }
 }

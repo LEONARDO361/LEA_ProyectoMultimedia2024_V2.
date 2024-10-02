@@ -8,17 +8,18 @@ using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
+using LEA_ProyectoMultimedia2024_V2_.Models.DTOs;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class DescuentoController : Controller
     {
-        private readonly GimnasioContext _context;
+
         private readonly IDescuento _Descuento;
 
         public DescuentoController(GimnasioContext context, IDescuento descuento)
         {
-            _context = context;
+
             _Descuento = descuento;
         }
 
@@ -62,12 +63,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DescuentoId,PorcentajeDescuento,FechaInicio,FechaFin,TipoDescuento")] Descuento descuento)
+        public async Task<IActionResult> Create([Bind("DescuentoId,PorcentajeDescuento,FechaInicio,FechaFin,TipoDescuento")] DescuentoDTO descuento)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(descuento);
-                await _context.SaveChangesAsync();
+                var DTO = descuento.toOriginal();
+                await _Descuento.CreateDescuentoAsync(DTO);
                 return RedirectToAction(nameof(Index));
             }
             return View(descuento);
@@ -110,7 +111,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DescuentoExists(descuento.DescuentoId))
+                    if (! await _Descuento.DescuentoExist(descuento.DescuentoId))
                     {
                         return NotFound();
                     }
@@ -132,8 +133,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var descuento = await _context.Descuento
-                .FirstOrDefaultAsync(m => m.DescuentoId == id);
+            var descuento = await _Descuento.GetDetails(id.Value);
+
             if (descuento == null)
             {
                 return NotFound();
@@ -147,19 +148,13 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var descuento = await _context.Descuento.FindAsync(id);
-            if (descuento != null)
-            {
-                _context.Descuento.Remove(descuento);
-            }
-
             await _Descuento.DeleteDescuentoAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DescuentoExists(int id)
+        private Task <bool> DescuentoExists(int id)
         {
-            return _context.Descuento.Any(e => e.DescuentoId == id);
+            return _Descuento.DescuentoExist(id);
         }
     }
 }

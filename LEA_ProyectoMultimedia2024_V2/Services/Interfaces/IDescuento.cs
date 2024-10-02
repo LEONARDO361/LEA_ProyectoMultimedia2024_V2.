@@ -11,5 +11,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Interfaces
         Task DeleteDescuentoAsync(int id);                   // Eliminar 
 
         Task <Descuento>GetDetalleDescuento(int id);
+
+        Task<Descuento> GetDetails(int id);
+        Task<bool> DescuentoExist(int id);
     }
 }

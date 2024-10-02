@@ -8,17 +8,18 @@ using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
+using LEA_ProyectoMultimedia2024_V2_.Models.DTOs;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class ClientesController : Controller
     {
-        private readonly GimnasioContext _context;
+
         private readonly ICliente _cliente;
 
         public ClientesController(GimnasioContext context, ICliente cliente)
         {
-            _context = context;
+
             _cliente = cliente;
         }
 
@@ -30,7 +31,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: Clientes
         public async Task<IActionResult> Index()
         {
-           var  a = await _context.Cliente.ToListAsync();
+           var  a = await _cliente.GetAllClientesAsync();
             return View(a);
         }
 
@@ -63,12 +64,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ClienteId,Nombre,Apellido,CorreoElectronico,Direccion,Telefono,Sexo,Edad")] Cliente cliente)
+        public async Task<IActionResult> Create([Bind("ClienteId,Nombre,Apellido,CorreoElectronico,Direccion,Telefono,Sexo,Edad")] ClienteDTO cliente)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(cliente);
-                await _context.SaveChangesAsync();
+                var DTO = cliente.toOriginal();
+                await _cliente.CreateClienteAsync(DTO);
                 return RedirectToAction(nameof(Index));
             }
             return View(cliente);
@@ -111,7 +112,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClienteExists(cliente.ClienteId))
+                    if (!await _cliente.ClienteExists(cliente.ClienteId))
                     {
                         return NotFound();
                     }
@@ -133,8 +134,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var cliente = await _context.Cliente
-                .FirstOrDefaultAsync(m => m.ClienteId == id);
+            var cliente = await _cliente.GetDetails(id.Value);
+
             if (cliente == null)
             {
                 return NotFound();
@@ -148,19 +149,15 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
-            if (cliente != null)
-            {
-                _context.Cliente.Remove(cliente);
-            }
+           
 
             await _cliente.DeleteClienteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ClienteExists(int id)
+        private Task <bool> ClienteExists(int id)
         {
-            return _context.Cliente.Any(e => e.ClienteId == id);
+            return _cliente.ClienteExists(id);
         }
     }
 }

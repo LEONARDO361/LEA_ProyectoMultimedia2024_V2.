@@ -8,19 +8,23 @@ using Microsoft.EntityFrameworkCore;
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
+using LEA_ProyectoMultimedia2024_V2_.Models.DTOs;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class DireccionEnviosController : Controller
     {
-        private readonly GimnasioContext _context;
-        private readonly IDireccionEnvios _direccionEnvios;
 
-        public DireccionEnviosController(GimnasioContext context, IDireccionEnvios direccionEnvios)
+        private readonly IDireccionEnvios _direccionEnvios;
+        private readonly GimnasioContext _context;
+
+        public DireccionEnviosController(IDireccionEnvios direccionEnvios, GimnasioContext context)
         {
-            _context = context;
             _direccionEnvios = direccionEnvios;
+            _context = context;
         }
+
+
 
 
 
@@ -61,12 +65,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DireccionId,ClienteId,Dirección,Ciudad,Provincia,CodigoPostal,Pais")] DireccionEnvio direccionEnvio)
+        public async Task<IActionResult> Create([Bind("DireccionId,ClienteId,Dirección,Ciudad,Provincia,CodigoPostal,Pais")] DireccionEnviosDTO direccionEnvio)
         {
             if (ModelState.IsValid)
             {
-
-                await _direccionEnvios.CreateDireccionAsync(direccionEnvio);
+                var DTO = direccionEnvio.toOriginal();
+                await _direccionEnvios.CreateDireccionAsync(DTO);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", direccionEnvio.ClienteId);
