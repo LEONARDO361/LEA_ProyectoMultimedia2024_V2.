@@ -9,7 +9,7 @@
 <p>
     <a asp-action="Create" class="btn btn-success">Crear una Orden</a>
 </p>
-<table class="table">
+<table class="table" id="Tabla">
     <thead>
         <tr>
             <th>
@@ -51,3 +51,11 @@
 }
     </tbody>
 </table>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            new DataTable('#Tabla');
+        });
+    </script>
+}
