@@ -69,7 +69,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             if (ModelState.IsValid)
             {
                 var DTO = producto.toOriginal();
-                _context.Add(producto);
+                
                 await _producto.CreateProductoAsync(DTO);
                 return RedirectToAction(nameof(Index));
             }

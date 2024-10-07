@@ -86,8 +86,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
                 TipoTarjeta = dto.TipoTarjeta,
                 NumeroTarjeta = dto.NumeroTarjeta,
                 FechaExpiracion = dto.FechaExpiracion,
-                Cvv = dto.Cvv,
-                Cliente = dto.Cliente
+                Cvv = dto.Cvv
+
 
             };
         }
@@ -117,7 +117,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
                 Estado = dto.Estado,
                 Marca = dto.Marca,
                 DescuentoId = dto.DescuentoId,
-                Categoria = dto.Categoria,
+                CategoriaId = dto.CategoriaId,
                 Descuento = dto.Descuento,
                 DetalleOrden = dto.DetalleOrden,
                 ReseñaProducto = dto.ReseñaProducto
