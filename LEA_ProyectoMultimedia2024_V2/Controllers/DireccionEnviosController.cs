@@ -49,7 +49,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: DireccionEnvios/Create
         public IActionResult Create()
         {
-            // Inyectar los datos del cliente según sea necesario
+
             return View();
         }
 
@@ -65,7 +65,6 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Recarga la lista de clientes si el modelo no es válido
             ViewBag.ClienteId = new SelectList(await _direccionEnvios.GetAllDireccionesAsync(), "ClienteId", "NombreCompleto", direccionEnvio.ClienteId);
             return View(direccionEnvio);
         }

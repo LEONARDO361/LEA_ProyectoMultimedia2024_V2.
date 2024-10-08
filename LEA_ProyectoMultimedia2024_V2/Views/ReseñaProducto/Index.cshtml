@@ -7,7 +7,7 @@
 <h1>Reseñas </h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-success" >Añadir reseñas </a>
+    <a asp-action="Create" class="btn btn-success d-grid gap-2 d-grid">Añadir reseñas </a>
 </p>
 <table class="table" id="Tabla">
     <thead>
@@ -54,10 +54,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Producto.Nombre)
             </td>
-            <td>
-                    <a asp-action="Edit" class="btn btn-primary btn-sm" asp-route-id="@item.ReseñaId">Editar</a> |
-                    <a asp-action="Details" class="btn btn-warning" asp-route-id="@item.ReseñaId">Detalles</a> |
+                <td>
+                    <div class="btn-group" role="group" aria-label="Basic example" >
+                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.ReseñaId">Editar</a> 
+                    <a asp-action="Details" class="btn btn-warning" asp-route-id="@item.ReseñaId">Detalles</a> 
                     <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.ReseñaId">Eliminar</a>
+                    </div>
             </td>
         </tr>
 }
