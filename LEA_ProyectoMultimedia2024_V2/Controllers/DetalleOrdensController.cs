@@ -5,34 +5,26 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
-using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 using LEA_ProyectoMultimedia2024_V2_.Models.DTOs;
+using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class DetalleOrdensController : Controller
     {
-        private readonly GimnasioContext _context;
         private readonly IDetalleOrden _DetalleOrden;
 
-        public DetalleOrdensController(GimnasioContext context, IDetalleOrden detalleOrden)
+        public DetalleOrdensController(IDetalleOrden detalleOrden)
         {
-            _context = context;
             _DetalleOrden = detalleOrden;
         }
-
-
-
-
-
 
         // GET: DetalleOrdens
         public async Task<IActionResult> Index()
         {
-            var gimnasioContext = _context.DetalleOrden.Include(d => d.Orden).Include(d => d.Producto);
-            return View(await gimnasioContext.ToListAsync());
+            var detalles = await _DetalleOrden.GetDetalleOrdensAsync();
+            return View(detalles);
         }
 
         // GET: DetalleOrdens/Details/5
@@ -54,16 +46,15 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: DetalleOrdens/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["OrdenId"] = new SelectList(_context.Orden, "OrdenId", "OrdenId");
-            ViewData["ProductoId"] = new SelectList(_context.Producto, "ProductoId", "ProductoId");
+            // Carga los datos necesarios para la vista
+            ViewData["OrdenId"] = new SelectList(await _DetalleOrden.GetOrdenesAsync(), "OrdenId", "OrdenId");
+            ViewData["ProductoId"] = new SelectList(await _DetalleOrden.GetProductosAsync(), "ProductoId", "ProductoId");
             return View();
         }
 
         // POST: DetalleOrdens/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DetalleId,OrdenId,ProductoId,Cantidad,PrecioTotal")] DetalleOrdenDTO detalleOrden)
@@ -74,8 +65,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 await _DetalleOrden.CreateDetalleOrdenAsync(DTO);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrdenId"] = new SelectList(_context.Orden, "OrdenId", "OrdenId", detalleOrden.OrdenId);
-            ViewData["ProductoId"] = new SelectList(_context.Producto, "ProductoId", "ProductoId", detalleOrden.ProductoId);
+
+            ViewData["OrdenId"] = new SelectList(await _DetalleOrden.GetOrdenesAsync(), "OrdenId", "OrdenId", detalleOrden.OrdenId);
+            ViewData["ProductoId"] = new SelectList(await _DetalleOrden.GetProductosAsync(), "ProductoId", "ProductoId", detalleOrden.ProductoId);
             return View(detalleOrden);
         }
 
@@ -87,19 +79,18 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var detalleOrden = await _context.DetalleOrden.FindAsync(id);
+            var detalleOrden = await _DetalleOrden.GetDetalleOrdenByIdAsync(id.Value);
             if (detalleOrden == null)
             {
                 return NotFound();
             }
-            ViewData["OrdenId"] = new SelectList(_context.Orden, "OrdenId", "OrdenId", detalleOrden.OrdenId);
-            ViewData["ProductoId"] = new SelectList(_context.Producto, "ProductoId", "ProductoId", detalleOrden.ProductoId);
+
+            ViewData["OrdenId"] = new SelectList(await _DetalleOrden.GetOrdenesAsync(), "OrdenId", "OrdenId", detalleOrden.OrdenId);
+            ViewData["ProductoId"] = new SelectList(await _DetalleOrden.GetProductosAsync(), "ProductoId", "ProductoId", detalleOrden.ProductoId);
             return View(detalleOrden);
         }
 
         // POST: DetalleOrdens/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("DetalleId,OrdenId,ProductoId,Cantidad,PrecioTotal")] DetalleOrden detalleOrden)
@@ -113,13 +104,11 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-
-                    _context.Update(detalleOrden);
-                    await _context.SaveChangesAsync();
+                    await _DetalleOrden.UpdateDetalleOrdenAsync(detalleOrden);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DetalleOrdenExists(detalleOrden.DetalleId))
+                    if (!await DetalleOrdenExists(detalleOrden.DetalleId))
                     {
                         return NotFound();
                     }
@@ -130,8 +119,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrdenId"] = new SelectList(_context.Orden, "OrdenId", "OrdenId", detalleOrden.OrdenId);
-            ViewData["ProductoId"] = new SelectList(_context.Producto, "ProductoId", "ProductoId", detalleOrden.ProductoId);
+
+            ViewData["OrdenId"] = new SelectList(await _DetalleOrden.GetOrdenesAsync(), "OrdenId", "OrdenId", detalleOrden.OrdenId);
+            ViewData["ProductoId"] = new SelectList(await _DetalleOrden.GetProductosAsync(), "ProductoId", "ProductoId", detalleOrden.ProductoId);
             return View(detalleOrden);
         }
 
@@ -143,10 +133,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var detalleOrden = await _context.DetalleOrden
-                .Include(d => d.Orden)
-                .Include(d => d.Producto)
-                .FirstOrDefaultAsync(m => m.DetalleId == id);
+            var detalleOrden = await _DetalleOrden.GetDetalleOrdenByIdAsync(id.Value);
             if (detalleOrden == null)
             {
                 return NotFound();
@@ -160,14 +147,13 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-             await _DetalleOrden.DeleteDetalleOrdenAsync(id);
-          
+            await _DetalleOrden.DeleteDetalleOrdenAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DetalleOrdenExists(int id)
+        private async Task<bool> DetalleOrdenExists(int id)
         {
-            return _context.DetalleOrden.Any(e => e.DetalleId == id);
+            return (await _DetalleOrden.GetDetalleOrdenByIdAsync(id)) != null;
         }
     }
 }

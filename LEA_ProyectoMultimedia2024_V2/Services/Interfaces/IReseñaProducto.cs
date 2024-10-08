@@ -10,6 +10,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Interfaces
         Task UpdateReseñaAsync(ReseñaProducto reseña);
         Task DeleteReseñaAsync(int id);
         Task<bool> ReseñaExistsAsync(int id);
+
+        Task<List<Cliente>> GetAllClientesAsync();
+        Task<List<Producto>> GetAllProductosAsync();
+
     }
 
 }

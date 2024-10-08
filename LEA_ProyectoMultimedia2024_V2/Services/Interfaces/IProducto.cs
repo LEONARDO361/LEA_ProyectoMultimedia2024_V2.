@@ -8,7 +8,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Interfaces
         Task<Producto> GetProductoByIdAsync(int id);        
         Task CreateProductoAsync(Producto producto);        
         Task UpdateProductoAsync(Producto producto);        
-        Task DeleteProductoAsync(int id);                    
+        Task DeleteProductoAsync(int id);
+        Task<bool> ProductExists(int id);
+        Task<Producto> BuscadorProduct(int id);
     }
 
 }

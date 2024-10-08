@@ -14,23 +14,20 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class MetodoPagoesController : Controller
     {
-        private readonly GimnasioContext _context;
         private readonly IMetodoDePago _metodoDePago;
+        private readonly ICliente _cliente;
 
-        public MetodoPagoesController(GimnasioContext context, IMetodoDePago metodoDePago)
+        public MetodoPagoesController(IMetodoDePago metodoDePago, ICliente cliente)
         {
-            _context = context;
             _metodoDePago = metodoDePago;
+            _cliente = cliente;
         }
-
-
-
 
         // GET: MetodoPagoes
         public async Task<IActionResult> Index()
         {
-            var gimnasioContext = _context.MetodoPago.Include(m => m.Cliente);
-            return View(await gimnasioContext.ToListAsync());
+            var metodosPago = await _metodoDePago.GetAllMetodosPagoAsync();
+            return View(metodosPago);
         }
 
         // GET: MetodoPagoes/Details/5
@@ -52,27 +49,36 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: MetodoPagoes/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId");
+            var clientes = await _cliente.GetAllClientesAsync();
+            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId");
             return View();
         }
 
         // POST: MetodoPagoes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MetodoPagoId,ClienteId,TipoTarjeta,NumeroTarjeta,FechaExpiracion,Cvv")] MetodoPagoDTO metodoPago)
         {
             if (ModelState.IsValid)
             {
-                var DTO = metodoPago.toOriginal();
-
-                await _metodoDePago.CreateMetodoPagoAsync(DTO);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var DTO = metodoPago.toOriginal(); // Asegúrate de que este método convierta correctamente el DTO
+                    await _metodoDePago.CreateMetodoPagoAsync(DTO);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    // Opcional: Loguea el error o muéstralo en la vista para más detalles
+                    ModelState.AddModelError("", $"Error al crear el método de pago: {ex.Message}");
+                }
             }
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", metodoPago.ClienteId);
+
+            // Si llega aquí, la creación falló o hubo un problema con el modelo
+            var clientes = await _cliente.GetAllClientesAsync();
+            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId", metodoPago.ClienteId);
             return View(metodoPago);
         }
 
@@ -84,18 +90,18 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var metodoPago = await _context.MetodoPago.FindAsync(id);
+            var metodoPago = await _metodoDePago.GetMetodoPagoByIdAsync(id.Value);
             if (metodoPago == null)
             {
                 return NotFound();
             }
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", metodoPago.ClienteId);
+
+            var clientes = await _cliente.GetAllClientesAsync();
+            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId", metodoPago.ClienteId);
             return View(metodoPago);
         }
 
         // POST: MetodoPagoes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MetodoPagoId,ClienteId,TipoTarjeta,NumeroTarjeta,FechaExpiracion,Cvv")] MetodoPago metodoPago)
@@ -109,12 +115,11 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-
                     await _metodoDePago.UpdateMetodoPagoAsync(metodoPago);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MetodoPagoExists(metodoPago.MetodoPagoId))
+                    if (!await _metodoDePago.MetodoPagoExistsAsync(metodoPago.MetodoPagoId))
                     {
                         return NotFound();
                     }
@@ -125,7 +130,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", metodoPago.ClienteId);
+
+            var clientes = await _cliente.GetAllClientesAsync();
+            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId", metodoPago.ClienteId);
             return View(metodoPago);
         }
 
@@ -137,9 +144,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var metodoPago = await _context.MetodoPago
-                .Include(m => m.Cliente)
-                .FirstOrDefaultAsync(m => m.MetodoPagoId == id);
+            var metodoPago = await _metodoDePago.GetMetodoPagoByIdAsync(id.Value);
             if (metodoPago == null)
             {
                 return NotFound();
@@ -153,19 +158,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var metodoPago = await _context.MetodoPago.FindAsync(id);
-            if (metodoPago != null)
-            {
-                _context.MetodoPago.Remove(metodoPago);
-            }
-
             await _metodoDePago.DeleteMetodoPagoAsync(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool MetodoPagoExists(int id)
-        {
-            return _context.MetodoPago.Any(e => e.MetodoPagoId == id);
         }
     }
 }

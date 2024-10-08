@@ -49,6 +49,16 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Repository
             }
         }
 
+        public async Task<List<Cliente>> GetAllClientesAsync()
+        {
+            return await _context.Cliente.ToListAsync();
+        }
+
+        public async Task<List<Producto>> GetAllProductosAsync()
+        {
+            return await _context.Producto.ToListAsync();
+        }
+
         public async Task<bool> ReseñaExistsAsync(int id)
         {
             return await _context.ReseñaProducto.AnyAsync(e => e.ReseñaId == id);

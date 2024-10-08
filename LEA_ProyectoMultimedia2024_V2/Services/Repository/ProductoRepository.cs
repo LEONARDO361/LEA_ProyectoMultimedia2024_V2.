@@ -37,7 +37,14 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Repository
             _gamnasioContext.Update(producto); 
             await _gamnasioContext.SaveChangesAsync(); 
         }
-
+        public async Task<Producto> BuscadorProduct(int id)
+        {
+            return await _gamnasioContext.Producto.FindAsync(id);
+        }
+        public async Task<bool> ProductExists(int id)
+        {
+            return await _gamnasioContext. Producto.AnyAsync(e => e.ProductoId == id);
+        }
         public async Task DeleteProductoAsync(int id)
         {
             var producto = await _gamnasioContext.Producto.FindAsync(id); 

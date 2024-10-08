@@ -37,6 +37,17 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Repository
             await _context.SaveChangesAsync(); 
         }
 
+        public async Task<List<Orden>> GetOrdenesAsync()
+        {
+            return await _context.Orden.ToListAsync();
+        }
+
+        public async Task<List<Producto>> GetProductosAsync()
+        {
+            return await _context.Producto.ToListAsync();
+        }
+
+
         public async Task DeleteDetalleOrdenAsync(int id)
         {
             var detalleOrden = await _context.DetalleOrden.FindAsync(id); 

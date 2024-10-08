@@ -14,22 +14,18 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class ReseñaProductoController : Controller
     {
-        private readonly GimnasioContext _context;
         private readonly IReseñaProducto _reseñaproducto;
 
-        public ReseñaProductoController(GimnasioContext context, IReseñaProducto reseñaproducto)
+        public ReseñaProductoController(IReseñaProducto reseñaproducto)
         {
-            _context = context;
             _reseñaproducto = reseñaproducto;
         }
-
-
 
         // GET: ReseñaProducto
         public async Task<IActionResult> Index()
         {
-            var gimnasioContext = _context.ReseñaProducto.Include(r => r.Cliente).Include(r => r.Producto);
-            return View(await gimnasioContext.ToListAsync());
+            var reseñas = await _reseñaproducto.GetAllReseñasAsync();
+            return View(reseñas);
         }
 
         // GET: ReseñaProducto/Details/5
@@ -51,16 +47,16 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: ReseñaProducto/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId");
-            ViewData["ProductoId"] = new SelectList(_context.Producto, "ProductoId", "ProductoId");
+            var clientes = await _reseñaproducto.GetAllClientesAsync(); // Asumiendo que esta función existe en el repositorio
+            var productos = await _reseñaproducto.GetAllProductosAsync(); // Asumiendo que esta función existe en el repositorio
+            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId");
+            ViewData["ProductoId"] = new SelectList(productos, "ProductoId", "ProductoId");
             return View();
         }
 
         // POST: ReseñaProducto/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ReseñaId,ProductoId,ClienteId,Calificación,Comentario,FechaReseña")] ReseñaProductoDTO reseñaProducto)
@@ -71,8 +67,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 await _reseñaproducto.CreateReseñaAsync(DTO);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", reseñaProducto.ClienteId);
-            ViewData["ProductoId"] = new SelectList(_context.Producto, "ProductoId", "ProductoId", reseñaProducto.ProductoId);
+            var clientes = await _reseñaproducto.GetAllClientesAsync(); // Asumiendo que esta función existe en el repositorio
+            var productos = await _reseñaproducto.GetAllProductosAsync(); // Asumiendo que esta función existe en el repositorio
+            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId", reseñaProducto.ClienteId);
+            ViewData["ProductoId"] = new SelectList(productos, "ProductoId", "ProductoId", reseñaProducto.ProductoId);
             return View(reseñaProducto);
         }
 
@@ -84,19 +82,19 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var reseñaProducto = await _context.ReseñaProducto.FindAsync(id);
+            var reseñaProducto = await _reseñaproducto.GetReseñaByIdAsync(id.Value);
             if (reseñaProducto == null)
             {
                 return NotFound();
             }
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", reseñaProducto.ClienteId);
-            ViewData["ProductoId"] = new SelectList(_context.Producto, "ProductoId", "ProductoId", reseñaProducto.ProductoId);
+            var clientes = await _reseñaproducto.GetAllClientesAsync(); // Asumiendo que esta función existe en el repositorio
+            var productos = await _reseñaproducto.GetAllProductosAsync(); // Asumiendo que esta función existe en el repositorio
+            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId", reseñaProducto.ClienteId);
+            ViewData["ProductoId"] = new SelectList(productos, "ProductoId", "ProductoId", reseñaProducto.ProductoId);
             return View(reseñaProducto);
         }
 
         // POST: ReseñaProducto/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ReseñaId,ProductoId,ClienteId,Calificación,Comentario,FechaReseña")] ReseñaProducto reseñaProducto)
@@ -110,12 +108,11 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-
                     await _reseñaproducto.UpdateReseñaAsync(reseñaProducto);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ReseñaProductoExists(reseñaProducto.ReseñaId))
+                    if (!await _reseñaproducto.ReseñaExistsAsync(reseñaProducto.ReseñaId))
                     {
                         return NotFound();
                     }
@@ -126,8 +123,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", reseñaProducto.ClienteId);
-            ViewData["ProductoId"] = new SelectList(_context.Producto, "ProductoId", "ProductoId", reseñaProducto.ProductoId);
+            var clientes = await _reseñaproducto.GetAllClientesAsync(); // Asumiendo que esta función existe en el repositorio
+            var productos = await _reseñaproducto.GetAllProductosAsync(); // Asumiendo que esta función existe en el repositorio
+            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId", reseñaProducto.ClienteId);
+            ViewData["ProductoId"] = new SelectList(productos, "ProductoId", "ProductoId", reseñaProducto.ProductoId);
             return View(reseñaProducto);
         }
 
@@ -139,10 +138,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var reseñaProducto = await _context.ReseñaProducto
-                .Include(r => r.Cliente)
-                .Include(r => r.Producto)
-                .FirstOrDefaultAsync(m => m.ReseñaId == id);
+            var reseñaProducto = await _reseñaproducto.GetReseñaByIdAsync(id.Value);
             if (reseñaProducto == null)
             {
                 return NotFound();
@@ -156,19 +152,13 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var reseñaProducto = await _context.ReseñaProducto.FindAsync(id);
+            var reseñaProducto = await _reseñaproducto.GetReseñaByIdAsync(id);
             if (reseñaProducto != null)
             {
-                _context.ReseñaProducto.Remove(reseñaProducto);
+                await _reseñaproducto.DeleteReseñaAsync(id);
             }
 
-            await _reseñaproducto.DeleteReseñaAsync(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ReseñaProductoExists(int id)
-        {
-            return _context.ReseñaProducto.Any(e => e.ReseñaId == id);
         }
     }
 }

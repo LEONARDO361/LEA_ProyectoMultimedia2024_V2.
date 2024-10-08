@@ -16,21 +16,21 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 
 
     {
-        private readonly GimnasioContext _context;
+
         private readonly IProducto _producto;
 
 
         public ProductoController(GimnasioContext context, IProducto producto)
         {
-            _context = context;
+
             _producto = producto;
         }
 
         // GET: Productoes
         public async Task<IActionResult> Index()
         {
-            var gimnasioContext = _context.Producto.Include(p => p.Categoria).Include(p =>p.Descuento);
-            return View(await gimnasioContext.ToListAsync());
+            var gimnasioContext = await _producto.GetProductosAsync();
+            return View(gimnasioContext);
         }
 
         // GET: Productoes/Details/5
@@ -41,9 +41,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var producto = await _context.Producto
-                .Include(p => p.Categoria)
-                .FirstOrDefaultAsync(m => m.ProductoId == id);
+            var producto = await _producto.GetProductoByIdAsync(id.Value);
+
             if (producto == null)
             {
                 return NotFound();
@@ -53,9 +52,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: Productoes/Create
-        public IActionResult Create()
+        public async Task< IActionResult> Create()
         {
-            ViewData["CategoriaId"] = new SelectList(_context.Categoria, "CategoriaId", "Nombre");
+            ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre");
             return View();
         }
 
@@ -73,7 +72,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 await _producto.CreateProductoAsync(DTO);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoriaId"] = new SelectList(_context.Categoria, "CategoriaId", "CategoriaId", producto.CategoriaId);
+            ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "CategoriaId", producto.CategoriaId);
             return View(producto);
         }
 
@@ -85,12 +84,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var producto = await _context.Producto.FindAsync(id);
+            var producto = await _producto.BuscadorProduct(id.Value);
             if (producto == null)
             {
                 return NotFound();
             }
-            ViewData["CategoriaId"] = new SelectList(_context.Categoria, "CategoriaId", "Nombre", producto.CategoriaId);
+            ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre", producto.CategoriaId);
             return View(producto);
         }
 
@@ -114,7 +113,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductoExists(producto.ProductoId))
+                    if (!await _producto.ProductExists(producto.ProductoId))
                     {
                         return NotFound();
                     }
@@ -125,7 +124,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoriaId"] = new SelectList(_context.Categoria, "CategoriaId", "CategoriaId", producto.CategoriaId);
+            ViewData["CategoriaId"] = new SelectList( await _producto.GetProductosAsync(), "CategoriaId", "CategoriaId", producto.CategoriaId);
             return View(producto);
         }
 
@@ -137,9 +136,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var producto = await _context.Producto
-                .Include(p => p.Categoria)
-                .FirstOrDefaultAsync(m => m.ProductoId == id);
+            var producto = await _producto.GetProductoByIdAsync(id.Value);
+
             if (producto == null)
             {
                 return NotFound();
@@ -159,9 +157,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductoExists(int id)
+        private Task<bool> ProductoExists(int id)
         {
-            return _context.Producto.Any(e => e.ProductoId == id);
+            return _producto.ProductExists(id);
         }
     }
 }

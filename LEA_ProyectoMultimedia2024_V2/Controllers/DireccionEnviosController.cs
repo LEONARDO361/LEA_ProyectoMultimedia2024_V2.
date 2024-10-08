@@ -14,25 +14,18 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
     public class DireccionEnviosController : Controller
     {
-
         private readonly IDireccionEnvios _direccionEnvios;
-        private readonly GimnasioContext _context;
 
-        public DireccionEnviosController(IDireccionEnvios direccionEnvios, GimnasioContext context)
+        public DireccionEnviosController(IDireccionEnvios direccionEnvios)
         {
             _direccionEnvios = direccionEnvios;
-            _context = context;
         }
-
-
-
-
 
         // GET: DireccionEnvios
         public async Task<IActionResult> Index()
         {
-            var gimnasioContext = _context.DireccionEnvio.Include(d => d.Cliente);
-            return View(await gimnasioContext.ToListAsync());
+            var direcciones = await _direccionEnvios.GetAllDireccionesAsync();
+            return View(direcciones);
         }
 
         // GET: DireccionEnvios/Details/5
@@ -56,13 +49,11 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: DireccionEnvios/Create
         public IActionResult Create()
         {
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId");
+            // Inyectar los datos del cliente según sea necesario
             return View();
         }
 
         // POST: DireccionEnvios/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DireccionId,ClienteId,Dirección,Ciudad,Provincia,CodigoPostal,Pais")] DireccionEnviosDTO direccionEnvio)
@@ -73,9 +64,13 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 await _direccionEnvios.CreateDireccionAsync(DTO);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", direccionEnvio.ClienteId);
+
+            // Recarga la lista de clientes si el modelo no es válido
+            ViewBag.ClienteId = new SelectList(await _direccionEnvios.GetAllDireccionesAsync(), "ClienteId", "NombreCompleto", direccionEnvio.ClienteId);
             return View(direccionEnvio);
         }
+
+
 
         // GET: DireccionEnvios/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -85,18 +80,16 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var direccionEnvio = await _context.DireccionEnvio.FindAsync(id);
+            var direccionEnvio = await _direccionEnvios.GetDireccionByIdAsync(id.Value);
             if (direccionEnvio == null)
             {
                 return NotFound();
             }
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", direccionEnvio.ClienteId);
+
             return View(direccionEnvio);
         }
 
         // POST: DireccionEnvios/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("DireccionId,ClienteId,Dirección,Ciudad,Provincia,CodigoPostal,Pais")] DireccionEnvio direccionEnvio)
@@ -110,12 +103,11 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-
                     await _direccionEnvios.UpdateDireccionAsync(direccionEnvio);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DireccionEnvioExists(direccionEnvio.DireccionId))
+                    if (!await _direccionEnvios.DireccionEnvioExistsAsync(direccionEnvio.DireccionId))
                     {
                         return NotFound();
                     }
@@ -126,7 +118,6 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", direccionEnvio.ClienteId);
             return View(direccionEnvio);
         }
 
@@ -138,9 +129,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return NotFound();
             }
 
-            var direccionEnvio = await _context.DireccionEnvio
-                .Include(d => d.Cliente)
-                .FirstOrDefaultAsync(m => m.DireccionId == id);
+            var direccionEnvio = await _direccionEnvios.GetDireccionByIdAsync(id.Value);
             if (direccionEnvio == null)
             {
                 return NotFound();
@@ -154,19 +143,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var direccionEnvio = await _context.DireccionEnvio.FindAsync(id);
-            if (direccionEnvio != null)
-            {
-                _context.DireccionEnvio.Remove(direccionEnvio);
-            }
-
             await _direccionEnvios.DeleteDireccionAsync(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool DireccionEnvioExists(int id)
-        {
-            return _context.DireccionEnvio.Any(e => e.DireccionId == id);
         }
     }
 }
