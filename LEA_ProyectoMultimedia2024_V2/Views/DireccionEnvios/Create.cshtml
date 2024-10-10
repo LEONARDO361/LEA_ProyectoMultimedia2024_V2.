@@ -8,13 +8,13 @@
 
 
 <hr />
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form asp-action="Create">
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 <div class="row">
     <div class="col-4">
             <div class="form-group">
-                <label asp-for="Cliente" class="control-label"></label>
+                <label asp-for="ClienteId" class="control-label"></label>
                 <select asp-for="ClienteId" class="form-control form-select" asp-items="ViewBag.ClienteId"></select>
             </div>
     </div>
@@ -70,7 +70,7 @@
            
            
 
-        </form>
+</form>
 
 
 @section Scripts {

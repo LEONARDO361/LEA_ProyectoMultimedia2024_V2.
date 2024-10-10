@@ -47,9 +47,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: DireccionEnvios/Create
-        public IActionResult Create()
+        public async Task <IActionResult> Create()
         {
-
+            ViewData["ClienteId"] = new SelectList(await _direccionEnvios.GetClientesAsync(), "ClienteId", "ClienteId");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.ClienteId = new SelectList(await _direccionEnvios.GetAllDireccionesAsync(), "ClienteId", "NombreCompleto", direccionEnvio.ClienteId);
+            ViewData["ClienteId"] = new SelectList(await _direccionEnvios.GetClientesAsync(), "ClienteId", "ClienteId", direccionEnvio.ClienteId);
             return View(direccionEnvio);
         }
 
@@ -84,7 +84,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["ClienteId"] = new SelectList(await _direccionEnvios.GetClientesAsync(), "ClienteId", "ClienteId", direccionEnvio.ClienteId);
             return View(direccionEnvio);
         }
 
@@ -117,6 +117,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ClienteId"] = new SelectList( await _direccionEnvios.GetClientesAsync(), "ClienteId", "ClienteId", direccionEnvio.ClienteId);
             return View(direccionEnvio);
         }
 

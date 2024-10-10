@@ -28,7 +28,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
         [Column("CVV")]
         public int Cvv { get; set; }
 
-        [Required(ErrorMessage = "Falta el campo Cliente")]
+
         [ForeignKey("ClienteId")]
         [InverseProperty("MetodoPago")]
         public virtual Cliente Cliente { get; set; }

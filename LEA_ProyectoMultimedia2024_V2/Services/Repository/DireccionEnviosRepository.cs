@@ -51,5 +51,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Repository
         {
             return await _context.DireccionEnvio.AnyAsync(e => e.DireccionId == id);
         }
+
+        public async Task<List<Cliente>> GetClientesAsync()
+        { 
+            return await _context.Cliente.ToListAsync();
+        }
     }
 }

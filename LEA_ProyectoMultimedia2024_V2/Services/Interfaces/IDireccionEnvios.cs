@@ -10,5 +10,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Interfaces
         Task UpdateDireccionAsync(DireccionEnvio direccionEnvio);
         Task DeleteDireccionAsync(int id);
         Task<bool> DireccionEnvioExistsAsync(int id);
+
+        Task<List<Cliente>> GetClientesAsync();
     }
 }

@@ -63,20 +63,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
-                {
                     var DTO = metodoPago.toOriginal(); // Asegúrate de que este método convierta correctamente el DTO
                     await _metodoDePago.CreateMetodoPagoAsync(DTO);
                     return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    // Opcional: Loguea el error o muéstralo en la vista para más detalles
-                    ModelState.AddModelError("", $"Error al crear el método de pago: {ex.Message}");
-                }
             }
 
-            // Si llega aquí, la creación falló o hubo un problema con el modelo
+            
             var clientes = await _cliente.GetAllClientesAsync();
             ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId", metodoPago.ClienteId);
             return View(metodoPago);

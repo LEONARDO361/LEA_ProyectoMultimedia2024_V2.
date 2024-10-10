@@ -32,11 +32,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
         public int CodigoPostal { get; set; }
 
         [Required(ErrorMessage = "Falta el campo Pais")]
-
         [StringLength(20)]
         public string Pais { get; set; }
 
-        [Required(ErrorMessage = "Falta el campo Cliente")]
+      
         [ForeignKey("ClienteId")]
         [InverseProperty("DireccionEnvio")]
         public virtual Cliente Cliente { get; set; }

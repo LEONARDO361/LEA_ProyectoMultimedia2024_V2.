@@ -29,7 +29,6 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
 
         [ForeignKey("ClienteId")]
         [InverseProperty("Orden")]
-        [Required(ErrorMessage = "Falta el campo Cliente")]
         public virtual Cliente Cliente { get; set; }
 
         [Required(ErrorMessage = "Falta el campo DetalleOrden")]

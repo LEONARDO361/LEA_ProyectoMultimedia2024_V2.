@@ -72,6 +72,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
                 Dirección =dto.Dirección,
                 Ciudad = dto.Ciudad,
                 Provincia = dto.Provincia,
+                Pais = dto.Pais,
                 CodigoPostal = dto.CodigoPostal,
                 Cliente = dto.Cliente
 
