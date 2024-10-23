@@ -19,10 +19,17 @@ namespace LEA_ProyectoMultimedia2024.Controllers
             return View();
         }
 
+        public IActionResult Mantenedores()
+        {
+            return View();
+        }
+
         public IActionResult About_Us()
         {
             return View();
         }
+
+
 
 
 

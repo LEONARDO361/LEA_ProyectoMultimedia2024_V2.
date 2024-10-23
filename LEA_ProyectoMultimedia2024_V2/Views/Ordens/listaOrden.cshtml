@@ -1,0 +1,71 @@
+﻿@model IEnumerable<LEA_ProyectoMultimedia2024_V2_.Models.Tables.Orden>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Orden</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success d-grid gap-2 d-grid">Crear una Orden</a>
+</p>
+<table class="table" id="TablaOrden">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaOrden)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cliente)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaOrden)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Total)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cliente.Nombre)
+                </td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.OrdenId">Editar</a>
+                        <a asp-action="Details" class="btn btn-warning" asp-route-id="@item.OrdenId">Detalles</a>
+                        <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.OrdenId">Eliminar</a>
+                    </div>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#TablaOrden').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
+                }
+            });
+
+        });
+    </script>
+}

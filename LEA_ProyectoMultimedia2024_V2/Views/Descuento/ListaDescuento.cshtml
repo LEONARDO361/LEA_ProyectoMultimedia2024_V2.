@@ -1,0 +1,71 @@
+﻿@model IEnumerable<LEA_ProyectoMultimedia2024_V2_.Models.Tables.Descuento>
+
+    @{
+        ViewData["Title"] = "Index";
+    }
+
+    <h1>Productos en Descuentos</h1>
+
+    <p>
+        <a asp-action="Create" class="btn btn-success d-grid gap-2 d-grid">Crear un Descuento en producto</a>
+    </p>
+<table class="table" id="TablaDescuento">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.PorcentajeDescuento)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FechaInicio)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FechaFin)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TipoDescuento)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PorcentajeDescuento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaInicio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaFin)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TipoDescuento)
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <a asp-action="Edit" class="btn btn-primary text-end" asp-route-id="@item.DescuentoId">Editar</a>
+                            <a asp-action="Details" class="btn btn-warning text-end" asp-route-id="@item.DescuentoId">Detalles</a>
+                            <a asp-action="Delete" class="btn btn-danger text-end" asp-route-id="@item.DescuentoId">Eliminar</a>
+                        </div>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @section scripts
+    {
+        <script>
+            $(document).ready(function () {
+                $('#TablaDescuento').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
+                    }
+                });
+
+            });
+        </script>
+    }

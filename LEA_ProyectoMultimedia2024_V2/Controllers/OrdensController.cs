@@ -31,6 +31,11 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             var gimnasioContext =await _Orden.GetAllOrdenesAsync();
             return View( gimnasioContext);
         }
+        public async Task<IActionResult> listaOrden()
+        {
+            var gimnasioContext = await _Orden.GetAllOrdenesAsync();
+            return PartialView(gimnasioContext);
+        }
 
         // GET: Ordens/Details/5
         public async Task<IActionResult> Details(int? id)

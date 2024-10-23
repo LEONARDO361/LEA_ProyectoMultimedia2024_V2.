@@ -29,6 +29,11 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             var metodosPago = await _metodoDePago.GetAllMetodosPagoAsync();
             return View(metodosPago);
         }
+        public async Task<IActionResult> ListaMetodoDePago()
+        {
+            var metodosPago = await _metodoDePago.GetAllMetodosPagoAsync();
+            return PartialView(metodosPago);
+        }
 
         // GET: MetodoPagoes/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -63,7 +68,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         {
             if (ModelState.IsValid)
             {
-                    var DTO = metodoPago.toOriginal(); // Asegúrate de que este método convierta correctamente el DTO
+                    var DTO = metodoPago.toOriginal(); // dto
                     await _metodoDePago.CreateMetodoPagoAsync(DTO);
                     return RedirectToAction(nameof(Index));
             }

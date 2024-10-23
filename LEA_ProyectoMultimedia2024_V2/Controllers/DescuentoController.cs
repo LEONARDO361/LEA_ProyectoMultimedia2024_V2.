@@ -34,6 +34,11 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             var cl = await _Descuento.GetDescuentoAsync();
             return View (cl);
         }
+        public async Task<IActionResult> ListaDescuento ()
+        {
+            var cl = await _Descuento.GetDescuentoAsync();
+            return PartialView(cl);
+        }
 
         // GET: Descuentoes/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -42,6 +47,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 return NotFound();
             }
+        
+
 
             var descuento = await _Descuento.GetDetalleDescuento(id.Value);
             if (descuento == null)

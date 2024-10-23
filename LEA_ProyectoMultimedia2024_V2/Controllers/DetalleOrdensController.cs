@@ -48,7 +48,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: DetalleOrdens/Create
         public async Task<IActionResult> Create()
         {
-            // Carga los datos necesarios para la vista
+
             ViewData["OrdenId"] = new SelectList(await _DetalleOrden.GetOrdenesAsync(), "OrdenId", "OrdenId");
             ViewData["ProductoId"] = new SelectList(await _DetalleOrden.GetProductosAsync(), "ProductoId", "ProductoId");
             return View();

@@ -23,11 +23,6 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             _cliente = cliente;
         }
 
-
-
-
-
-
         // GET: Clientes
         public async Task<IActionResult> Index()
         {
@@ -88,6 +83,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 return NotFound();
             }
+            
             return View(cliente);
         }
 
@@ -107,7 +103,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-
+                    
                     await _cliente.UpdateClienteAsync(cliente);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -155,9 +151,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private Task <bool> ClienteExists(int id)
+        private async Task <bool> ClienteExists(int id)
         {
-            return _cliente.ClienteExists(id);
+            return await _cliente.ClienteExists(id);
         }
     }
 }

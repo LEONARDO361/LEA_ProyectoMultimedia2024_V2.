@@ -34,6 +34,11 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             var a = await _categorias.GetCategoriasAsync();
             return View(a);
         }
+        public async Task<IActionResult> ListaCategoria()
+        {
+            var a = await _categorias.GetCategoriasAsync();
+            return PartialView(a);
+        }
 
         // GET: Categorias/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -88,8 +93,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             if (categoria == null)
             {
                 return NotFound();
+
             }
-            return View(categoria);
+            var CategoriaDto = categoria.ToDto();
+            return View(CategoriaDto);
         }
 
         // POST: Categorias/Edit/5
@@ -97,7 +104,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CategoriaId,Nombre,Descripcion,Pesokg")] Categoria categoria)
+        public async Task<IActionResult> Edit(int id, [Bind("CategoriaId,Nombre,Descripcion,Pesokg")] CategoriaDTO categoria)
         {
             if (id != categoria.CategoriaId)
             {
@@ -108,8 +115,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             {
                 try
                 {
-
-                    await _categorias.UpdateCategoriaAsync(categoria);
+                    var CategoriaOriginal = categoria.toOriginal();
+                    await _categorias.UpdateCategoriaAsync(CategoriaOriginal);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

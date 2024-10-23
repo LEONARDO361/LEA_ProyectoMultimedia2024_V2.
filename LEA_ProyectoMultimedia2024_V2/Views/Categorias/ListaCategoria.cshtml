@@ -1,0 +1,67 @@
+﻿@model IEnumerable<LEA_ProyectoMultimedia2024_V2_.Models.Tables.Categoria>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Categorías</h1>
+<div>
+    <p>
+        <a asp-action="Create" class=" btn btn-success d-grid gap-2 d-grid">Crea una categoría</a>
+    </p>
+</div>
+<table class="table" id="TablaCategoria">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pesokg)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Pesokg)
+                </td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <a asp-action="Edit" class="btn btn-primary text-end " asp-route-id="@item.CategoriaId">Editar</a>
+                        <a asp-action="Details" class="btn btn-warning text-end " asp-route-id="@item.CategoriaId">Detalles</a>
+                        <a asp-action="Delete" class="btn btn-danger text-end" asp-route-id="@item.CategoriaId">Eliminar</a>
+                    </div>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#TablaCategoria').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
+                }
+            });
+
+        });
+    </script>
+}
