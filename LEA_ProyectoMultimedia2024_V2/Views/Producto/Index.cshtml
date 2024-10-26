@@ -9,7 +9,8 @@
 <p>
     <a asp-action="Create" class="btn btn-success d-grid gap-2 d-grid">Crear producto</a>
 </p>
-<table class="table" id="Tabla">
+
+<table class="table" id="Tabla" style="display: block; overflow-x: auto; white-space: nowrap;">
     <thead>
         <tr>
             <th>
@@ -42,10 +43,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Descuento.PorcentajeDescuento)
             </th>
-                        <th>
+            <th>
                 @Html.DisplayNameFor(model => model.Descuento.FechaFin)
             </th>
-
             <th></th>
         </tr>
     </thead>
@@ -76,31 +76,28 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Categoria.Nombre)
             </td>
-             <td>
-                    @Html.DisplayFor(modelItem => item.Categoria.Pesokg)
-             </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Descuento.PorcentajeDescuento)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Descuento.FechaFin)
-                </td>
             <td>
-                    <div class="btn-group" role="group" aria-label="Basic example" >
-                        <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.ProductoId">Editar</a> 
-                        <a asp-action="Details" class="btn btn-warning" asp-route-id="@item.ProductoId">Detalles</a> 
-                        <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.ProductoId">Eliminar</a>
+                @Html.DisplayFor(modelItem => item.Categoria.Pesokg)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descuento.PorcentajeDescuento)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descuento.FechaFin)
+            </td>
+            <td>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.ProductoId">Editar</a>
+                    <a asp-action="Details" class="btn btn-warning" asp-route-id="@item.ProductoId">Detalles</a>
+                    <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.ProductoId">Eliminar</a>
                 </div>
-
-
             </td>
         </tr>
 }
     </tbody>
 </table>
 
-@section scripts
-{
+@section scripts {
     <script>
         $(document).ready(function () {
             $('#Tabla').DataTable({
@@ -108,7 +105,7 @@
                     "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
                 }
             });
-
         });
     </script>
 }
+
