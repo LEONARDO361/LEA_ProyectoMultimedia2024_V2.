@@ -7,7 +7,7 @@
 <h1>Categorías</h1>
 <div>
     <p>
-        <a asp-action="Create" class=" btn btn-success d-grid gap-2 d-grid">Crea una categoría</a>
+        <a asp-action="PVCreate" id="BotonC" class="btn btn-success d-grid gap-2 d-grid">Crea una categoría</a>
     </p>
 </div>
 <table class="table" id="TablaCategoria">
@@ -40,28 +40,39 @@
                 </td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <a asp-action="Edit" class="btn btn-primary text-end " asp-route-id="@item.CategoriaId">Editar</a>
-                        <a asp-action="Details" class="btn btn-warning text-end " asp-route-id="@item.CategoriaId">Detalles</a>
-                        <a asp-action="Delete" class="btn btn-danger text-end" asp-route-id="@item.CategoriaId">Eliminar</a>
+                        <button class="btn btn-sm btn-info me-2" onclick="EditCategorias(@item.CategoriaId)">Editar</button>
+                        <button class="btn btn-sm btn-primary me-2" onclick="DetailsCategorias(@item.CategoriaId)">Detalles</button>
+                        <button type="button" class="btn btn-danger text-end" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl(@item.CategoriaId)">Eliminar</button>
                     </div>
-
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
+<!-- Modal de confirmación -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar esta categoría?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="confirmDeleteButton" class="btn btn-danger">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-@section scripts
-{
-    <script>
+<script>
         $(document).ready(function () {
             $('#TablaCategoria').DataTable({
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
-                }
-            });
-
-        });
-    </script>
-}
+    }
+</script>

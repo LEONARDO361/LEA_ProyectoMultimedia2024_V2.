@@ -41,26 +41,17 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: Categorias/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> PVDetails(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
             var categoria = await _categorias.GetDetails(id.Value);
-            if (categoria == null)
-            {
-                return NotFound();
-            }
-
-            return View(categoria);
+            return PartialView (categoria);
         }
 
         // GET: Categorias/Create
-        public IActionResult Create()
+        public IActionResult PVCreate()
         {
-            return View();
+            return PartialView();
         }
 
         // POST: Categorias/Create
@@ -68,35 +59,25 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoriaId,Nombre,Descripcion,Pesokg")] CategoriaDTO categoria)
+        public async Task<IActionResult> PVCreate([Bind("CategoriaId,Nombre,Descripcion,Pesokg")] CategoriaDTO categoria)
         {
 
 
-             if (ModelState.IsValid)
-            {
+            
                 var DTO = categoria.toOriginal();
                 await _categorias.AddCategoriaAsync(DTO);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(categoria);
+                return RedirectToAction("Index","Mantenedores");
+
         }
 
         // GET: Categorias/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> PVEdit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+
 
             var categoria = await _categorias.GetCategoriaByIdAsync(id.Value);
-            if (categoria == null)
-            {
-                return NotFound();
-
-            }
             var CategoriaDto = categoria.ToDto();
-            return View(CategoriaDto);
+            return PartialView(CategoriaDto);
         }
 
         // POST: Categorias/Edit/5
@@ -104,66 +85,33 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CategoriaId,Nombre,Descripcion,Pesokg")] CategoriaDTO categoria)
+        public async Task<IActionResult> PVEdit(int id, [Bind("CategoriaId,Nombre,Descripcion,Pesokg")] CategoriaDTO categoria)
         {
-            if (id != categoria.CategoriaId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var CategoriaOriginal = categoria.toOriginal();
-                    await _categorias.UpdateCategoriaAsync(CategoriaOriginal);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await _categorias.CategoriaExists(categoria.CategoriaId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(categoria);
+            
+                var CategoriaOriginal = categoria.toOriginal();
+                await _categorias.UpdateCategoriaAsync(CategoriaOriginal);
+                return RedirectToAction("Index","Mantenedores");
+           
         }
 
         // GET: Categorias/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+
 
             var categoria = await _categorias.GetDetails(id.Value);
 
-            if (categoria == null)
-            {
-                return NotFound();
-            }
-
-            return View(categoria);
+            return PartialView(categoria);
         }
 
         // POST: Categorias/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmede(int id)
         {
            await _categorias.DeleteCategoriaAsync (id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index","Mantenedores");
         }
 
-        private Task <bool> CategoriaExists(int id)
-        {
-            return _categorias.CategoriaExists(id);
-        }
     }
 }

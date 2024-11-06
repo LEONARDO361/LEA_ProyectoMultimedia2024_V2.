@@ -36,118 +36,62 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: MetodoPagoes/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> PVDetails(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+          
 
             var metodoPago = await _metodoDePago.GetMetodoPagoByIdAsync(id.Value);
-
-            if (metodoPago == null)
-            {
-                return NotFound();
-            }
-
-            return View(metodoPago);
+            return PartialView(metodoPago);
         }
 
         // GET: MetodoPagoes/Create
-        public async Task<IActionResult> Create()
+        public IActionResult PVCreate()
         {
-            var clientes = await _cliente.GetAllClientesAsync();
-            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId");
-            return View();
+
+            return PartialView();
         }
 
         // POST: MetodoPagoes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MetodoPagoId,ClienteId,TipoTarjeta,NumeroTarjeta,FechaExpiracion,Cvv")] MetodoPagoDTO metodoPago)
+        public async Task<IActionResult> PVCreate([Bind("MetodoPagoId,ClienteId,TipoTarjeta,NumeroTarjeta,FechaExpiracion,Cvv")] MetodoPagoDTO metodoPago)
         {
-            if (ModelState.IsValid)
-            {
+          
                     var DTO = metodoPago.toOriginal(); // dto
                     await _metodoDePago.CreateMetodoPagoAsync(DTO);
-                    return RedirectToAction(nameof(Index));
-            }
-
-            
-            var clientes = await _cliente.GetAllClientesAsync();
-            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId", metodoPago.ClienteId);
-            return View(metodoPago);
+                    return RedirectToAction("Index","Mantenedores");
         }
 
         // GET: MetodoPagoes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> PVEdit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+         
 
             var metodoPago = await _metodoDePago.GetMetodoPagoByIdAsync(id.Value);
-            if (metodoPago == null)
-            {
-                return NotFound();
-            }
-
-            var clientes = await _cliente.GetAllClientesAsync();
-            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId", metodoPago.ClienteId);
-            return View(metodoPago);
+            var metodoPagoDTO = metodoPago.toDto();
+            return PartialView(metodoPagoDTO);
         }
 
         // POST: MetodoPagoes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MetodoPagoId,ClienteId,TipoTarjeta,NumeroTarjeta,FechaExpiracion,Cvv")] MetodoPago metodoPago)
+        public async Task<IActionResult> PVEdit(int id, [Bind("MetodoPagoId,ClienteId,TipoTarjeta,NumeroTarjeta,FechaExpiracion,Cvv")] MetodoPagoDTO metodoPago)
         {
-            if (id != metodoPago.MetodoPagoId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await _metodoDePago.UpdateMetodoPagoAsync(metodoPago);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await _metodoDePago.MetodoPagoExistsAsync(metodoPago.MetodoPagoId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-
-            var clientes = await _cliente.GetAllClientesAsync();
-            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId", metodoPago.ClienteId);
-            return View(metodoPago);
+            var MetodoPagoOriginal = metodoPago.toOriginal();
+                    await _metodoDePago.UpdateMetodoPagoAsync(MetodoPagoOriginal);
+               
+                return RedirectToAction("Index", "Mantenedores");
+           
         }
 
         // GET: MetodoPagoes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+           
 
             var metodoPago = await _metodoDePago.GetMetodoPagoByIdAsync(id.Value);
-            if (metodoPago == null)
-            {
-                return NotFound();
-            }
 
-            return View(metodoPago);
+            return PartialView(metodoPago);
         }
 
         // POST: MetodoPagoes/Delete/5

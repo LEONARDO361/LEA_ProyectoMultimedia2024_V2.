@@ -32,37 +32,25 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         public async Task<IActionResult> Index()
         {
             var cl = await _Descuento.GetDescuentoAsync();
-            return View (cl);
+            return View(cl);
         }
-        public async Task<IActionResult> ListaDescuento ()
+        public async Task<IActionResult> ListaDescuento()
         {
             var cl = await _Descuento.GetDescuentoAsync();
             return PartialView(cl);
         }
 
         // GET: Descuentoes/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> PVDetails(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-        
-
-
             var descuento = await _Descuento.GetDetalleDescuento(id.Value);
-            if (descuento == null)
-            {
-                return NotFound();
-            }
-
-            return View(descuento);
+            return  PartialView(descuento);
         }
 
         // GET: Descuentoes/Create
-        public IActionResult Create()
+        public IActionResult PVCreate()
         {
-            return View();
+            return PartialView();
         }
 
         // POST: Descuentoes/Create
@@ -70,30 +58,22 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DescuentoId,PorcentajeDescuento,FechaInicio,FechaFin,TipoDescuento")] DescuentoDTO descuento)
+        public async Task<IActionResult> PVCreate([Bind("DescuentoId,PorcentajeDescuento,FechaInicio,FechaFin,TipoDescuento")] DescuentoDTO descuento)
         {
-            if (ModelState.IsValid)
-            {
+           
                 var DTO = descuento.toOriginal();
                 await _Descuento.CreateDescuentoAsync(DTO);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(descuento);
+                return RedirectToAction("Index","Mantenedores");
+
         }
 
         // GET: Descuentoes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> PVEdit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+          
 
             var descuento = await _Descuento.GetDescuentoByIdAsync(id.Value);
-            if (descuento == null)
-            {
-                return NotFound();
-            }
+           var descuentoDto = descuento.toDto();
             return View(descuento);
         }
 
@@ -102,52 +82,22 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DescuentoId,PorcentajeDescuento,FechaInicio,FechaFin,TipoDescuento")] Descuento descuento)
+        public async Task<IActionResult> PVEdit(int id, [Bind("DescuentoId,PorcentajeDescuento,FechaInicio,FechaFin,TipoDescuento")] DescuentoDTO descuento)
         {
-            if (id != descuento.DescuentoId)
-            {
-                return NotFound();
-            }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-
-                    await _Descuento.UpdateDescuentoAsync(descuento);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (! await _Descuento.DescuentoExist(descuento.DescuentoId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(descuento);
+            var DescuentoOriginal = descuento.toOriginal();
+            await _Descuento.UpdateDescuentoAsync(DescuentoOriginal);
+            return RedirectToAction("Index", "Mantenedores");
         }
 
         // GET: Descuentoes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
             var descuento = await _Descuento.GetDetails(id.Value);
 
-            if (descuento == null)
-            {
-                return NotFound();
-            }
-
-            return View(descuento);
+        
+            return PartialView(descuento);
         }
 
         // POST: Descuentoes/Delete/5
@@ -156,12 +106,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _Descuento.DeleteDescuentoAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index","Mantenedores");
         }
 
-        private Task <bool> DescuentoExists(int id)
-        {
-            return _Descuento.DescuentoExist(id);
-        }
     }
 }

@@ -18,6 +18,7 @@
                 <div class="d-flex justify-content-center m-5">
                     <div>
                         <img src="https://i.gifer.com/TkMx.gif" alt="Cargando Reseñas..." width="100" height="100">
+
                     </div>
                 </div>
             </div>
@@ -91,7 +92,7 @@
             $('#nav-VPCategorias-tab').click(function () {
                 Carga_VPCategorias();
             });
-            Carga_VPMetodoDePago(); 
+            Carga_VPMetodoDePago();
             $('#nav-VPMetodoDePago-tab').click(function () {
                 Carga_VPMetodoDePago();
             });
@@ -99,15 +100,45 @@
             $('#nav-VPOrden-tab').click(function () {
                 Carga_VPOrden();
             });
+            // Crear VPCategorias
+            $(document).on('click', '#BotonC', function (e) {
+                e.preventDefault();
+                Desabilitar();
+                // DesabilitarI();
+                $('#Carga_VPCategorias').load('@Url.Action("PVCreate", "Categorias")');
+                // Editar un Cliente
+                
+
+
+
+             //crear vpdescuento
+            });
+            $(document).on('click', '#BotonC', function (e) {
+                e.preventDefault();
+                DesabilitarI()
+                $('#Carga_VPDescuento').load('@Url.Action("PVCreate", "Descuento")');
+            });
         });
 
+        function EditCategorias(id) {
+            $("#Carga_VPCategorias").load('@Url.Action("PVEdit", "Categorias")' + '?id=' + id);
+        }
+        // Ver detalles de un Cliente
+        function DetailsCategorias(id) {
+            $("#Carga_VPcategorias").load('@Url.Action("PVDetails", "Categorias")' + '?id=' + id);
+        }
         function Carga_VPReseñas() {
             setTimeout(function () {
                 $("#Carga_VPReseñas").load('@Url.Action("ListaReseña", "ReseñaProducto")', function () {
                     $('#TablaReseña').wrap('<div class="table-responsive"></div>').DataTable({
                         "language": {
                             "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-                        }
+                        },
+                        "paging": false, // elimina la paginacion
+                        "scrollY": "400px", // define el scroll vertical
+                        "scrollX": true,   // activa el scroll horizontal
+                        "searching": false, // elimina el buscador individual por tabla
+                        "info": false // saca la informacion de abajo de la tabla
                     });
                 });
             }, 3000);
@@ -118,7 +149,12 @@
                 $('#TablaProducto').wrap('<div class="table-responsive"></div>').DataTable({
                     "language": {
                         "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-                    }
+                    },
+                    "paging": false,
+                    "scrollY": "400px",
+                    "scrollX": true,
+                    "searching": false, // elimina el buscador individual por tabla
+                    "info": false
                 });
             });
         }
@@ -128,7 +164,12 @@
                 $('#TablaDescuento').wrap('<div class="table-responsive"></div>').DataTable({
                     "language": {
                         "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-                    }
+                    },
+                    "paging": false,
+                    "scrollY": "400px",
+                    "scrollX": true,
+                    "searching": false, // elimina el buscador individual por tabla
+                    "info": false
                 });
             });
         }
@@ -138,17 +179,27 @@
                 $('#TablaCategoria').wrap('<div class="table-responsive"></div>').DataTable({
                     "language": {
                         "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-                    }
+                    },
+                    "paging": false,
+                    "scrollY": "400px",
+                    "scrollX": true,
+                    "searching": false, // elimina el buscador individual por tabla
+                    "info": false
                 });
             });
         }
 
-        function Carga_VPMetodoDePago() { 
+        function Carga_VPMetodoDePago() {
             $("#Carga_VPMetodoDePago").load('@Url.Action("ListaMetodoDePago", "MetodoPagoes")', function () {
                 $('#TablaMetodoDePago1').wrap('<div class="table-responsive"></div>').DataTable({
                     "language": {
                         "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-                    }
+                    },
+                    "paging": false,
+                    "scrollY": "400px",
+                    "scrollX": true,
+                    "searching": false, // elimina el buscador individual por tabla
+                    "info": false
                 });
             });
         }
@@ -158,9 +209,23 @@
                 $('#TablaOrden').wrap('<div class="table-responsive"></div>').DataTable({
                     "language": {
                         "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-                    }
+                    },
+                    "paging": false,
+                    "scrollY": "400px",
+                    "scrollX": true,
+                    "searching": false, // elimina el buscador individual por tabla
+                    "info": false
                 });
             });
         }
+        function Desabilitar() {
+            $('#nav-Reseñas-tab').addClass('disabled');
+            $('#nav-Productos-tab').addClass('disabled');
+            $('#nav-Descuentos-tab').addClass('disabled');
+            $('#nav-Categorias-tab').addClass('disabled');
+            $('#nav-Orden-tab').addClass('disabled');
+            $('#nav-MetodoDePago-tab').addClass('disabled');
+        }
     </script>
 }
+

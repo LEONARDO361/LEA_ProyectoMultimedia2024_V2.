@@ -1,0 +1,62 @@
+﻿@model LEA_ProyectoMultimedia2024_V2_.Models.Tables.Orden
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Editar Orden</h1>
+
+
+<hr />
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="OrdenId" />
+
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="FechaOrden" class="control-label"></label>
+                <input asp-for="FechaOrden" class="form-control" />
+                <span asp-validation-for="FechaOrden" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+
+            <div class="form-group">
+                <label asp-for="Total" class="control-label"></label>
+                <input asp-for="Total" class="form-control" />
+                <span asp-validation-for="Total" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+
+            <div class="form-group">
+                <label asp-for="Estado" class="control-label"></label>
+                <input asp-for="Estado" class="form-control" />
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="Cliente" class="control-label"></label>
+                <select asp-for="ClienteId" class="form-control form-select" asp-items="ViewBag.ClienteId"></select>
+                <span asp-validation-for="ClienteId" class="text-danger"></span>
+            </div>
+
+        </div>
+
+    </div><div class="row">
+        <div class="col-12 text-end">
+            <input type="submit" value="Guardar" class="btn btn-primary" />
+            <a asp-action="Index" class="btn btn-info">Volver</a>
+        </div>
+
+    </div>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,69 @@
+﻿@model LEA_ProyectoMultimedia2024_V2_.Models.DTOs.ReseñaProductoDTO
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edita una reseña del producto </h1>
+
+
+<hr />
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="ReseñaId" />
+
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="ProductoId" class="control-label"></label>
+                <select asp-for="ProductoId" class="form-control form-select" asp-items="ViewBag.ProductoId"></select>
+                <span asp-validation-for="ProductoId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="ClienteId" class="control-label"></label>
+                <select asp-for="ClienteId" class="form-control form-select" asp-items="ViewBag.ClienteId"></select>
+                <span asp-validation-for="ClienteId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="Calificación" class="control-label"></label>
+                <input asp-for="Calificación" class="form-control" />
+                <span asp-validation-for="Calificación" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+
+            <div class="form-group">
+                <label asp-for="Comentario" class="control-label"></label>
+                <input asp-for="Comentario" class="form-control" />
+                <span asp-validation-for="Comentario" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="FechaReseña" class="control-label"></label>
+                <input asp-for="FechaReseña" class="form-control" />
+                <span asp-validation-for="FechaReseña" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-end">
+            <input type="submit" value="Guardar" class="btn btn-primary" />
+            <a asp-action="Index" class="btn btn-info">Volver</a>
+        </div>
+    </div>
+
+</form>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

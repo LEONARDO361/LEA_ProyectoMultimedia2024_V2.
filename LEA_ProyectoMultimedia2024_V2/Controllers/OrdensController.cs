@@ -38,25 +38,16 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: Ordens/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> PVDetails(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+          
 
             var orden = await _Orden.GetOrdenByIdAsync(id.Value);
-
-            if (orden == null)
-            {
-                return NotFound();
-            }
-
-            return View(orden);
+            return PartialView(orden);
         }
 
         // GET: Ordens/Create
-        public async Task <IActionResult> Create()
+        public async Task <IActionResult> PVCreate()
         {
             ViewData["ClienteId"] = new SelectList(await _Orden.GetAllOrdensAsync(), "ClienteId", "ClienteId");
             return View();
@@ -67,33 +58,22 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrdenId,FechaOrden,Total,Estado,ClienteId")] OrdenDTO orden)
+        public async Task<IActionResult> PVCreate([Bind("OrdenId,FechaOrden,Total,Estado,ClienteId")] OrdenDTO orden)
         {
-            if (ModelState.IsValid)
-            {
+           
                 var DTO = orden.toOriginal();
                 await _Orden.CreateOrdenAsync(DTO);
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ClienteId"] = new SelectList(await _Orden.GetAllOrdensAsync(), "ClienteId", "ClienteId", orden.ClienteId);
-            return View(orden);
+                return RedirectToAction("Index","Mantenedores");
+
+
         }
 
         // GET: Ordens/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> PVEdit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var orden = await _Orden.BuscOrden(id.Value);
-            if (orden == null)
-            {
-                return NotFound();
-            }
-            ViewData["ClienteId"] = new SelectList(await _Orden.GetAllOrdensAsync(), "ClienteId", "ClienteId", orden.ClienteId);
-            return View(orden);
+            var OrdenDTO = orden.toDto;
+            return PartialView(orden);
         }
 
         // POST: Ordens/Edit/5
@@ -101,53 +81,23 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrdenId,FechaOrden,Total,Estado,ClienteId")] Orden orden)
+        public async Task<IActionResult> PVEdit(int id, [Bind("OrdenId,FechaOrden,Total,Estado,ClienteId")] OrdenDTO orden)
         {
-            if (id != orden.OrdenId)
-            {
-                return NotFound();
-            }
+            var OrdenOriginal = orden.toOriginal();
+            await _Orden.UpdateOrdenAsync(OrdenOriginal);
+            return RedirectToAction("Index","Mantenedores");
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-
-                    await _Orden.UpdateOrdenAsync(orden);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await _Orden.OrdenExistsAsync(orden.OrdenId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ClienteId"] = new SelectList(await _Orden.GetAllOrdensAsync(), "ClienteId", "ClienteId", orden.ClienteId);
-            return View(orden);
         }
 
         // GET: Ordens/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+           
 
             var orden = await _Orden.GetOrdenByIdAsync(id.Value);
 
-            if (orden == null)
-            {
-                return NotFound();
-            }
-
-            return View(orden);
+            
+            return PartialView(orden);
         }
 
         // POST: Ordens/Delete/5
@@ -158,12 +108,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
           
 
             await _Orden.DeleteOrdenAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index","Mantenedores");
         }
 
-        private Task <bool> OrdenExists(int id)
-        {
-            return _Orden.OrdenExistsAsync(id);
-        }
+
     }
 }

@@ -1,71 +1,94 @@
 ﻿@model IEnumerable<LEA_ProyectoMultimedia2024_V2_.Models.Tables.Descuento>
 
-    @{
-        ViewData["Title"] = "Index";
-    }
+@{
+    ViewData["Title"] = "Index";
+}
 
-    <h1>Productos en Descuentos</h1>
+<h1>Productos en Descuentos</h1>
 
-    <p>
-        <a asp-action="Create" class="btn btn-success d-grid gap-2 d-grid">Crear un Descuento en producto</a>
-    </p>
+<p>
+    <a asp-action="PVCreate" id="BotonC" class="btn btn-success d-grid gap-2 d-grid">Crear un Descuento en producto</a>
+</p>
 <table class="table" id="TablaDescuento">
-        <thead>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PorcentajeDescuento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaFin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoDescuento)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.PorcentajeDescuento)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FechaInicio)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FechaFin)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TipoDescuento)
-                </th>
-                <th></th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PorcentajeDescuento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaInicio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaFin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoDescuento)
+                </td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <a asp-action="Edit" class="btn btn-primary text-end" asp-route-id="@item.DescuentoId">Editar</a>
+                        <a asp-action="Details" class="btn btn-warning text-end" asp-route-id="@item.DescuentoId">Detalles</a>
+                        <button type="button" class="btn btn-danger text-end" onclick="openDeleteModal(@item.DescuentoId)">Eliminar</button>
+                    </div>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PorcentajeDescuento)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FechaInicio)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FechaFin)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TipoDescuento)
-                    </td>
-                    <td>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <a asp-action="Edit" class="btn btn-primary text-end" asp-route-id="@item.DescuentoId">Editar</a>
-                            <a asp-action="Details" class="btn btn-warning text-end" asp-route-id="@item.DescuentoId">Detalles</a>
-                            <a asp-action="Delete" class="btn btn-danger text-end" asp-route-id="@item.DescuentoId">Eliminar</a>
-                        </div>
+        }
+    </tbody>
+</table>
 
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
 
-    @section scripts
-    {
-        <script>
-            $(document).ready(function () {
-                $('#TablaDescuento').DataTable({
-                    "language": {
-                        "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
-                    }
-                });
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar este descuento?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="confirmDeleteButton" class="btn btn-danger">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
 
+
+
+    <script>
+      
+
+        function openDeleteModal(descuentoId) {
+            var deleteUrl = '@Url.Action("Delete", "Descuento", new { id = "__id__" })';
+            deleteUrl = deleteUrl.replace('__id__', descuentoId);
+            $('#confirmDeleteButton').attr('href', deleteUrl);
+
+
+            var myModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+                keyboard: false
             });
-        </script>
-    }
+            myModal.show();
+        }
+    </script>
+

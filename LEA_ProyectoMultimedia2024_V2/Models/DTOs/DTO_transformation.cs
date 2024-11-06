@@ -19,17 +19,6 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
 
             };
         }
-        public static CategoriaDTO ToDto(this Categoria original)
-        {
-            return new()
-            {
-                CategoriaId = original.CategoriaId,
-                Nombre = original.Nombre,
-                Descripcion = original.Descripcion,
-                Pesokg = original.Pesokg
-
-            };
-        }
 
         public static Cliente toOriginal(this ClienteDTO dto)
         {
@@ -151,7 +140,19 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
                 Producto = dto.Producto
             };
         }
+        //-------------------------------------------------TO DTO---------------------------------------------------
 
+        public static CategoriaDTO ToDto(this Categoria original)
+        {
+            return new()
+            {
+                CategoriaId = original.CategoriaId,
+                Nombre = original.Nombre,
+                Descripcion = original.Descripcion,
+                Pesokg = original.Pesokg
+
+            };
+        }
         public static ReseñaProductoDTO ToDto(this ReseñaProducto original)
         {
             return new()
@@ -191,6 +192,91 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
             };
 
 
+        }
+        public static ProductoDTO toDto(this Producto Original)
+        {
+            return new()
+            {
+                ProductoId = Original.ProductoId,
+                Nombre = Original.Nombre,
+                Descripcion = Original.Descripcion,
+                Precio = Original.Precio,
+                Cantidad = Original.Cantidad,
+                Procedencia = Original.Procedencia,
+                Estado = Original.Estado,
+                Marca = Original.Marca,
+                DescuentoId = Original.DescuentoId,
+                CategoriaId = Original.CategoriaId,
+                Descuento = Original.Descuento,
+                DetalleOrden = Original.DetalleOrden,
+                ReseñaProducto = Original.ReseñaProducto
+            };
+        }
+        public static DescuentoDTO toDto(this Descuento Original)
+        {
+            return new()
+            {
+                DescuentoId = Original.DescuentoId,
+                PorcentajeDescuento = Original.PorcentajeDescuento,
+                FechaInicio = Original.FechaInicio,
+                FechaFin = Original.FechaFin,
+                TipoDescuento = Original.TipoDescuento,
+            };
+        }
+        public static DetalleOrdenDTO toDto(this DetalleOrden Original)
+        {
+            return new()
+            {
+                DetalleId = Original.DetalleId,
+                OrdenId = Original.OrdenId,
+                ProductoId = Original.ProductoId,
+                Cantidad = Original.Cantidad,
+                PrecioTotal = Original.PrecioTotal,
+                Orden = Original.Orden,
+                Producto = Original.Producto,
+            };
+        }
+        public static DireccionEnviosDTO toDto(this DireccionEnvio Original)
+        {
+            return new()
+            {
+                DireccionId = Original.DireccionId,
+                ClienteId = Original.ClienteId,
+                Dirección = Original.Dirección,
+                Ciudad = Original.Ciudad,
+                Provincia = Original.Provincia,
+                Pais = Original.Pais,
+                CodigoPostal = Original.CodigoPostal,
+                Cliente = Original.Cliente
+
+            };
+        }
+        public static MetodoPagoDTO toDto(this MetodoPago Original)
+        {
+            return new()
+            {
+                MetodoPagoId = Original.MetodoPagoId,
+                ClienteId = Original.ClienteId,
+                TipoTarjeta = Original.TipoTarjeta,
+                NumeroTarjeta = Original.NumeroTarjeta,
+                FechaExpiracion = Original.FechaExpiracion,
+                Cvv = Original.Cvv
+
+
+            };
+        }
+        public static OrdenDTO toDto(this Orden Original)
+        {
+            return new()
+            {
+                OrdenId = Original.OrdenId,
+                FechaOrden = Original.FechaOrden,
+                Total = Original.Total,
+                Estado = Original.Estado,
+                ClienteId = Original.ClienteId,
+                Cliente = Original.Cliente,
+                DetalleOrden = Original.DetalleOrden
+            };
         }
     }
 }

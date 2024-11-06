@@ -1,0 +1,60 @@
+﻿@model LEA_ProyectoMultimedia2024_V2_.Models.DTOs.OrdenDTO
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Crear una orden</h1>
+
+
+<hr />
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="FechaOrden" class="control-label"></label>
+                <input asp-for="FechaOrden" class="form-control" />
+                <span asp-validation-for="FechaOrden" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+
+            <div class="form-group">
+                <label asp-for="Total" class="control-label"></label>
+                <input asp-for="Total" class="form-control" />
+                <span asp-validation-for="Total" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+
+            <div class="form-group">
+                <label asp-for="Estado" class="control-label"></label>
+                <input asp-for="Estado" class="form-control" />
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="Cliente" class="control-label"></label>
+                <select asp-for="ClienteId" class="form-control form-select" asp-items="ViewBag.ClienteId"></select>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-end">
+            <input type="submit" value="Crear orden" class=" btn btn-success" />
+            <a asp-action="Index" class="btn btn-info">Volver</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

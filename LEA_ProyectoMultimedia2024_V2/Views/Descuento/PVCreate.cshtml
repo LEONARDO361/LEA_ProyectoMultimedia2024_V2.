@@ -1,0 +1,59 @@
+﻿@model LEA_ProyectoMultimedia2024_V2_.Models.DTOs.DescuentoDTO
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Crear producto en descuento </h1>
+
+
+<hr />
+<form asp-action="PVCreate" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="PorcentajeDescuento" class="control-label"></label>
+                <input asp-for="PorcentajeDescuento" class="form-control" />
+                <span asp-validation-for="PorcentajeDescuento" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="FechaInicio" class="control-label"></label>
+                <input asp-for="FechaInicio" class="form-control" />
+                <span asp-validation-for="FechaInicio" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+
+            <div class="form-group">
+                <label asp-for="FechaFin" class="control-label"></label>
+                <input asp-for="FechaFin" class="form-control" />
+                <span asp-validation-for="FechaFin" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="TipoDescuento" class="control-label"></label>
+                <input asp-for="TipoDescuento" class="form-control" />
+                <span asp-validation-for="TipoDescuento" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-end">
+                <a asp-action="Index" asp-controller="Mantenedores" class="btn btn-info">Volver</a>
+                <input type="submit" value="Crear" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

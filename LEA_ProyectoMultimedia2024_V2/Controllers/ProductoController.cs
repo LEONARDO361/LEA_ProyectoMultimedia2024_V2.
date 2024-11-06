@@ -39,28 +39,17 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: Productoes/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> PVDetails(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var producto = await _producto.GetProductoByIdAsync(id.Value);
-
-            if (producto == null)
-            {
-                return NotFound();
-            }
-
-            return View(producto);
+          var producto = await _producto.GetProductoByIdAsync(id.Value);
+           return PartialView(producto);
         }
 
         // GET: Productoes/Create
-        public async Task< IActionResult> Create()
+        public async Task< IActionResult> PVDetails()
         {
-            ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre");
-            return View();
+
+            return PartialView();
         }
 
         // POST: Productoes/Create
@@ -68,33 +57,22 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductoId,Nombre,Descripcion,Precio,Cantidad,Procedencia,Estado,Marca,CategoriaId")] ProductoDTO producto)
+        public async Task<IActionResult> PVCreate([Bind("ProductoId,Nombre,Descripcion,Precio,Cantidad,Procedencia,Estado,Marca,CategoriaId")] ProductoDTO producto)
         {
-            if (ModelState.IsValid)
-            {
+          
                 var DTO = producto.toOriginal();
-                
                 await _producto.CreateProductoAsync(DTO);
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "CategoriaId", producto.CategoriaId);
-            return View(producto);
+                return RedirectToAction("Index","Mantenedores");
+
         }
 
         // GET: Productoes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> PVEdit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+
 
             var producto = await _producto.BuscadorProduct(id.Value);
-            if (producto == null)
-            {
-                return NotFound();
-            }
-            ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre", producto.CategoriaId);
+            var ProductoDto = producto.toDto();
             return View(producto);
         }
 
@@ -103,52 +81,24 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductoId,Nombre,Descripcion,Precio,Cantidad,Procedencia,Estado,Marca,CategoriaId")] Producto producto)
+        public async Task<IActionResult> PVEdit(int id, [Bind("ProductoId,Nombre,Descripcion,Precio,Cantidad,Procedencia,Estado,Marca,CategoriaId")] ProductoDTO producto)
         {
-            if (id != producto.ProductoId)
-            {
-                return NotFound();
-            }
+                 var ProductoOriginal = producto.toOriginal();
+                 await _producto.UpdateProductoAsync(ProductoOriginal);
+                 return RedirectToAction("Index","Mantenedores");
+            
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await _producto.UpdateProductoAsync(producto);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await _producto.ProductExists(producto.ProductoId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoriaId"] = new SelectList( await _producto.GetProductosAsync(), "CategoriaId", "CategoriaId", producto.CategoriaId);
-            return View(producto);
+
         }
 
         // GET: Productoes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+
 
             var producto = await _producto.GetProductoByIdAsync(id.Value);
 
-            if (producto == null)
-            {
-                return NotFound();
-            }
-
-            return View(producto);
+            return PartialView(producto);
         }
 
         // POST: Productoes/Delete/5
@@ -159,12 +109,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 
 
             await _producto.DeleteProductoAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index","Mantenedores");
         }
 
-        private Task<bool> ProductoExists(int id)
-        {
-            return _producto.ProductExists(id);
-        }
+
     }
 }

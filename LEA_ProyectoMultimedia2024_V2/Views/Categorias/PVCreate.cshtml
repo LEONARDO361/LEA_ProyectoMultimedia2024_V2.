@@ -1,0 +1,50 @@
+﻿@model LEA_ProyectoMultimedia2024_V2_.Models.DTOs.CategoriaDTO
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Creador de categorías</h1>
+
+<hr />
+<form asp-action="PVCreate" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" required />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="Descripcion" class="control-label"></label>
+                <input asp-for="Descripcion" class="form-control" required />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="Pesokg" class="control-label"></label>
+                <input asp-for="Pesokg" class="form-control" required />
+                <span asp-validation-for="Pesokg" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-end">
+            <a asp-action="Index" asp-controller="Mantenedores" class="btn btn-info">Volver</a>
+            <input type="submit" value="Crear Categoria" class=" btn btn-success" />
+        </div>
+    </div>
+
+</form>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
