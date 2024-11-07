@@ -46,9 +46,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: Productoes/Create
-        public async Task< IActionResult> PVDetails()
+        public async Task< IActionResult> PVCreate()
         {
-
+            ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre");
             return PartialView();
         }
 

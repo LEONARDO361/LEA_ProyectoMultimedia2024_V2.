@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<LEA_ProyectoMultimedia2024_V2_.Models.Tables.MetodoPago>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Metodos de pago";
 }
 
 <h1>Metodos de pago</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-success d-grid gap-2 d-grid">Crear metodo de pago</a>
+    <a asp-action="PVCreate" id="BotonC" class="btn btn-success d-grid gap-2 d-grid">Crear metodo de pago</a>
 </p>
 <table class="table" id="TablaMetodoDePago">
     <thead>
@@ -51,19 +51,43 @@
                 </td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.MetodoPagoId">Editar</a>
-                        <a asp-action="Details" class="btn btn-warning" asp-route-id="@item.MetodoPagoId">Detalles</a>
-                        <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.MetodoPagoId">Eliminar</a>
+                        <button class="btn btn-sm btn-info me-2" onclick="EditMetodoDepago(@item.MetodoPagoId)">Editar</button>
+                        <button class="btn btn-sm btn-primary me-2" onclick="DetailsMetodoDePago(@item.MetodoPagoId)">Detalles</button>
+                        <button type="button" class="btn btn-danger text-end" onclick="openDeleteModal('@item.MetodoPagoId', '@item.TipoTarjeta')">Eliminar</button>
                     </div>
-
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-@section scripts
-{
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal fade" id="deleteModalMetodoPago" tabindex="-1" aria-labelledby="deleteModalLabelMetodoPago" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="deleteModalLabelMetodoPago">Eliminar Metodo de Pago</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h3>¿Estás seguro de que quieres eliminar el metodo de pago <strong class="text-danger" id="metodoPagoName"></strong>?</h3>
+                <form id="deleteFormMetodoPago" method="post" class="mt-5">
+                    <input type="hidden" id="metodoPagoId" name="MetodoPagoId" />
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                        <div class="col text-end">
+                            <input type="submit" value="Eliminar" class="btn btn-danger" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+
     <script>
         $(document).ready(function () {
             $('#TablaMetodoDePago').DataTable({
@@ -71,7 +95,14 @@
                     "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
                 }
             });
-
         });
+
+        // Función para abrir el modal de eliminación
+        function openDeleteModal(metodoPagoId, metodoPagoName) {
+            $('#metodoPagoName').text(metodoPagoName); // Asigna el nombre del metodo de pago al modal
+            $('#metodoPagoId').val(metodoPagoId); // Asigna el id del metodo de pago al input oculto
+            $('#deleteFormMetodoPago').attr('action', '/MetodoPagoes/Delete/' + metodoPagoId); // Configura la acción del formulario de eliminación
+            $('#deleteModalMetodoPago').modal('show'); // Muestra el modal
+        }
     </script>
-}
+

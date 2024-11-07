@@ -8,7 +8,7 @@
 
 
 <hr />
-<form asp-action="Edit">
+<form asp-action="PVEdit">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="ReseñaId" />
 
@@ -55,7 +55,7 @@
     <div class="row">
         <div class="col-12 text-end">
             <input type="submit" value="Guardar" class="btn btn-primary" />
-            <a asp-action="Index" class="btn btn-info">Volver</a>
+            <a asp-action="Index" asp-controller="Mantenedores" class="btn btn-info">Volver</a>
         </div>
     </div>
 

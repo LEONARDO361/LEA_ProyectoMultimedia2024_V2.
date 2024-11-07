@@ -7,7 +7,7 @@
 <h1>Producto</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-success d-grid gap-2 d-grid">Crear producto</a>
+    <button asp-action="PVCreate" id="BotonC" class="btn btn-success d-grid gap-2 d-grid">Crear producto</button>
 </p>
 <table class="table" id="TablaProducto">
     <thead>
@@ -88,9 +88,9 @@
                 </td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.ProductoId">Editar</a>
-                        <a asp-action="Details" class="btn btn-warning" asp-route-id="@item.ProductoId">Detalles</a>
-                        <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.ProductoId">Eliminar</a>
+                        <button class="btn btn-sm btn-info me-2" onclick="EditProductos(@item.ProductoId)">Editar</button>
+                        <button class="btn btn-sm btn-primary me-2" onclick="DetailsProductos(@item.ProductoId)">Detalles</button>
+                        <button type="button" class="btn btn-danger text-end" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl(@item.ProductoId)">Eliminar</button>
                     </div>
 
 

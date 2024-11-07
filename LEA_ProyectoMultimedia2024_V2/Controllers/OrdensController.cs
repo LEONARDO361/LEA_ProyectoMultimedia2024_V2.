@@ -49,7 +49,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: Ordens/Create
         public async Task <IActionResult> PVCreate()
         {
-            ViewData["ClienteId"] = new SelectList(await _Orden.GetAllOrdensAsync(), "ClienteId", "ClienteId");
+            ViewData["ClienteId"] = new SelectList(await _Orden.GetAllOrdensAsync(), "ClienteId", "Nombre");
             return View();
         }
 

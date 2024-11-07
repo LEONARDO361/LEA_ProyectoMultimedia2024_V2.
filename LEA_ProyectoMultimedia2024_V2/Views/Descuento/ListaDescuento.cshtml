@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<LEA_ProyectoMultimedia2024_V2_.Models.Tables.Descuento>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Productos en Descuentos";
 }
 
 <h1>Productos en Descuentos</h1>
@@ -45,9 +45,9 @@
                 </td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <a asp-action="Edit" class="btn btn-primary text-end" asp-route-id="@item.DescuentoId">Editar</a>
-                        <a asp-action="Details" class="btn btn-warning text-end" asp-route-id="@item.DescuentoId">Detalles</a>
-                        <button type="button" class="btn btn-danger text-end" onclick="openDeleteModal(@item.DescuentoId)">Eliminar</button>
+                        <button class="btn btn-sm btn-info me-2" onclick="EditDescuento(@item.DescuentoId)">Editar</button>
+                        <button class="btn btn-sm btn-primary me-2" onclick="DetailsDescuento(@item.DescuentoId)">Detalles</button>
+                        <button type="button" class="btn btn-danger text-end" onclick="openDeleteModal('@item.DescuentoId', '@item.PorcentajeDescuento')">Eliminar</button>
                     </div>
                 </td>
             </tr>
@@ -55,40 +55,49 @@
     </tbody>
 </table>
 
-
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal fade" id="deleteModalDescuento" tabindex="-1" aria-labelledby="deleteModalLabelDescuento" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirmar eliminación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <h2 class="modal-title" id="deleteModalLabelDescuento">Eliminar Descuento</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ¿Estás seguro de que deseas eliminar este descuento?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <a id="confirmDeleteButton" class="btn btn-danger">Eliminar</a>
+                <h3>¿Estás seguro de que quieres eliminar el descuento con porcentaje <strong class="text-danger" id="descuentoName"></strong>?</h3>
+                <form id="deleteFormDescuento" method="post" class="mt-5">
+                    <input type="hidden" id="descuentoId" name="DescuentoId" />
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                        <div class="col text-end">
+                            <input type="submit" value="Eliminar" class="btn btn-danger" />
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
-
-
+@section scripts
+{
     <script>
-      
-
-        function openDeleteModal(descuentoId) {
-            var deleteUrl = '@Url.Action("Delete", "Descuento", new { id = "__id__" })';
-            deleteUrl = deleteUrl.replace('__id__', descuentoId);
-            $('#confirmDeleteButton').attr('href', deleteUrl);
-
-
-            var myModal = new bootstrap.Modal(document.getElementById('deleteModal'), {
-                keyboard: false
+        $(document).ready(function () {
+            $('#TablaDescuento').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
+                }
             });
-            myModal.show();
+        });
+
+        // Función para abrir el modal de eliminación
+        function openDeleteModal(descuentoId, descuentoName) {
+            $('#descuentoName').text(descuentoName); // Asigna el nombre del descuento al modal
+            $('#descuentoId').val(descuentoId); // Asigna el id del descuento al input oculto
+            $('#deleteFormDescuento').attr('action', '/Descuento/Delete/' + descuentoId); // Configura la acción del formulario de eliminación
+            $('#deleteModalDescuento').modal('show'); // Muestra el modal
         }
     </script>
-
+}

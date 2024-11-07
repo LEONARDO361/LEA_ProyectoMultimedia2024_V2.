@@ -50,8 +50,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         {
             var clientes = await _reseñaproducto.GetAllClientesAsync(); 
             var productos = await _reseñaproducto.GetAllProductosAsync();
-            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "ClienteId");
-            ViewData["ProductoId"] = new SelectList(productos, "ProductoId", "ProductoId");
+            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "Nombre");
+            ViewData["ProductoId"] = new SelectList(productos, "ProductoId", "Nombre");
             return PartialView();
         }
 

@@ -1,5 +1,60 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model LEA_ProyectoMultimedia2024_V2_.Models.Tables.ReseñaProducto
+
 @{
+    ViewData["Title"] = "Edit";
 }
+
+<h1>detalles de una reseña del producto </h1>
+
+
+<hr />
+
+
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="ProductoId" class="control-label"></label>
+                <select asp-for="ProductoId" class="form-control form-select" asp-items="ViewBag.ProductoId"></select>
+                <span asp-validation-for="ProductoId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="ClienteId" class="control-label"></label>
+                <select asp-for="ClienteId" class="form-control form-select" asp-items="ViewBag.ClienteId"></select>
+                <span asp-validation-for="ClienteId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="Calificación" class="control-label"></label>
+            <input asp-for="Calificación" class="form-control" disabled />
+                <span asp-validation-for="Calificación" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+
+            <div class="form-group">
+                <label asp-for="Comentario" class="control-label"></label>
+            <input asp-for="Comentario" class="form-control" disabled />
+                <span asp-validation-for="Comentario" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="FechaReseña" class="control-label"></label>
+            <input asp-for="FechaReseña" class="form-control" disabled />
+                <span asp-validation-for="FechaReseña" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-end">
+        <button class="btn btn-success" onclick=" EditReseñas(@Model?.ReseñaId)">Editar Reseñas</button>
+        <a asp-action="Index" asp-controller="Mantenedores" class="btn btn-info">Volver</a>
+        </div>
+    </div>
+
+

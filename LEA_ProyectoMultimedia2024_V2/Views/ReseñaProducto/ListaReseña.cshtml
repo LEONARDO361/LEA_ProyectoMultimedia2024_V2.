@@ -7,7 +7,7 @@
 <h1>Reseñas </h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-success d-grid gap-2 d-grid">Añadir reseñas </a>
+    <a asp-action="PVCreate" id="BotonC" class="btn btn-success d-grid gap-2 d-grid">Añadir reseñas </a>
 </p>
 <table class="table" id="TablaReseña">
     <thead>
@@ -58,9 +58,9 @@
                 </td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.ReseñaId">Editar</a>
-                        <a asp-action="Details" class="btn btn-warning" asp-route-id="@item.ReseñaId">Detalles</a>
-                        <a asp-action="Delete" class="btn btn-danger"  asp-route-id="@item.ReseñaId">Eliminar</a>
+                        <button class="btn btn-sm btn-info me-2" onclick="EditReseñas(@item.ReseñaId)">Editar</button>
+                        <button class="btn btn-sm btn-primary me-2" onclick="DetailsReseñas(@item.ReseñaId)">Detalles</button>
+                        <button type="button" class="btn btn-danger text-end" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl(@item.ReseñaId)">Eliminar</button>
                     </div>
                 </td>
             </tr>

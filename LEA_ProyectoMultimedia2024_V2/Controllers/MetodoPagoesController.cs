@@ -45,9 +45,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: MetodoPagoes/Create
-        public IActionResult PVCreate()
+        public async Task<IActionResult> PVCreateAsync()
         {
-
+            var clientes = await _cliente.GetAllClientesAsync();    
+            ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "Nombre");
             return PartialView();
         }
 
