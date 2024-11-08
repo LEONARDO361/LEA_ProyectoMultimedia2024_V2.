@@ -13,7 +13,7 @@
         <div class="col-4">
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
+            <input asp-for="Nombre" class="form-control" disabled />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
 
 
@@ -25,21 +25,21 @@
 
             <div class="form-group">
                 <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
+            <input asp-for="Descripcion" class="form-control" disabled />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
                 <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
+            <input asp-for="Precio" class="form-control" disabled />
                 <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
                 <label asp-for="Cantidad" class="control-label"></label>
-                <input asp-for="Cantidad" class="form-control" />
+            <input asp-for="Cantidad" class="form-control" disabled />
                 <span asp-validation-for="Cantidad" class="text-danger"></span>
             </div>
         </div>
@@ -47,28 +47,28 @@
 
             <div class="form-group">
                 <label asp-for="Procedencia" class="control-label"></label>
-                <input asp-for="Procedencia" class="form-control" />
+            <input asp-for="Procedencia" class="form-control" disabled />
                 <span asp-validation-for="Procedencia" class="text-danger"></span>
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
                 <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
+            <input asp-for="Estado" class="form-control" disabled />
                 <span asp-validation-for="Estado" class="text-danger"></span>
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
                 <label asp-for="Marca" class="control-label"></label>
-                <input asp-for="Marca" class="form-control" />
+            <input asp-for="Marca" class="form-control" disabled />
                 <span asp-validation-for="Marca" class="text-danger"></span>
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
                 <label asp-for="Categoria" class="control-label"></label>
-                <select asp-for="CategoriaId" class="form-control" asp-items="ViewBag.CategoriaId"></select>
+            <select asp-for="CategoriaId" class="form-control" asp-items="ViewBag.CategoriaId" disabled></select>
                 <span asp-validation-for="CategoriaId" class="text-danger"></span>
             </div>
         </div>

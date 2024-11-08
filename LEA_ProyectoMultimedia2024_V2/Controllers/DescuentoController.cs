@@ -74,7 +74,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 
             var descuento = await _Descuento.GetDescuentoByIdAsync(id.Value);
            var descuentoDto = descuento.toDto();
-            return View(descuento);
+            return PartialView(descuento);
         }
 
         // POST: Descuentoes/Edit/5

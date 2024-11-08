@@ -3,6 +3,7 @@
 *@
 @{
         <nav>
+        <input type="text" id="generalSearch" placeholder="Buscar en todas las tablas..." class="form-control mb-3">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <button class="nav-link active" id="nav-Reseñas-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-Reseñas" aria-selected="true">Reseñas</button>
                 <button class="nav-link" id="nav-Productos-tab" data-bs-toggle="tab" data-bs-target="#nav-Productos" type="button" role="tab" aria-controls="nav-Productos" aria-selected="true">Productos</button>
@@ -323,5 +324,31 @@
             $('#nav-MetodoDePago-tab').addClass('disabled');
         }
     </script>
+    <script>
+        $(document).ready(function () {
+            Carga_VPReseñas();
+            Carga_VPProducto();
+            Carga_VPDescuentos();
+            Carga_VPCategorias();
+            Carga_VPMetodoDePago();
+            Carga_VPOrden();
+
+            $('#generalSearch').on('input', function () {
+                var searchTerm = $(this).val().toLowerCase();
+
+                $('.tab-pane').each(function () {
+                    $(this).find('table tbody tr').each(function () {
+                        var rowText = $(this).text().toLowerCase();
+                        if (rowText.includes(searchTerm)) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
 }
 

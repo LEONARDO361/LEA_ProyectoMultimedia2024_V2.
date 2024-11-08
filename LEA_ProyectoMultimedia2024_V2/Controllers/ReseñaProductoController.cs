@@ -75,8 +75,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
  
             
             var reseñaDto = reseñaProducto.ToDto();
-            ViewData["ClienteId"] = new SelectList(await _reseñaproducto.GetAllClientesAsync(), "ClienteId", "ClienteId", reseñaDto.ClienteId);
-            ViewData["ProductoId"] = new SelectList(await _reseñaproducto.GetAllProductosAsync(), "ProductoId", "ProductoId", reseñaDto.ProductoId);
+            ViewData["ClienteId"] = new SelectList(await _reseñaproducto.GetAllClientesAsync(), "ClienteId", "Nombre", reseñaDto.ClienteId);
+            ViewData["ProductoId"] = new SelectList(await _reseñaproducto.GetAllProductosAsync(), "ProductoId", "Nombre", reseñaDto.ProductoId);
             return PartialView(reseñaDto);
         }
 

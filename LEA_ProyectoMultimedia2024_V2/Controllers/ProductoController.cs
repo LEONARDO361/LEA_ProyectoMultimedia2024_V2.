@@ -41,7 +41,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: Productoes/Details/5
         public async Task<IActionResult> PVDetails(int? id)
         {
-          var producto = await _producto.GetProductoByIdAsync(id.Value);
+            ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre");
+            var producto = await _producto.GetProductoByIdAsync(id.Value);
            return PartialView(producto);
         }
 
@@ -69,11 +70,11 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: Productoes/Edit/5
         public async Task<IActionResult> PVEdit(int? id)
         {
-
-
             var producto = await _producto.BuscadorProduct(id.Value);
+            ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre", producto.CategoriaId);
+ 
             var ProductoDto = producto.toDto();
-            return View(producto);
+            return PartialView(producto);
         }
 
         // POST: Productoes/Edit/5

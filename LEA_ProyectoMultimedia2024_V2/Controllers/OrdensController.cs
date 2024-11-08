@@ -40,9 +40,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: Ordens/Details/5
         public async Task<IActionResult> PVDetails(int? id)
         {
-          
 
-            var orden = await _Orden.GetOrdenByIdAsync(id.Value);
+
+            var orden = await _Orden.GetAllOrdenesAsync();
+            ViewData["ClienteId"] = new SelectList(orden, "ClienteId", "Nombre");
             return PartialView(orden);
         }
 
@@ -50,7 +51,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         public async Task <IActionResult> PVCreate()
         {
             ViewData["ClienteId"] = new SelectList(await _Orden.GetAllOrdensAsync(), "ClienteId", "Nombre");
-            return View();
+            return PartialView();
         }
 
         // POST: Ordens/Create
@@ -71,7 +72,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: Ordens/Edit/5
         public async Task<IActionResult> PVEdit(int? id)
         {
+           
             var orden = await _Orden.BuscOrden(id.Value);
+            ViewData["ClienteId"] = (await _Orden.BuscOrden(id.Value) , "ClienteId", "Nombre");
             var OrdenDTO = orden.toDto;
             return PartialView(orden);
         }

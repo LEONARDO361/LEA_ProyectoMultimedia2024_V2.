@@ -13,14 +13,14 @@
         <div class="col-4">
             <div class="form-group">
                 <label asp-for="PorcentajeDescuento" class="control-label"></label>
-                <input asp-for="PorcentajeDescuento" class="form-control" />
+            <input asp-for="PorcentajeDescuento" class="form-control" disabled />
                 <span asp-validation-for="PorcentajeDescuento" class="text-danger"></span>
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
                 <label asp-for="FechaInicio" class="control-label"></label>
-                <input asp-for="FechaInicio" class="form-control" />
+            <input asp-for="FechaInicio" class="form-control" disabled />
                 <span asp-validation-for="FechaInicio" class="text-danger"></span>
             </div>
         </div>
@@ -28,7 +28,7 @@
     <div class="col-4">
         <div class="form-group">
             <label asp-for="FechaFin" class="control-label"></label>
-            <input asp-for="FechaFin" class="form-control" />
+        <input asp-for="FechaFin" class="form-control" disabled />
             <span asp-validation-for="FechaFin" class="text-danger"></span>
         </div>
     </div>
@@ -37,13 +37,13 @@
 
             <div class="form-group">
                 <label asp-for="TipoDescuento" class="control-label"></label>
-                <input asp-for="TipoDescuento" class="form-control" />
+                <input asp-for="TipoDescuento" class="form-control"disabled />
                 <span asp-validation-for="TipoDescuento" class="text-danger"></span>
             </div>
         </div>
 
     </div>
-    </div>
+
     <div class="row">
         <div class="col-12 text-end">
         <a asp-action="Index" asp-controller="Mantenedores" class="btn btn-info">Volver</a>
