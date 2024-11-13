@@ -61,9 +61,30 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         public async Task<IActionResult> PVCreate([Bind("ProductoId,Nombre,Descripcion,Precio,Cantidad,Procedencia,Estado,Marca,CategoriaId")] ProductoDTO producto)
         {
           
+            if (ModelState.IsValid)
+            {
                 var DTO = producto.toOriginal();
                 await _producto.CreateProductoAsync(DTO);
-                return RedirectToAction("Index","Mantenedores");
+                return Json(new { success = true, message = "Cliente creado exitosamente" });
+            }
+            else
+            {
+                var errors = ModelState
+                    .Where(a => a.Value.Errors.Any())
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
+                    );
+
+                return Json(new
+                {
+                    succes = false,
+                    errors
+
+
+                });
+
+            }
 
         }
 

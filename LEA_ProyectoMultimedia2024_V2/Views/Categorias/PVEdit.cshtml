@@ -9,7 +9,7 @@
 
 <hr />
 
-<form asp-action="PVEdit">
+<form asp-action="PVEdit" id="CEdit">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="CategoriaId" />
     <div class="row">
@@ -49,4 +49,32 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(document).ready(function () {
+            $("#CEdit").on("submit", function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '@Url.Action("PVEdit", "Categorias")',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.href = '@Url.Action("Index", "Mantenedores")';
+                        } else {
+                            $("span.text-danger").html("");
+                            $.each(response.errors, function (key, value) {
+                                $('span[data-valmsg-for="' + key + '"]').html(value.join("<br>"));
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
+                        alert("Ocurrió un error al procesar la solicitud.");
+                    }
+                });
+            });
+        });
+
+    </script>
 }

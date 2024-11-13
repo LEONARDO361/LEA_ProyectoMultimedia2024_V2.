@@ -36,8 +36,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: ReseñaProducto/Details/5
         public async Task<IActionResult> PVDetails(int? id)
         {
-            
 
+            ViewData["ClienteId"] = new SelectList(await _reseñaproducto.GetAllClientesAsync(), "ClienteId", "Nombre");
+            ViewData["ProductoId"] = new SelectList(await _reseñaproducto.GetAllProductosAsync(), "ProductoId", "Nombre");
             var reseñaProducto = await _reseñaproducto.GetReseñaByIdAsync(id.Value);
 
            

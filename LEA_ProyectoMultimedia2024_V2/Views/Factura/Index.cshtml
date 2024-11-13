@@ -1,0 +1,194 @@
+﻿@{
+    ViewData["Title"] = "Factura";
+}
+
+<h2>Generar Factura</h2>
+
+<div class="container mt-4">
+    <!-- Selección de Cliente -->
+    <div class="form-group">
+        <label for="ClienteId">Cliente:</label>
+        <select id="ClienteId" class="form-control">
+            <option value="">Seleccione un cliente</option>
+            @foreach (var cliente in ViewBag.ClienteId as MultiSelectList)
+            {
+                <option value="@cliente.Value">@cliente.Text</option>
+            }
+        </select>
+    </div>
+
+    <!-- Detalles del Cliente -->
+    <div id="clienteDetalles" style="display: none;">
+        <h4>Detalles del Cliente</h4>
+        <p><strong>Nombre Completo:</strong> <span id="nombreCompleto"></span></p>
+        <p><strong>Correo Electrónico:</strong> <span id="correo"></span></p>
+        <p><strong>Teléfono:</strong> <span id="telefono"></span></p>
+    </div>
+
+    <!-- Selección de Dirección de Envío -->
+    <div class="form-group" id="direccionContainer" style="display: none;">
+        <label for="DireccionId">Dirección de Envío:</label>
+        <select id="DireccionId" class="form-control">
+            <option value="">Seleccione una dirección</option>
+        </select>
+    </div>
+
+    <!-- Detalles de la Dirección -->
+    <div id="direccionDetalles" style="display: none;">
+        <h4>Detalles de la Dirección</h4>
+        <p><strong>Provincia:</strong> <span id="provincia"></span></p>
+        <p><strong>Ciudad:</strong> <span id="ciudad"></span></p>
+        <p><strong>Código Postal:</strong> <span id="codigoPostal"></span></p>
+    </div>
+
+    <!-- Selección de Producto -->
+    <div class="form-group">
+        <label for="ProductoId">Producto:</label>
+        <select id="ProductoId" class="form-control">
+            <option value="">Seleccione un producto</option>
+            @foreach (var producto in ViewBag.ProductoId as MultiSelectList)
+            {
+                <option value="@producto.Value">@producto.Text</option>
+            }
+        </select>
+    </div>
+
+    <!-- Detalles del Producto -->
+    <div id="productoDetalles" style="display: none;">
+        <h4>Detalles del Producto</h4>
+        <p><strong>Nombre del Producto:</strong> <span id="nombreProducto"></span></p>
+        <p><strong>Precio:</strong> $<span id="precio"></span></p>
+    </div>
+
+    <!-- Tabla de Productos en la Factura -->
+    <table class="table mt-4" id="tablaFactura">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Productos seleccionados se agregarán aquí -->
+        </tbody>
+    </table>
+
+    <!-- Total de la Factura -->
+    <div class="form-group">
+        <h4>Total: $<span id="totalFactura">0</span></h4>
+    </div>
+
+    <!-- Botón para generar factura -->
+    <div class="mt-4">
+        <button id="generarFactura" class="btn btn-primary">Generar Factura</button>
+    </div>
+</div>
+
+<script>
+    // Función para obtener los detalles del cliente seleccionado
+    $('#ClienteId').change(function () {
+        var clienteId = $(this).val();
+        if (clienteId) {
+            $.getJSON('/Factura/GetClienteDetails', { clienteId: clienteId }, function (data) {
+                $('#nombreCompleto').text(data.nombreCompleto);
+                $('#correo').text(data.correo);
+                $('#telefono').text(data.telefono);
+                $('#clienteDetalles').show();
+            });
+
+            // Obtener direcciones del cliente
+            $.getJSON('/Factura/GetDireccionesByCliente', { clienteId: clienteId }, function (data) {
+                $('#DireccionId').empty().append('<option value="">Seleccione una dirección</option>');
+                $.each(data, function (index, direccion) {
+                    $('#DireccionId').append($('<option>', {
+                        value: direccion.value,
+                        text: direccion.text
+                    }));
+                });
+                $('#direccionContainer').show();
+            });
+        } else {
+            $('#clienteDetalles').hide();
+            $('#direccionContainer').hide();
+            $('#direccionDetalles').hide();
+        }
+    });
+
+    // Función para obtener los detalles de la dirección seleccionada
+    $('#DireccionId').change(function () {
+        var direccionId = $(this).val();
+        if (direccionId) {
+            $.getJSON('/Factura/GetDireccionesDetails', { direccionId: direccionId }, function (data) {
+                $('#provincia').text(data.direccion);
+                $('#ciudad').text(data.ciudad);
+                $('#codigoPostal').text(data.codigoPostal);
+                $('#direccionDetalles').show();
+            });
+        } else {
+            $('#direccionDetalles').hide();
+        }
+    });
+
+    // Función para obtener los detalles del producto seleccionado y agregarlo a la tabla de la factura
+    $('#ProductoId').change(function () {
+        var productoId = $(this).val();
+        if (productoId) {
+            $.getJSON('/Factura/GetProductosDetails', { productoId: productoId }, function (data) {
+                $('#nombreProducto').text(data.nombreProducto);
+                $('#precio').text(data.precio);
+                $('#productoDetalles').show();
+
+                // Agregar el producto a la tabla de factura
+                agregarProductoAFactura(data.nombreProducto, data.precio);
+            });
+        } else {
+            $('#productoDetalles').hide();
+        }
+    });
+
+    // Función para agregar el producto seleccionado a la factura
+    function agregarProductoAFactura(nombre, precio) {
+        var fila = `<tr>
+                            <td>${nombre}</td>
+                            <td>$${precio}</td>
+                            <td><input type="number" class="form-control cantidad" value="1" min="1"></td>
+                            <td class="subtotal">$${precio}</td>
+                            <td><button class="btn btn-danger btn-sm eliminarProducto">Eliminar</button></td>
+                        </tr>`;
+        $('#tablaFactura tbody').append(fila);
+        actualizarTotal();
+    }
+
+    // Evento para eliminar un producto de la factura
+    $(document).on('click', '.eliminarProducto', function () {
+        $(this).closest('tr').remove();
+        actualizarTotal();
+    });
+
+    // Evento para actualizar el subtotal y total cuando cambia la cantidad
+    $(document).on('input', '.cantidad', function () {
+        var cantidad = $(this).val();
+        var precio = $(this).closest('tr').find('td:eq(1)').text().replace('$', '');
+        var subtotal = cantidad * parseFloat(precio);
+        $(this).closest('tr').find('.subtotal').text(`$${subtotal.toFixed(2)}`);
+        actualizarTotal();
+    });
+
+    // Función para actualizar el total de la factura
+    function actualizarTotal() {
+        var total = 0;
+        $('#tablaFactura tbody tr').each(function () {
+            var subtotal = $(this).find('.subtotal').text().replace('$', '');
+            total += parseFloat(subtotal);
+        });
+        $('#totalFactura').text(total.toFixed(2));
+    }
+
+    // Función para manejar el botón de generar factura
+    $('#generarFactura').click(function () {
+        alert(`Factura generada con total de: $${$('#totalFactura').text()}`);
+    });
+</script>

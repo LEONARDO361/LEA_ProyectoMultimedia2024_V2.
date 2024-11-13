@@ -61,14 +61,34 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PVCreate([Bind("CategoriaId,Nombre,Descripcion,Pesokg")] CategoriaDTO categoria)
         {
+          
 
-
-            
+            if (ModelState.IsValid)
+            {
                 var DTO = categoria.toOriginal();
                 await _categorias.AddCategoriaAsync(DTO);
-                return RedirectToAction("Index","Mantenedores");
+                return Json(new { success = true, message = "Cliente creado exitosamente" });
+            }
+            else
+            {
+                var errors = ModelState
+                    .Where(a => a.Value.Errors.Any())
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
+                    );
 
+                return Json(new
+                {
+                    succes = false,
+                    errors
+
+
+                });
+
+            }
         }
+
 
         // GET: Categorias/Edit/5
         public async Task<IActionResult> PVEdit(int? id)
@@ -87,13 +107,33 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PVEdit(int id, [Bind("CategoriaId,Nombre,Descripcion,Pesokg")] CategoriaDTO categoria)
         {
-            
+
+
+
+            if (ModelState.IsValid)
+            {
                 var CategoriaOriginal = categoria.toOriginal();
                 await _categorias.UpdateCategoriaAsync(CategoriaOriginal);
-                return RedirectToAction("Index","Mantenedores");
-           
-        }
+                return Json(new { success = true, message = "Cliente creado exitosamente" });
+            }
+            else
+            {
+                var errors = ModelState
+                    .Where(a => a.Value.Errors.Any())
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
+                    );
 
+                return Json(new
+                {
+                    succes = false,
+                    errors
+
+
+                });
+            }
+        }
         // GET: Categorias/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
