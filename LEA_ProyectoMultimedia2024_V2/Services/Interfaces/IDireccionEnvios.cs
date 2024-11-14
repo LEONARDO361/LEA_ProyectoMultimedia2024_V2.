@@ -12,5 +12,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Interfaces
         Task<bool> DireccionEnvioExistsAsync(int id);
 
         Task<List<Cliente>> GetClientesAsync();
+        // Método para obtener todas las direcciones de un cliente específico
+        Task<IEnumerable<DireccionEnvio>> GetDireccionesByClienteAsync(int clienteId);
+
+        // Método para obtener una dirección específica por su ID
+        Task<DireccionEnvio> GetDireccionByIdAsyncAA(int direccionId);
     }
 }

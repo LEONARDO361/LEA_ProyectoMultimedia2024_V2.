@@ -19,14 +19,15 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
         public string TipoTarjeta { get; set; }
 
         [Required(ErrorMessage = "Falta el campo NumeroTarjeta")]
-        public int NumeroTarjeta { get; set; }
+        public int? NumeroTarjeta { get; set; }
 
         [Required(ErrorMessage = "Falta el campo FechaExpiracion")]
-        public DateOnly FechaExpiracion { get; set; }
+        public DateOnly? FechaExpiracion { get; set; } // Cambiado a nullable para manejar validación
 
         [Required(ErrorMessage = "Falta el campo Cvv")]
+        [Range(100, 999, ErrorMessage = "El CVV debe ser un número de 3 dígitos")]
         [Column("CVV")]
-        public int Cvv { get; set; }
+        public int? Cvv { get; set; }
 
 
         [ForeignKey("ClienteId")]

@@ -1,4 +1,4 @@
-﻿@model LEA_ProyectoMultimedia2024_V2_.Models.Tables.MetodoPago
+﻿@model LEA_ProyectoMultimedia2024_V2_.Models.DTOs.MetodoPagoDTO
 
 @{
     ViewData["Title"] = "Edit";
@@ -8,7 +8,7 @@
 
 
 <hr />
-<form asp-action="PVEdit">
+<form asp-action="PVEdit" id="CEdit">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="MetodoPagoId" />
 
@@ -53,13 +53,40 @@
     <div class="row">
         <div class="col-12 text-end">
             <input type="submit" value="Guardar" class="btn btn-primary" />
-            <a asp-action="Index" class="btn btn-info">Volver</a>
+            <a asp-action="Index" asp-controller="Mantenedores" class="btn btn-info">Volver</a>
         </div>
     </div>
 </form>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     }
-}
+
+<script>
+    $(document).ready(function () {
+        $("#CEdit").on("submit", function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: '@Url.Action("PVEdit", "MetodoPagoes")',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = '@Url.Action("Index", "Mantenedores")';
+                    } else {
+                        $("span.text-danger").html("");
+                        $.each(response.errors, function (key, value) {
+                            $('span[data-valmsg-for="' + key + '"]').html(value.join("<br>"));
+                        });
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
+                    alert("Ocurrió un error al procesar la solicitud.");
+                }
+            });
+        });
+    });
+    </script>
+

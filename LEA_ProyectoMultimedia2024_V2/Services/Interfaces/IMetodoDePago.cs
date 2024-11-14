@@ -10,6 +10,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Interfaces
         Task UpdateMetodoPagoAsync(MetodoPago metodoPago);
         Task DeleteMetodoPagoAsync(int id);
         Task<bool> MetodoPagoExistsAsync(int id);
+        Task<List<Cliente>> GetClientesAsync();
     }
 
 }

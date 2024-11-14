@@ -2,6 +2,7 @@
 using Humanizer;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.JSInterop.Infrastructure;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
@@ -15,7 +16,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
                 CategoriaId = dto.CategoriaId,
                 Nombre = dto.Nombre,
                 Descripcion = dto.Descripcion,
-                Pesokg = dto.Pesokg
+                Pesokg = dto.Pesokg ?? 0m
 
             };
         }
@@ -42,15 +43,16 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
         }
         public static Descuento toOriginal(this DescuentoDTO dto)
         {
-            return new()
+            return new Descuento
             {
                 DescuentoId = dto.DescuentoId,
-                PorcentajeDescuento = dto.PorcentajeDescuento,
-                FechaInicio = dto.FechaInicio,
-                FechaFin = dto.FechaFin,
+                PorcentajeDescuento = dto.PorcentajeDescuento ?? 0m, // Asigna 0 si es null
+                FechaInicio = dto.FechaInicio ?? DateOnly.FromDateTime(DateTime.Today), // Asigna la fecha actual si es null
+                FechaFin = dto.FechaFin ?? DateOnly.FromDateTime(DateTime.Today), // Asigna la fecha actual si es null
                 TipoDescuento = dto.TipoDescuento,
             };
         }
+
 
         public static DetalleOrden toOriginal(this DetalleOrdenDTO dto)
         {
@@ -87,20 +89,20 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
                 MetodoPagoId = dto.MetodoPagoId,
                 ClienteId = dto.ClienteId,
                 TipoTarjeta = dto.TipoTarjeta,
-                NumeroTarjeta = dto.NumeroTarjeta,
-                FechaExpiracion = dto.FechaExpiracion,
-                Cvv = dto.Cvv
+                NumeroTarjeta = dto.NumeroTarjeta ?? 0,
+                FechaExpiracion = dto.FechaExpiracion ?? DateOnly.FromDateTime(DateTime.Today),
+                Cvv = dto.Cvv ?? 0
 
 
             };
         }
         public static Orden toOriginal(this OrdenDTO dto)
         {
-            return new()
+            return new Orden
             {
                 OrdenId = dto.OrdenId,
-                FechaOrden = dto.FechaOrden,
-                Total = dto.Total,
+                FechaOrden = dto.FechaOrden ?? DateOnly.FromDateTime(DateTime.Today), // Asigna la fecha actual si es null
+                Total = dto.Total ?? 0, // Asigna 0 si es null
                 Estado = dto.Estado,
                 ClienteId = dto.ClienteId,
                 Cliente = dto.Cliente,
@@ -114,8 +116,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
                 ProductoId = dto.ProductoId,
                 Nombre = dto.Nombre,
                 Descripcion = dto.Descripcion,
-                Precio = dto.Precio,
-                Cantidad = dto.Cantidad,
+                Precio = dto.Precio ?? 0,
+                Cantidad = dto.Cantidad ?? 0,
                 Procedencia = dto.Procedencia,
                 Estado = dto.Estado,
                 Marca = dto.Marca,
@@ -133,9 +135,9 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
                 ReseñaId = dto.ReseñaId,
                 ProductoId = dto.ProductoId,
                 ClienteId = dto.ClienteId,
-                Calificación = dto.Calificación,
+                Calificación = dto.Calificación ?? 0,
                 Comentario = dto.Comentario,
-                FechaReseña = dto.FechaReseña,
+                FechaReseña = dto.FechaReseña ?? DateTime.Now,//Error
                 Cliente = dto.Cliente,
                 Producto = dto.Producto
             };

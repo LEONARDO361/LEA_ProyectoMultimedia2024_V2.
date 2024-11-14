@@ -8,7 +8,7 @@
 
 
 <hr />
-<form asp-action="PVCreate">
+<form asp-action="PVCreate" id="CCrearUsuario" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="row">
@@ -57,4 +57,37 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(document).ready(function () {
+            $("#CCrearUsuario").on("submit", function (e) {
+                e.preventDefault(); // Evitar envío tradicional del formulario
+
+                // Limpiar errores previos
+                $("span.text-danger").html("");
+                $("input").removeClass("input-validation-error");
+
+                $.ajax({
+                    url: '@Url.Action("PVCreate", "Ordens")',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Dirección creada exitosamente.");
+                            // Realiza alguna acción como redirigir o actualizar la UI
+                        } else {
+                            // Muestra los errores de validación
+                            $.each(response.errors, function (field, messages) {
+                                var errorSpan = $("span[data-valmsg-for='" + field + "']");
+                                errorSpan.html(messages.join("<br>"));
+                                $("input[name='" + field + "']").addClass("input-validation-error");
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Ocurrió un error al procesar la solicitud.");
+                    }
+                });
+            });
+        });
+    </script>
 }

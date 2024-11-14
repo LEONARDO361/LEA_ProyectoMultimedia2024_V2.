@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<LEA_ProyectoMultimedia2024_V2_.Models.Tables.Producto>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Producto";
 }
 
 <h1>Producto</h1>
@@ -12,40 +12,17 @@
 <table class="table" id="TablaProducto">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cantidad)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Procedencia)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Marca)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categoria.Pesokg)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descuento.PorcentajeDescuento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descuento.FechaFin)
-            </th>
-
+            <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+            <th>@Html.DisplayNameFor(model => model.Descripcion)</th>
+            <th>@Html.DisplayNameFor(model => model.Precio)</th>
+            <th>@Html.DisplayNameFor(model => model.Cantidad)</th>
+            <th>@Html.DisplayNameFor(model => model.Procedencia)</th>
+            <th>@Html.DisplayNameFor(model => model.Estado)</th>
+            <th>@Html.DisplayNameFor(model => model.Marca)</th>
+            <th>@Html.DisplayNameFor(model => model.Categoria.Nombre)</th>
+            <th>@Html.DisplayNameFor(model => model.Categoria.Pesokg)</th>
+            <th>@Html.DisplayNameFor(model => model.Descuento.PorcentajeDescuento)</th>
+            <th>@Html.DisplayNameFor(model => model.Descuento.FechaFin)</th>
             <th></th>
         </tr>
     </thead>
@@ -53,63 +30,63 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Descripcion)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Precio)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Cantidad)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Procedencia)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Estado)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Marca)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Categoria.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Categoria.Pesokg)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Descuento.PorcentajeDescuento)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Descuento.FechaFin)
-                </td>
+                <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
+                <td>@Html.DisplayFor(modelItem => item.Precio)</td>
+                <td>@Html.DisplayFor(modelItem => item.Cantidad)</td>
+                <td>@Html.DisplayFor(modelItem => item.Procedencia)</td>
+                <td>@Html.DisplayFor(modelItem => item.Estado)</td>
+                <td>@Html.DisplayFor(modelItem => item.Marca)</td>
+                <td>@Html.DisplayFor(modelItem => item.Categoria.Nombre)</td>
+                <td>@Html.DisplayFor(modelItem => item.Categoria.Pesokg)</td>
+                <td>@Html.DisplayFor(modelItem => item.Descuento.PorcentajeDescuento)</td>
+                <td>@Html.DisplayFor(modelItem => item.Descuento.FechaFin)</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button class="btn btn-sm btn-info me-2" onclick="EditProductos(@item.ProductoId)">Editar</button>
                         <button class="btn btn-sm btn-primary me-2" onclick="DetailsProductos(@item.ProductoId)">Detalles</button>
-                        <button type="button" class="btn btn-danger text-end" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl(@item.ProductoId)">Eliminar</button>
+                        <button type="button" class="btn btn-danger text-end" onclick="openDeleteModalProducto('@item.ProductoId', '@item.Nombre')">Eliminar</button>
                     </div>
-
-
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-@section scripts
-{
-    <script>
-        $(document).ready(function () {
-            $('#TablaProducto').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
-                }
-            });
+<!-- Modal de Confirmación de Eliminación para Producto -->
+<div class="modal fade" id="deleteModalProducto" tabindex="-1" aria-labelledby="deleteModalLabelProducto" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="deleteModalLabelProducto">Eliminar Producto</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h3>¿Estás seguro de que quieres eliminar el producto <strong class="text-danger" id="Nombre"></strong>?</h3>
+                <form id="deleteFormProducto" method="post" class="mt-5">
+                    <input type="hidden" id="productoId" name="ProductoId" />
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                        <div class="col text-end">
+                            <input type="submit" value="Eliminar" class="btn btn-danger" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-        });
+    <script>
+
+        // Función para abrir el modal de eliminación para Producto
+    function openDeleteModalProducto(ProductoId, Nombre) {
+        $('#Nombre').text(Nombre); // Asigna el nombre del producto al modal
+        $('#ProductoId').val(ProductoId); // Asigna el id del producto al input oculto
+        $('#deleteFormProducto').attr('action', '/Producto/Delete/' + ProductoId); // Configura la acción del formulario de eliminación
+            $('#deleteModalProducto').modal('show'); // Muestra el modal
+        }
     </script>
 }

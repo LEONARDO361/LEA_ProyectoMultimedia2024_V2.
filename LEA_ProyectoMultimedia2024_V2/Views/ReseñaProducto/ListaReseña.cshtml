@@ -1,66 +1,42 @@
 ﻿@model IEnumerable<LEA_ProyectoMultimedia2024_V2_.Models.Tables.ReseñaProducto>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Reseñas";
 }
 
 <h1>Reseñas </h1>
 
 <p>
-    <a asp-action="PVCreate" id="BotonC" class="btn btn-success d-grid gap-2 d-grid">Añadir reseñas </a>
+    <a asp-action="PVCreate" id="BotonC" class="btn btn-success d-grid gap-2 d-grid">Añadir reseña</a>
 </p>
 <table class="table" id="TablaReseña">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Calificación)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comentario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaReseña)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cliente)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cliente.Apellido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Producto)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.Calificación)</th>
+            <th>@Html.DisplayNameFor(model => model.Comentario)</th>
+            <th>@Html.DisplayNameFor(model => model.FechaReseña)</th>
+            <th>@Html.DisplayNameFor(model => model.Cliente)</th>
+            <th>@Html.DisplayNameFor(model => model.Cliente.Apellido)</th>
+            <th>@Html.DisplayNameFor(model => model.Producto)</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Calificación)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Comentario)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaReseña)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Cliente.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Cliente.Apellido)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Producto.Nombre)
-                </td>
+                <td>@Html.DisplayFor(modelItem => item.Calificación)</td>
+                <td>@Html.DisplayFor(modelItem => item.Comentario)</td>
+                <td>@Html.DisplayFor(modelItem => item.FechaReseña)</td>
+                <td>@Html.DisplayFor(modelItem => item.Cliente.Nombre)</td>
+                <td>@Html.DisplayFor(modelItem => item.Cliente.Apellido)</td>
+                <td>@Html.DisplayFor(modelItem => item.Producto.Nombre)</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button class="btn btn-sm btn-info me-2" onclick="EditReseñas(@item.ReseñaId)">Editar</button>
                         <button class="btn btn-sm btn-primary me-2" onclick="DetailsReseñas(@item.ReseñaId)">Detalles</button>
-                        <button type="button" class="btn btn-danger text-end" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl(@item.ReseñaId)">Eliminar</button>
+                        <button type="button" class="btn btn-danger text-end" onclick="openDeleteModalReseña('@item.ReseñaId', '@item.Comentario')">Eliminar</button>
+
                     </div>
                 </td>
             </tr>
@@ -68,18 +44,41 @@
     </tbody>
 </table>
 
+<!-- Modal de Confirmación de Eliminación para Reseña -->
+<div class="modal fade" id="deleteModalReseña" tabindex="-1" aria-labelledby="deleteModalLabelReseña" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="deleteModalLabelReseña">Eliminar Reseña</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h3>¿Estás seguro de que quieres eliminar la reseña con el comentario <strong class="text-danger" id="Comentario"></strong>?</h3>
+                <form id="deleteFormReseña" method="post" class="mt-5">
+                    <input type="hidden" id="reseñaId" name="ReseñaId" />
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                        <div class="col text-end">
+                            <input type="submit" value="Eliminar" class="btn btn-danger" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-@section scripts
-{
     <script>
-        $(document).ready(function () {
-            $('#TablaReseña').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
-                }
-            });
 
-        });
+
+        // Función para abrir el modal de eliminación para Reseña
+    function openDeleteModalReseña(reseñaId, Comentario) {
+        $('#Comentario').text(Comentario); // Asigna el comentario de la reseña al modal
+            $('#reseñaId').val(reseñaId); // Asigna el id de la reseña al input oculto
+            $('#deleteFormReseña').attr('action', '/ReseñaProducto/Delete/' + reseñaId); // Configura la acción del formulario de eliminación
+            $('#deleteModalReseña').modal('show'); // Muestra el modal
+        }
     </script>
 }

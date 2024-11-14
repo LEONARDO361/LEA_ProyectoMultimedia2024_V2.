@@ -163,6 +163,7 @@
         //editar metodoDepago
         function EditMetodoDepago(id) {
             $("#Carga_VPMetodoDePago").load('@Url.Action("PVEdit", "MetodoPagoes")' + '?id=' + id);
+            Desabilitar();
         }
 
         //editar orden
@@ -173,7 +174,7 @@
 
         // editar producto
         function EditProductos(id) {
-            $("#Carga_VPProducto").load('@Url.Action("PVEdit", "Producto")' + '?id=' + id);
+            $('#Carga_VPProducto').load('@Url.Action("PVEdit", "Producto")' + '?id=' + id);
             Desabilitar();
         }
 
@@ -357,6 +358,113 @@
                 });
             });
         });
+
+
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Obtener la pestaña activa del localStorage
+            var activeTab = localStorage.getItem('activeTab');
+
+            // Cargar la pestaña activa o la predeterminada
+            if (activeTab) {
+                $('#' + activeTab).tab('show');
+                cargarContenidoPorPestana(activeTab);
+            } else {
+                $('#nav-Reseñas-tab').tab('show');
+                cargarContenidoPorPestana('nav-Reseñas-tab');
+            }
+
+            // Manejar cambio de pestañas y almacenar en localStorage
+            $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var tabId = $(e.target).attr('id');
+                localStorage.setItem('activeTab', tabId);
+                cargarContenidoPorPestana(tabId);
+            });
+
+            // Activar búsqueda en todas las tablas
+            $('#generalSearch').on('input', function () {
+                var searchTerm = $(this).val().toLowerCase();
+                $('.tab-pane').each(function () {
+                    $(this).find('table tbody tr').each(function () {
+                        var rowText = $(this).text().toLowerCase();
+                        $(this).toggle(rowText.includes(searchTerm));
+                    });
+                });
+            });
+        });
+
+        // Función para cargar el contenido de la pestaña seleccionada
+        function cargarContenidoPorPestana(tabId) {
+            switch (tabId) {
+                case 'nav-Reseñas-tab':
+                    Carga_VPReseñas();
+                    break;
+                case 'nav-Productos-tab':
+                    Carga_VPProducto();
+                    break;
+                case 'nav-Descuentos-tab':
+                    Carga_VPDescuentos();
+                    break;
+                case 'nav-Categorias-tab':
+                    Carga_VPCategorias();
+                    break;
+                case 'nav-Orden-tab':
+                    Carga_VPOrden();
+                    break;
+                case 'nav-MetodoDePago-tab':
+                    Carga_VPMetodoDePago();
+                    break;
+            }
+        }
+
+        // Funciones de carga para cada pestaña
+        function Carga_VPReseñas() {
+            $("#Carga_VPReseñas").load('@Url.Action("ListaReseña", "ReseñaProducto")', function () {
+                // Configuración de DataTable aquí
+            });
+        }
+
+        function Carga_VPProducto() {
+            $("#Carga_VPProducto").load('@Url.Action("ListaProducto", "Producto")', function () {
+                // Configuración de DataTable aquí
+            });
+        }
+
+        function Carga_VPDescuentos() {
+            $("#Carga_VPDescuentos").load('@Url.Action("ListaDescuento", "Descuento")', function () {
+                // Configuración de DataTable aquí
+            });
+        }
+
+        function Carga_VPCategorias() {
+            $("#Carga_VPCategorias").load('@Url.Action("ListaCategoria", "Categorias")', function () {
+                // Configuración de DataTable aquí
+            });
+        }
+
+        function Carga_VPOrden() {
+            $("#Carga_VPOrden").load('@Url.Action("ListaOrden", "Ordens")', function () {
+                // Configuración de DataTable aquí
+            });
+        }
+
+        function Carga_VPMetodoDePago() {
+            $("#Carga_VPMetodoDePago").load('@Url.Action("ListaMetodoDePago", "MetodoPagoes")', function () {
+            // Configuración de DataTable aquí
+        });
+    }
+
+    function Desabilitar() {
+        $('#nav-Reseñas-tab').addClass('disabled');
+        $('#nav-Productos-tab').addClass('disabled');
+        $('#nav-Descuentos-tab').addClass('disabled');
+        $('#nav-Categorias-tab').addClass('disabled');
+        $('#nav-Orden-tab').addClass('disabled');
+        $('#nav-MetodoDePago-tab').addClass('disabled');
+    }
     </script>
 
 }

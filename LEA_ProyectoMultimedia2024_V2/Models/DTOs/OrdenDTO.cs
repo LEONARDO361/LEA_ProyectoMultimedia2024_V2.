@@ -12,15 +12,15 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
         public int OrdenId { get; set; }
 
         [Required(ErrorMessage = "Falta el campo FechaOrden")]
-        public DateOnly FechaOrden { get; set; }
+        [DataType(DataType.Date, ErrorMessage = "Fecha de orden inválida")]
+        public DateOnly? FechaOrden { get; set; } // Cambiado a nullable con mensaje de error personalizado
 
         [Required(ErrorMessage = "Falta el campo Total")]
-        public int Total { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "El total debe ser un valor positivo")]
+        public int? Total { get; set; } // Cambiado a nullable con un rango para evitar el valor 0 o negativo
 
         [Required(ErrorMessage = "Falta el campo Estado")]
-
         [StringLength(50)]
-
         public string Estado { get; set; }
 
         [Required(ErrorMessage = "Falta el campo ClienteId")]
@@ -32,8 +32,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
         public virtual Cliente Cliente { get; set; }
 
         [Required(ErrorMessage = "Falta el campo DetalleOrden")]
-
         [InverseProperty("Orden")]
         public virtual ICollection<DetalleOrden> DetalleOrden { get; set; } = new List<DetalleOrden>();
     }
+
 }

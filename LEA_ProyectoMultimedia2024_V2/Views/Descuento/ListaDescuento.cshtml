@@ -12,18 +12,10 @@
 <table class="table" id="TablaDescuento">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PorcentajeDescuento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaInicio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaFin)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TipoDescuento)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.PorcentajeDescuento)</th>
+            <th>@Html.DisplayNameFor(model => model.FechaInicio)</th>
+            <th>@Html.DisplayNameFor(model => model.FechaFin)</th>
+            <th>@Html.DisplayNameFor(model => model.TipoDescuento)</th>
             <th></th>
         </tr>
     </thead>
@@ -31,23 +23,15 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PorcentajeDescuento)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaInicio)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaFin)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TipoDescuento)
-                </td>
+                <td>@Html.DisplayFor(modelItem => item.PorcentajeDescuento)</td>
+                <td>@Html.DisplayFor(modelItem => item.FechaInicio)</td>
+                <td>@Html.DisplayFor(modelItem => item.FechaFin)</td>
+                <td>@Html.DisplayFor(modelItem => item.TipoDescuento)</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button class="btn btn-sm btn-info me-2" onclick="EditDescuento(@item.DescuentoId)">Editar</button>
                         <button class="btn btn-sm btn-primary me-2" onclick="DetailsDescuento(@item.DescuentoId)">Detalles</button>
-                        <button type="button" class="btn btn-danger text-end" onclick="openDeleteModal('@item.DescuentoId', '@item.PorcentajeDescuento')">Eliminar</button>
+                        <button type="button" class="btn btn-danger" onclick="openDeleteModalDescuento('@item.DescuentoId', '@item.PorcentajeDescuento')">Eliminar</button>
                     </div>
                 </td>
             </tr>
@@ -55,7 +39,7 @@
     </tbody>
 </table>
 
-<!-- Modal de Confirmación de Eliminación -->
+<!-- Modal de Confirmación de Eliminación para Descuento -->
 <div class="modal fade" id="deleteModalDescuento" tabindex="-1" aria-labelledby="deleteModalLabelDescuento" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -81,20 +65,11 @@
     </div>
 </div>
 
-@section scripts
-{
     <script>
-        $(document).ready(function () {
-            $('#TablaDescuento').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
-                }
-            });
-        });
 
-        // Función para abrir el modal de eliminación
-        function openDeleteModal(descuentoId, descuentoName) {
-            $('#descuentoName').text(descuentoName); // Asigna el nombre del descuento al modal
+        // Función para abrir el modal de eliminación para Descuento
+        function openDeleteModalDescuento(descuentoId, descuentoName) {
+            $('#descuentoName').text(descuentoName); // Asigna el nombre o porcentaje del descuento al modal
             $('#descuentoId').val(descuentoId); // Asigna el id del descuento al input oculto
             $('#deleteFormDescuento').attr('action', '/Descuento/Delete/' + descuentoId); // Configura la acción del formulario de eliminación
             $('#deleteModalDescuento').modal('show'); // Muestra el modal

@@ -1,52 +1,61 @@
 ﻿@model LEA_ProyectoMultimedia2024_V2_.Models.Tables.Orden
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Detalles Orden";
 }
 
 <h1>Detalles Orden</h1>
 
-
 <hr />
 
-    <div class="row">
-        <div class="col-4">
-            <div class="form-group">
-                <label asp-for="FechaOrden" class="control-label"></label>
-                <input asp-for="FechaOrden" class="form-control" />
-                <span asp-validation-for="FechaOrden" class="text-danger"></span>
-            </div>
+<div class="row">
+    <div class="col-4">
+        <div class="form-group">
+            <label asp-for="FechaOrden" class="control-label"></label>
+            <input asp-for="FechaOrden" class="form-control" readonly />
+            <span asp-validation-for="FechaOrden" class="text-danger"></span>
         </div>
-        <div class="col-4">
-
-            <div class="form-group">
-                <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
-                <span asp-validation-for="Total" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-4">
-
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="form-group">
-                <label asp-for="Cliente" class="control-label"></label>
-                <select asp-for="ClienteId" class="form-control form-select" asp-items="ViewBag.ClienteId"></select>
-                <span asp-validation-for="ClienteId" class="text-danger"></span>
-            </div>
-
-        </div>
-
-    </div><div class="row">
-        <div class="col-12 text-end">
-        <button class="btn btn-success" onclick=" EditOrden(@Model?.OrdenId)">Editar Orden</button>
-        <a asp-action="Index" asp-controller="Mantenedores" class="btn btn-info">Volver</a>
-        </div>
-
     </div>
+    <div class="col-4">
+        <div class="form-group">
+            <label asp-for="Total" class="control-label"></label>
+            <input asp-for="Total" class="form-control" readonly />
+            <span asp-validation-for="Total" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="form-group">
+            <label asp-for="Estado" class="control-label"></label>
+            <input asp-for="Estado" class="form-control" readonly />
+            <span asp-validation-for="Estado" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="form-group">
+            <label asp-for="ClienteId" class="control-label"></label>
+            <select asp-for="ClienteId" class="form-control form-select" asp-items="ViewBag.ClienteId" disabled>
+                <option>Seleccione un Cliente</option>
+            </select>
+            <span asp-validation-for="ClienteId" class="text-danger"></span>
+        </div>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col-12 text-end">
+        <button class="btn btn-success" onclick="EditOrden(@Model?.OrdenId)">Editar Orden</button>
+        <a asp-action="Index" asp-controller="Mantenedores" class="btn btn-info">Volver</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function EditOrden(ordenId) {
+            if (ordenId) {
+                window.location.href = '@Url.Action("PVEdit", "Ordens")' + '?id=' + ordenId;
+            } else {
+                alert("ID de la orden no válido.");
+            }
+        }
+    </script>
+}

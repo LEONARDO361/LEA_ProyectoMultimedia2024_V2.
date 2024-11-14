@@ -17,10 +17,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
         [Required(ErrorMessage = "Falta el campo Descripcion")]
         [StringLength(100)]
         public string Descripcion { get; set; }
-
         [Required(ErrorMessage = "Falta el campo Peso")]
+        [Range(0.01, (double)decimal.MaxValue, ErrorMessage = "El valor ingresado no es válido.")]
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal Pesokg { get; set; }
+        public decimal? Pesokg { get; set; }
 
         [InverseProperty("Categoria")]
         public virtual ICollection<Producto> Producto { get; set; } = new List<Producto>();

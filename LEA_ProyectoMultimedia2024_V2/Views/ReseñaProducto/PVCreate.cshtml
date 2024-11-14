@@ -8,14 +8,14 @@
 
 
 <hr />
-<form asp-action="PVCreate">
+<form asp-action="PVCreate" id="PCreate">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="row">
         <div class="col-4">
             <div class="form-group">
                 <label asp-for="Producto" class="control-label"></label>
-                <select asp-for="ProductoId" class="form-control" asp-items="ViewBag.ProductoId"></select>
+                <select asp-for="ProductoId" class="form-control form-select" asp-items="ViewBag.ProductoId"></select>
             </div>
         </div>
         <div class="col-4">
@@ -61,4 +61,42 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(document).ready(function () {
+            $("#PCreate").on("submit", function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '@Url.Action("PVCreate", "ReseñaProducto")',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.href = '@Url.Action("Index", "Mantenedores")';
+                        } else {
+                            $("span.text-danger").html("");
+                            $.each(response.errors, function (key, value) {
+                                $('span[data-valmsg-for="' + key + '"]').html(value.join("<br>"));
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
+                        alert("Ocurrió un error al procesar la solicitud.");
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $("#PCreate").on("submit", function (e) {
+                e.preventDefault();
+
+                $.ajax({
+
+                });
+            });
+        });
+
+    </script>
 }

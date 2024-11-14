@@ -8,20 +8,20 @@
 
 
 <hr />
-<form asp-action="PVCreate" method="post">
+<form asp-action="PVCreate" id="CCrearUsuario" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <div class="row">
     <div class="col-4">
             <div class="form-group">
                 <label asp-for="PorcentajeDescuento" class="control-label"></label>
-                <input asp-for="PorcentajeDescuento" class="form-control" required />
+                <input asp-for="PorcentajeDescuento" class="form-control"  />
                 <span asp-validation-for="PorcentajeDescuento" class="text-danger"></span>
             </div>
     </div>
     <div class="col-4">
             <div class="form-group">
                 <label asp-for="FechaInicio" class="control-label"></label>
-                <input asp-for="FechaInicio" class="form-control" required />
+                <input asp-for="FechaInicio" class="form-control"  />
                 <span asp-validation-for="FechaInicio" class="text-danger"></span>
             </div>
     </div>
@@ -31,14 +31,14 @@
 
             <div class="form-group">
                 <label asp-for="FechaFin" class="control-label"></label>
-                <input asp-for="FechaFin" class="form-control" required />
+                <input asp-for="FechaFin" class="form-control"  />
                 <span asp-validation-for="FechaFin" class="text-danger"></span>
             </div>
     </div>
     <div class="col-4">
             <div class="form-group">
                 <label asp-for="TipoDescuento" class="control-label"></label>
-                <input asp-for="TipoDescuento" class="form-control" required />
+                <input asp-for="TipoDescuento" class="form-control"  />
                 <span asp-validation-for="TipoDescuento" class="text-danger"></span>
             </div>
     </div>
@@ -54,4 +54,41 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            $("#CCrearUsuario").on("submit", function (e) {
+                e.preventDefault(); // Evitar envío tradicional del formulario
+
+                // Limpiar errores previos
+                $("span.text-danger").html("");
+                $("input").removeClass("input-validation-error");
+
+                $.ajax({
+                    url: '@Url.Action("PVCreate", "Descuento")',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Dirección creada exitosamente.");
+                            // Realiza alguna acción como redirigir o actualizar la UI
+                        } else {
+                            // Muestra los errores de validación
+                            $.each(response.errors, function (field, messages) {
+                                var errorSpan = $("span[data-valmsg-for='" + field + "']");
+                                errorSpan.html(messages.join("<br>"));
+                                $("input[name='" + field + "']").addClass("input-validation-error");
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Ocurrió un error al procesar la solicitud.");
+                    }
+                });
+            });
+        });
+    </script>
 }
+
+
+

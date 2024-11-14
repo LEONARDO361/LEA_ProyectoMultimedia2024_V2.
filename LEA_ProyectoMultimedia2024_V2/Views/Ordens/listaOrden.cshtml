@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<LEA_ProyectoMultimedia2024_V2_.Models.Tables.Orden>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Orden";
 }
 
 <h1>Orden</h1>
@@ -12,18 +12,10 @@
 <table class="table" id="TablaOrden">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaOrden)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Total)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cliente)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.FechaOrden)</th>
+            <th>@Html.DisplayNameFor(model => model.Total)</th>
+            <th>@Html.DisplayNameFor(model => model.Estado)</th>
+            <th>@Html.DisplayNameFor(model => model.Cliente)</th>
             <th></th>
         </tr>
     </thead>
@@ -31,41 +23,57 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaOrden)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Total)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Estado)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Cliente.Nombre)
-                </td>
+                <td>@Html.DisplayFor(modelItem => item.FechaOrden)</td>
+                <td>@Html.DisplayFor(modelItem => item.Total)</td>
+                <td>@Html.DisplayFor(modelItem => item.Estado)</td>
+                <td>@Html.DisplayFor(modelItem => item.Cliente.Nombre)</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button class="btn btn-sm btn-info me-2" onclick="EditOrden(@item.OrdenId)">Editar</button>
                         <button class="btn btn-sm btn-primary me-2" onclick="DetailsOrden(@item.OrdenId)">Detalles</button>
-                        <button type="button" class="btn btn-danger text-end" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteUrl(@item.OrdenId)">Eliminar</button>
+                        <button type="button" class="btn btn-danger" onclick="openDeleteModalOrden('@item.OrdenId', '@item.Cliente.Nombre')">Eliminar</button>
                     </div>
-
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-@section scripts
-{
-    <script>
-        $(document).ready(function () {
-            $('#TablaOrden').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
-                }
-            });
+<!-- Modal de Confirmación de Eliminación para Orden -->
+<div class="modal fade" id="deleteModalOrden" tabindex="-1" aria-labelledby="deleteModalLabelOrden" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="deleteModalLabelOrden">Eliminar Orden</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h3>¿Estás seguro de que quieres eliminar la orden de <strong class="text-danger" id="ordenCliente"></strong>?</h3>
+                <form id="deleteFormOrden" method="post" class="mt-5">
+                    <input type="hidden" id="ordenId" name="OrdenId" />
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                        <div class="col text-end">
+                            <input type="submit" value="Eliminar" class="btn btn-danger" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-        });
+    <script>
+
+
+        // abre el modal
+        function openDeleteModalOrden(ordenId, clienteNombre) {
+            $('#ordenCliente').text(clienteNombre); // Asigna el nombre del cliente al modal
+            $('#ordenId').val(ordenId); // Asigna el id de la orden al input oculto
+            $('#deleteFormOrden').attr('action', '/Ordens/Delete/' + ordenId); // Configura la acción del formulario de eliminación
+            $('#deleteModalOrden').modal('show'); // Muestra el modal
+        }
     </script>
 }

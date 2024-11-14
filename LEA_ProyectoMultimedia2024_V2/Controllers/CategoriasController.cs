@@ -61,31 +61,17 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PVCreate([Bind("CategoriaId,Nombre,Descripcion,Pesokg")] CategoriaDTO categoria)
         {
-          
-
             if (ModelState.IsValid)
             {
                 var DTO = categoria.toOriginal();
                 await _categorias.AddCategoriaAsync(DTO);
-                return Json(new { success = true, message = "Cliente creado exitosamente" });
+                TempData["SuccessMessage"] = "Cliente creado exitosamente";
+                return RedirectToAction("Index");
             }
             else
             {
-                var errors = ModelState
-                    .Where(a => a.Value.Errors.Any())
-                    .ToDictionary(
-                        kvp => kvp.Key,
-                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
-                    );
-
-                return Json(new
-                {
-                    succes = false,
-                    errors
-
-
-                });
-
+                ModelState.AddModelError("", "Hay errores en el formulario. Por favor, revísalos.");
+                return View(categoria);
             }
         }
 
@@ -107,14 +93,20 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PVEdit(int id, [Bind("CategoriaId,Nombre,Descripcion,Pesokg")] CategoriaDTO categoria)
         {
-
-
-
             if (ModelState.IsValid)
             {
                 var CategoriaOriginal = categoria.toOriginal();
                 await _categorias.UpdateCategoriaAsync(CategoriaOriginal);
-                return Json(new { success = true, message = "Cliente creado exitosamente" });
+
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = true, message = "Cliente actualizado exitosamente" });
+                }
+                else
+                {
+                    TempData["SuccessMessage"] = "Cliente actualizado exitosamente";
+                    return RedirectToAction("Index");
+                }
             }
             else
             {
@@ -125,15 +117,19 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                         kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
                     );
 
-                return Json(new
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 {
-                    succes = false,
-                    errors
-
-
-                });
+                    return Json(new { success = false, errors });
+                }
+                else
+                {
+                    // Regresar la vista con el modelo y los errores de validación
+                    ModelState.AddModelError("", "Hay errores en el formulario. Por favor, revísalos.");
+                    return View(categoria);
+                }
             }
         }
+
         // GET: Categorias/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

@@ -16,15 +16,16 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
         [Column("ClienteID")]
         public int ClienteId { get; set; }
         [Required(ErrorMessage = "Falta el campo Calificación")]
-        public int Calificación { get; set; }
+        [Range(1, 5, ErrorMessage = "La calificación debe estar entre 1 y 5")]
+        public int? Calificación { get; set; }
+
 
         [Required(ErrorMessage = "Falta el campo Comentario")]
         [StringLength(500)]
         public string Comentario { get; set; }
         [Required(ErrorMessage = "Falta el campo FechaReseña")]
-
         [Column(TypeName = "datetime")]
-        public DateTime FechaReseña { get; set; }
+        public DateTime? FechaReseña { get; set; } // Cambiado a nullable para permitir la validación
 
 
         [ForeignKey("ClienteId")]

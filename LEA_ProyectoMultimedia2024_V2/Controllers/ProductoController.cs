@@ -60,15 +60,25 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PVCreate([Bind("ProductoId,Nombre,Descripcion,Precio,Cantidad,Procedencia,Estado,Marca,CategoriaId")] ProductoDTO producto)
         {
-          
             if (ModelState.IsValid)
             {
                 var DTO = producto.toOriginal();
                 await _producto.CreateProductoAsync(DTO);
-                return Json(new { success = true, message = "Cliente creado exitosamente" });
+
+                // Responder con JSON solo si la solicitud es AJAX
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = true, message = "Producto creado exitosamente" });
+                }
+                else
+                {
+                    TempData["SuccessMessage"] = "Producto creado exitosamente";
+                    return RedirectToAction("Index");
+                }
             }
             else
             {
+                ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre");
                 var errors = ModelState
                     .Where(a => a.Value.Errors.Any())
                     .ToDictionary(
@@ -76,17 +86,20 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                         kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
                     );
 
-                return Json(new
+                // Responder con JSON solo si la solicitud es AJAX
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 {
-                    succes = false,
-                    errors
-
-
-                });
-
+                    return Json(new { success = false, errors });
+                }
+                else
+                {
+                    // Agregar un mensaje de error genérico y devolver la vista con los errores de validación
+                    ModelState.AddModelError("", "Hay errores en el formulario. Por favor, revísalos.");
+                    return View(producto);
+                }
             }
-
         }
+
 
         // GET: Productoes/Edit/5
         public async Task<IActionResult> PVEdit(int? id)
@@ -95,7 +108,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre", producto.CategoriaId);
  
             var ProductoDto = producto.toDto();
-            return PartialView(producto);
+            return PartialView(ProductoDto);
         }
 
         // POST: Productoes/Edit/5
@@ -105,12 +118,46 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PVEdit(int id, [Bind("ProductoId,Nombre,Descripcion,Precio,Cantidad,Procedencia,Estado,Marca,CategoriaId")] ProductoDTO producto)
         {
-                 var ProductoOriginal = producto.toOriginal();
-                 await _producto.UpdateProductoAsync(ProductoOriginal);
-                 return RedirectToAction("Index","Mantenedores");
-            
+            if (ModelState.IsValid)
+            {
+                var ProductoOriginal = producto.toOriginal();
+                await _producto.UpdateProductoAsync(ProductoOriginal);
 
+                // Responder con JSON solo si la solicitud es AJAX
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = true, message = "Producto actualizado exitosamente" });
+                }
+                else
+                {
+                    TempData["SuccessMessage"] = "Producto actualizado exitosamente";
+                    return RedirectToAction("Index", "Mantenedores");
+                }
+            }
+            else
+            {
+                // Cargar los datos necesarios para la vista en caso de error
+                ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre", producto.CategoriaId);
 
+                var errors = ModelState
+                    .Where(a => a.Value.Errors.Any())
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
+                    );
+
+                // Responder con JSON solo si la solicitud es AJAX
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, errors });
+                }
+                else
+                {
+                    // Agregar un mensaje de error genérico y devolver la vista con los errores de validación
+                    ModelState.AddModelError("", "Hay errores en el formulario. Por favor, revísalos.");
+                    return View(producto);
+                }
+            }
         }
 
         // GET: Productoes/Delete/5

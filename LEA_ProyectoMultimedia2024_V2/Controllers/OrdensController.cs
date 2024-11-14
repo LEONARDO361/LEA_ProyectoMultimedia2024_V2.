@@ -40,11 +40,37 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: Ordens/Details/5
         public async Task<IActionResult> PVDetails(int? id)
         {
+            try
+            {
+                if (id == null)
+                {
+                    return BadRequest("ID inválido.");
+                }
 
+                // Obtén la orden específica por su ID
+                var orden = await _Orden.BuscOrden(id.Value);
+                if (orden == null)
+                {
+                    return NotFound("Orden no encontrada.");
+                }
 
-            var orden = await _Orden.GetAllOrdenesAsync();
-            ViewData["ClienteId"] = new SelectList(orden, "ClienteId", "Nombre");
-            return PartialView(orden);
+                // Asegúrate de que GetAllClientesAsync devuelva una lista válida
+                var clientes = await _Orden.GetAllOrdensAsync();
+                if (clientes == null || !clientes.Any())
+                {
+                    return StatusCode(500, "No se pudieron cargar los clientes.");
+                }
+
+                // Configura el SelectList para ClienteId
+                ViewBag.ClienteId = new SelectList(clientes, "ClienteId", "Nombre");
+
+                return PartialView(orden);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en PVDetails: {ex.Message}");
+                return StatusCode(500, "Error interno del servidor.");
+            }
         }
 
         // GET: Ordens/Create
@@ -61,12 +87,20 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PVCreate([Bind("OrdenId,FechaOrden,Total,Estado,ClienteId")] OrdenDTO orden)
         {
-           
+            if (ModelState.IsValid)
+            {
                 var DTO = orden.toOriginal();
                 await _Orden.CreateOrdenAsync(DTO);
-                return RedirectToAction("Index","Mantenedores");
 
-
+                TempData["SuccessMessage"] = "Orden creada exitosamente";
+                return RedirectToAction("Index", "Mantenedores");
+            }
+            else
+            {
+                ViewData["ClienteId"] = new SelectList(await _Orden.GetAllOrdensAsync(), "ClienteId", "Nombre");
+                ModelState.AddModelError("", "Hay errores en el formulario. Por favor, revísalos.");
+                return View(orden);
+            }
         }
 
         // GET: Ordens/Edit/5
@@ -76,7 +110,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             var orden = await _Orden.BuscOrden(id.Value);
             ViewData["ClienteId"] = (await _Orden.BuscOrden(id.Value) , "ClienteId", "Nombre");
             var OrdenDTO = orden.toDto;
-            return PartialView(orden);
+            return PartialView(OrdenDTO);
         }
 
         // POST: Ordens/Edit/5
@@ -86,22 +120,46 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PVEdit(int id, [Bind("OrdenId,FechaOrden,Total,Estado,ClienteId")] OrdenDTO orden)
         {
-            var OrdenOriginal = orden.toOriginal();
-            await _Orden.UpdateOrdenAsync(OrdenOriginal);
-            return RedirectToAction("Index","Mantenedores");
+            if (ModelState.IsValid)
+            {
+                var OrdenOriginal = orden.toOriginal();
+                await _Orden.UpdateOrdenAsync(OrdenOriginal);
 
+                // Manejo de solicitud AJAX
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = true, message = "Orden actualizada exitosamente" });
+                }
+                else
+                {
+                    TempData["SuccessMessage"] = "Orden actualizada exitosamente";
+                    return RedirectToAction("Index", "Mantenedores");
+                }
+            }
+            else
+            {
+                // Obtener los errores de ModelState
+                var errors = ModelState
+                    .Where(a => a.Value.Errors.Any())
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
+                    );
+
+                // Manejo de solicitud AJAX en caso de error
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, errors });
+                }
+                else
+                {
+                    // Regresar la vista con el modelo y los errores de validación
+                    ModelState.AddModelError("", "Hay errores en el formulario. Por favor, revísalos.");
+                    return View(orden);
+                }
+            }
         }
 
-        // GET: Ordens/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-           
-
-            var orden = await _Orden.GetOrdenByIdAsync(id.Value);
-
-            
-            return PartialView(orden);
-        }
 
         // POST: Ordens/Delete/5
         [HttpPost, ActionName("Delete")]

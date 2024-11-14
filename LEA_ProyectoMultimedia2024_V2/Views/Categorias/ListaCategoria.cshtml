@@ -42,7 +42,7 @@
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button class="btn btn-sm btn-info me-2" onclick="EditCategorias(@item.CategoriaId)">Editar</button>
                         <button class="btn btn-sm btn-primary me-2" onclick="DetailsCategorias(@item.CategoriaId)">Detalles</button>
-                        <button type="button" class="btn btn-danger text-end" onclick="openDeleteModal('@item.CategoriaId', '@item.Nombre')">Eliminar</button>
+                        <button type="button" class="btn btn-danger text-end" onclick="openDeleteModalCategoria('@item.CategoriaId', '@item.Nombre')">Eliminar</button>
                     </div>
                 </td>
             </tr>
@@ -50,7 +50,7 @@
     </tbody>
 </table>
 
-<!-- Modal de Confirmación de Eliminación -->
+<!-- Modal de Confirmación de Eliminación para Categoría -->
 <div class="modal fade" id="deleteModalCategoria" tabindex="-1" aria-labelledby="deleteModalLabelCategoria" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -59,7 +59,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <h3>¿Estás seguro de que quieres eliminar la categoría <strong class="text-danger" id="categoriaName"></strong>?</h3>
+                <h3>¿Estás seguro de que quieres eliminar la categoría <strong class="text-danger" id="Nombre"></strong>?</h3>
                 <form id="deleteFormCategoria" method="post" class="mt-5">
                     <input type="hidden" id="categoriaId" name="CategoriaId" />
                     <div class="row">
@@ -76,19 +76,12 @@
     </div>
 </div>
 
-
-
-    <script>
-
-        });
-
-        // Función para abrir el modal de eliminación
-        function openDeleteModal(categoriaId, categoriaName) {
-            $('#categoriaName').text(categoriaName); // Asigna el nombre de la categoría al modal
-            $('#categoriaId').val(categoriaId); // Asigna el id de la categoría al input oculto
-            $('#deleteFormCategoria').attr('action', '/Categoria/Delete/' + categoriaId); // Configura la acción del formulario de eliminación
-            $('#deleteModalCategoria').modal('show'); // Muestra el modal
-        }
-    </script>
-
-
+<script>
+    // Función para abrir el modal de eliminación para Categoría
+    function openDeleteModalCategoria(CategoriaId, Nombre) {
+        $('#Nombre').text(Nombre); // Asigna el nombre de la categoría al modal
+        $('#CategoriaId').val(CategoriaId); // Asigna el id de la categoría al input oculto
+        $('#deleteFormCategoria').attr('action', '/Categorias/Delete/' + CategoriaId); // Configura la acción del formulario de eliminación
+        $('#deleteModalCategoria').modal('show'); // Muestra el modal
+    }
+</script>

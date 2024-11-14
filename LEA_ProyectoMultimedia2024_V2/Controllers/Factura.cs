@@ -1,79 +1,97 @@
-﻿
-using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
+using NBO_ProyectoMultimedia2024.Models.ViewModels;
 using System.Linq;
 using System.Threading.Tasks;
-using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
+using System.Collections.Generic;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
+using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 
-namespace CGS_ProyectoMultimedia2024.Controllers
+public class FacturasController : Controller
 {
-    public class FacturaController : Controller
+    private readonly ICliente _clientes;
+    private readonly IDireccionEnvios _direcciones;
+    private readonly IProducto _productos;
+
+    public FacturasController(ICliente clientes, IDireccionEnvios direcciones, IProducto productos)
     {
-        private readonly ICliente _clientes;
-        private readonly IDireccionEnvios _direccionEnvio;
-        private readonly IProducto _productos;
+        _clientes = clientes;
+        _direcciones = direcciones;
+        _productos = productos;
+    }
 
-        public FacturaController(ICliente clientes, IDireccionEnvios direccionEnvio, IProducto productos)
+    public async Task<IActionResult> Index()
+    {
+        var clientes = await _clientes.GetAllClientesAsync() ?? new List<Cliente>();
+        var productos = await _productos.GetProductosAsync() ?? new List<Producto>();
+
+        // Verificar si las listas no están vacías para evitar errores en la vista
+        if (!clientes.Any())
         {
-            _clientes = clientes;
-            _direccionEnvio = direccionEnvio;
-            _productos = productos;
+            ModelState.AddModelError("", "No hay clientes disponibles.");
         }
 
-        public async Task<IActionResult> Index()
+        if (!productos.Any())
         {
-            var clientes = await _clientes.GetAllClientesAsync();
-            var productos = await _productos.GetProductosAsync();
-
-            ViewBag.ClienteId = new SelectList(clientes, "ID_Cliente", "Nombre");
-            ViewBag.ProductoId = new SelectList(productos, "ID_Producto", "Nombre");
-
-            return View();
+            ModelState.AddModelError("", "No hay productos disponibles.");
         }
 
-        public async Task<JsonResult> GetDireccionesByCliente(int clienteId)
-        {
-            var direcciones = await _direccionEnvio.GetAllDireccionesAsync();
-            return Json(direcciones.Select(d => new
-            {
-                value = d.Dirección,
-                text = d.Provincia
-            }));
-        }
+        // Filtrar clientes y productos para evitar elementos con propiedades nulas
+        clientes = clientes.Where(c => c != null && c.ClienteId != 0 && !string.IsNullOrEmpty(c.Nombre)).ToList();
+        productos = productos.Where(p => p != null && p.ProductoId != 0 && !string.IsNullOrEmpty(p.Nombre)).ToList();
 
-        public async Task<JsonResult> GetClienteDetails(int clienteId)
-        {
-            var cliente = await _clientes.GetClienteByIdAsync(clienteId);
-            return Json(new
-            {
-                nombreCompleto = $"{cliente.Nombre} {cliente.Apellido}",
-                correo = cliente.CorreoElectronico,
-                telefono = cliente.Telefono
-            });
-        }
+        // Pasar datos a la vista usando ViewData
+        ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "Nombre");  // Cambiado a ClienteId
+        ViewData["Productos"] = new SelectList(productos, "ProductoId", "Nombre"); // Cambiado a ProductoId
 
-        public async Task<JsonResult> GetDireccionesDetails(int direccionId)
+        var viewModel = new FacturaViewModel
         {
-            var direccion = await _direccionEnvio.GetDireccionByIdAsync(direccionId);
-            return Json(new
-            {
-                direccion = direccion.Provincia,
-                ciudad = direccion.Ciudad,
-                codigoPostal = direccion.CodigoPostal
-            });
-        }
+            Clientes = clientes,
+            Productos = productos
+        };
 
-        public async Task<JsonResult> GetProductosDetails(int productoId)
+        return View(viewModel);
+    }
+
+    public async Task<JsonResult> GetDireccionesByCliente(int clienteId)
+    {
+        var direcciones = await _direcciones.GetDireccionesByClienteAsync(clienteId);
+        return Json(direcciones.Select(d => new
         {
-            var producto = await _productos.GetProductoByIdAsync(productoId);
-            return Json(new
-            {
-                nombreProducto = producto.Nombre,
-                precio = producto.Precio
-            });
-        }
+            value = d.DireccionId,
+            text = $"{d.Dirección} - {d.Ciudad}"
+        }));
+    }
+
+    public async Task<JsonResult> GetClienteDetails(int clienteId)
+    {
+        var cliente = await _clientes.GetClienteByIdAsync(clienteId);
+        return Json(new
+        {
+            nombreCompleto = $"{cliente?.Nombre} {cliente?.Apellido}", // Concatenar nombre completo
+            correo = cliente?.CorreoElectronico,
+            telefono = cliente?.Telefono
+        });
+    }
+
+    public async Task<JsonResult> GetDireccionesDetails(int direccionId)
+    {
+        var direccion = await _direcciones.GetDireccionByIdAsync(direccionId);
+        return Json(new
+        {
+            direccion = direccion?.Dirección,
+            ciudad = direccion?.Ciudad,
+            codigoPostal = direccion?.CodigoPostal
+        });
+    }
+
+    public async Task<JsonResult> GetProductosDetails(int productoId)
+    {
+        var producto = await _productos.GetProductoByIdAsync(productoId);
+        return Json(new
+        {
+            nombreProducto = producto?.Nombre,
+            precio = producto?.Precio
+        });
     }
 }

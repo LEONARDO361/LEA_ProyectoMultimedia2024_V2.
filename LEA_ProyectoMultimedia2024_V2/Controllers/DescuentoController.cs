@@ -60,12 +60,21 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PVCreate([Bind("DescuentoId,PorcentajeDescuento,FechaInicio,FechaFin,TipoDescuento")] DescuentoDTO descuento)
         {
-           
+            if (ModelState.IsValid)
+            {
                 var DTO = descuento.toOriginal();
                 await _Descuento.CreateDescuentoAsync(DTO);
-                return RedirectToAction("Index","Mantenedores");
 
+                TempData["SuccessMessage"] = "Descuento creado exitosamente";
+                return RedirectToAction("Index", "Mantenedores");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Hay errores en el formulario. Por favor, revísalos.");
+                return View(descuento);
+            }
         }
+
 
         // GET: Descuentoes/Edit/5
         public async Task<IActionResult> PVEdit(int? id)
@@ -84,20 +93,44 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PVEdit(int id, [Bind("DescuentoId,PorcentajeDescuento,FechaInicio,FechaFin,TipoDescuento")] DescuentoDTO descuento)
         {
+            if (ModelState.IsValid)
+            {
+                var DescuentoOriginal = descuento.toOriginal();
+                await _Descuento.UpdateDescuentoAsync(DescuentoOriginal);
 
-            var DescuentoOriginal = descuento.toOriginal();
-            await _Descuento.UpdateDescuentoAsync(DescuentoOriginal);
-            return RedirectToAction("Index", "Mantenedores");
-        }
+                // Manejo de solicitud AJAX
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = true, message = "Descuento actualizado exitosamente" });
+                }
+                else
+                {
+                    TempData["SuccessMessage"] = "Descuento actualizado exitosamente";
+                    return RedirectToAction("Index", "Mantenedores");
+                }
+            }
+            else
+            {
+                // Obtener los errores de ModelState
+                var errors = ModelState
+                    .Where(a => a.Value.Errors.Any())
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
+                    );
 
-        // GET: Descuentoes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-
-            var descuento = await _Descuento.GetDetails(id.Value);
-
-        
-            return PartialView(descuento);
+                // Manejo de solicitud AJAX en caso de error
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, errors });
+                }
+                else
+                {
+                    // Regresar la vista con el modelo y los errores de validación
+                    ModelState.AddModelError("", "Hay errores en el formulario. Por favor, revísalos.");
+                    return View(descuento);
+                }
+            }
         }
 
         // POST: Descuentoes/Delete/5

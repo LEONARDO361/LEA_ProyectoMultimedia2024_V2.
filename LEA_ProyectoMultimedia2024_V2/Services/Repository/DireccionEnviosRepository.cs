@@ -56,5 +56,21 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Repository
         { 
             return await _context.Cliente.ToListAsync();
         }
+        public async Task<IEnumerable<DireccionEnvio>> GetDireccionesByClienteAsync(int clienteId)
+        {
+            return await _context.DireccionEnvio
+                .Where(d => d.ClienteId == clienteId)
+                .ToListAsync();
+        }
+
+        // Implementación del método para obtener una dirección específica por su ID
+        public async Task<DireccionEnvio> GetDireccionByIdAsyncAA(int direccionId)
+        {
+            return await _context.DireccionEnvio
+                .FirstOrDefaultAsync(d => d.DireccionId == direccionId);
+        }
+
+
+
     }
 }

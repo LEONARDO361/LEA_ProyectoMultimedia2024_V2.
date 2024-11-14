@@ -51,6 +51,11 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Repository
         {
             return await _context.MetodoPago.AnyAsync(e => e.MetodoPagoId == id);
         }
+
+        public async Task<List<Cliente>> GetClientesAsync()
+        {
+            return await _context.Cliente.ToListAsync();
+        }
     }
 
 }

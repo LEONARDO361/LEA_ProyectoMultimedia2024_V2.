@@ -19,9 +19,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
         public string Descripcion { get; set; }
 
         [Required(ErrorMessage = "Falta el campo Precio")]
-        public int Precio { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "El precio debe ser un valor positivo")]
+        public int? Precio { get; set; }
+
         [Required(ErrorMessage = "Falta el campo Cantidad")]
-        public int Cantidad { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "La cantidad debe ser un valor positivo")]
+        public int? Cantidad { get; set; }
 
         [Required(ErrorMessage = "Falta el campo Procedencia")]
         [StringLength(500)]
@@ -55,4 +58,5 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
         [InverseProperty("Producto")]
         public virtual ICollection<ReseñaProducto> ReseñaProducto { get; set; } = new List<ReseñaProducto>();
     }
+
 }
