@@ -1,108 +1,320 @@
 ﻿@model NBO_ProyectoMultimedia2024.Models.ViewModels.FacturaViewModel
 
 <body>
-    <!-- Lista desplegable de clientes -->
-    <div class="row justify-content-md-center mt-2">
-        <div class="form-group col-md-4">
-            <label asp-for="IdCliente" class="control-label">Cliente</label>
-            <select asp-for="IdCliente" class="form-control form-select" asp-items="ViewBag.ClienteId" id="IdCliente" onchange="cargarClienteDetalles(), cargarDireccionesByCliente()">
-                <option value="">Seleccione un Cliente</option>
-            </select>
+
+<body>
+    <!-- Encabezado -->
+    <div class="container mt-4">
+        <div style="background-color: #3acaf7; height: 35px; margin-bottom: 35px;"></div>
+
+        <!-- Datos de la empresa -->
+        <div class="row">
+            <div class="col-md-8">
+                <h1>ChadStore Inc.</h1>
+                <p>Avenida Siempre Viva<br>bla bla #890</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <p><strong>Nº DE FACTURA:</strong> ES-001</p>
+            </div>
         </div>
-        <div class="col-md-4">
-            Nombre Completo:
-            <input type="text" id="Nombre" class="form-control" placeholder="Nombre Completo" readonly>
+
+        <hr>
+
+        <!-- Informacion del cliente y dirección -->
+        <div class="row">
+            <div class="col-md-6">
+                <h4>DATOS DEL CLIENTE</h4>
+                <select asp-for="IdCliente" class="form-control form-select" asp-items="ViewBag.ClienteId" id="IdCliente" onchange="cargarClienteDetalles(), cargarDireccionesByCliente()">
+                    <option value="">Seleccione un Cliente</option>
+                </select>
+                <p><input type="text" id="Nombre" class="form-control mt-2" placeholder="Nombre Completo" readonly></p>
+                <p><input type="text" id="Correo" class="form-control" placeholder="Email" readonly></p>
+                <p><input type="text" id="Telefono" class="form-control" placeholder="Número" readonly></p>
+            </div>
+            <div class="col-md-6">
+                <h4>DIRECCION DEL CLIENTE</h4>
+                <select asp-for="DireccionId" class="form-control form-select" id="DireccionId" onchange="cargarDireccionDetalles()">
+                    <option value="">Seleccione una dirección</option>
+                </select>
+                <p><input type="text" id="direccionUsuario" class="form-control mt-2" placeholder="Dirección" readonly></p>
+                <p><input type="text" id="ciudadDireccion" class="form-control" placeholder="Ciudad" readonly></p>
+                <p><input type="text" id="codigoPostalDireccion" class="form-control" placeholder="Código Postal" readonly></p>
+            </div>
         </div>
+
+        <hr>
+
+        <!-- Productos y detalles -->
+        <h4>LISTADO DE PRODUCTOS</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="ProductoId" class="form-label">Producto</label>
+                <select asp-for="ProductoId" class="form-control form-select" asp-items="ViewBag.Productos" id="ProductoId" onchange="cargarPrecioProducto()"></select>
+            </div>
+            <div class="col-md-3">
+                <label for="valorUnitario" class="form-label">Precio Unitario</label>
+                <input type="text" id="valorUnitario" class="form-control" readonly>
+            </div>
+            <div class="col-md-3">
+                <label for="cantidadProducto" class="form-label">Cantidad</label>
+                <input type="number" id="cantidadProducto" class="form-control">
+            </div>
+        </div>
+        <div class="text-end mt-2">
+            <button class="btn btn-primary" onclick="agregarProducto()">Agregar Producto</button>
+        </div>
+
+        <hr>
+
+        <!-- Tabla de detalles -->
+        <h4>TABLA DE DETALLE</h4>
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Valor Unitario</th>
+                        <th>Valor Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="detalleFactura">
+                    <!-- Filas de productos -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Totales -->
+        <div class="row mt-4">
+            <div class="col-md-8 text-end">
+                <p><strong>Subtotal:</strong></p>
+                <p><strong>IVA:</strong></p>
+                <p><strong>Total:</strong></p>
+            </div>
+            <div class="col-md-4">
+                <input type="text" id="valorSubtotal" class="form-control mb-2" readonly>
+                <input type="text" id="valorIVA" class="form-control mb-2" readonly>
+                <input type="text" id="valorTotal" class="form-control" readonly>
+            </div>
+        </div>
+
+
+        <div style="background-color: #3acaf7; height: 35px; margin-top: 35px;"></div>
     </div>
 
-    <div class="row justify-content-md-center mt-2 mb-3">
-        <div class="col-md-4">
-            Email:
-            <input type="text" id="Correo" class="form-control" placeholder="Email" readonly>
-        </div>
-        <div class="col-md-4">
-            Número:
-            <input type="text" id="Telefono" class="form-control" placeholder="Número" readonly>
-        </div>
-    </div>
+    <script>
+        const tasaIVA = 0.19;
 
-    <div class="row justify-content-md-center mt-2">
-        <div class="col-md-4 form-group">
-            <label asp-for="DireccionId" class="control-label">Dirección</label>
-            <select asp-for="DireccionId" class="form-control form-select" id="DireccionId" onchange="cargarDireccionDetalles()">
-                <option value="">Seleccione una dirección</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            Dirección:
-            <input type="text" id="direccionUsuario" class="form-control" placeholder="Dirección" readonly>
-        </div>
-    </div>
+        function cargarClienteDetalles() {
+            var clienteId = $('#IdCliente').val();
 
-    <div class="row justify-content-md-center mt-2 mb-3">
-        <div class="col-md-4">
-            Ciudad:
-            <input type="text" id="ciudadDireccion" class="form-control" placeholder="Ciudad" readonly>
-        </div>
-        <div class="col-md-4">
-            Código Postal:
-            <input type="text" id="codigoPostalDireccion" class="form-control" placeholder="Código Postal" readonly>
-        </div>
-    </div>
+            if (clienteId) {
+                $.ajax({
+                    url: '/Facturas/GetClienteDetails',
+                    type: 'GET',
+                    data: { clienteId: clienteId },
+                    success: function (cliente) {
+                        if (cliente) {
+                            $('#Nombre').val(cliente.nombreCompleto);
+                            $('#Correo').val(cliente.correo);
+                            $('#Telefono').val(cliente.telefono);
+                        } else {
+                            $('#Nombre').val('');
+                            $('#Correo').val('');
+                            $('#Telefono').val('');
+                        }
+                    },
+                    error: function () {
+                        alert('Error al cargar los detalles del cliente.');
+                    }
+                });
+            } else {
+                $('#Nombre').val('');
+                $('#Correo').val('');
+                $('#Telefono').val('');
+            }
+        }
 
-    <!-- Lista de Productos -->
-    <div class="row justify-content-md-center mt-3">
-        <div class="col-md-4">
-            <label asp-for="ProductoId" class="control-label">Producto</label>
-            <select asp-for="ProductoId" class="form-control form-select" asp-items="ViewBag.Productos" id="ProductoId" onchange="cargarPrecioProducto()"></select>
-        </div>
-    </div>
-    <div class="row justify-content-md-center mt-2 mb-3">
-        <div class="col-md-4">
-            <input type="text" id="valorUnitario" class="form-control" placeholder="Precio" readonly>
-        </div>
-        <div class="col-md-4">
-            <input type="number" id="cantidadProducto" class="form-control" placeholder="Cantidad">
-        </div>
-        <div class="col-md-2">
-            <button class="btn btn-primary" onclick="agregarProducto()">Agregar</button>
-        </div>
-    </div>
+        function cargarDireccionesByCliente() {
+            var clienteId = $('#IdCliente').val();
 
-    <!-- Tabla de detalles de la factura -->
-    <div class="table-responsive mb-4">
-        <table class="table table-bordered">
-            <thead class="table-light">
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Cantidad</th>
-                    <th>Valor Unitario</th>
-                    <th>Valor Total</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="detalleFactura">
-                <!-- Filas de productos agregados aquí -->
-            </tbody>
-        </table>
-    </div>
+            if (clienteId) {
+                $.ajax({
+                    url: '/Facturas/GetDireccionesByCliente',
+                    type: 'GET',
+                    data: { clienteId: clienteId },
+                    success: function (direcciones) {
+                        var direccionSelect = $('#DireccionId');
+                        direccionSelect.empty();
+                        direccionSelect.append(new Option("Seleccione una dirección", ""));
 
-    <!-- Totales -->
-    <div class="row">
-        <div class="col-md-4">
-            <label for="valorSubtotal" class="form-label">Subtotal:</label>
-            <input type="text" id="valorSubtotal" class="form-control" readonly>
-        </div>
-        <div class="col-md-4">
-            <label for="valorIVA" class="form-label">IVA (19%):</label>
-            <input type="text" id="valorIVA" class="form-control" readonly>
-        </div>
-        <div class="col-md-4">
-            <label for="valorTotal" class="form-label">Total:</label>
-            <input type="text" id="valorTotal" class="form-control" readonly>
-        </div>
-    </div>
+                        $.each(direcciones, function (index, direccion) {
+                            direccionSelect.append(new Option(direccion.text, direccion.value));
+                        });
+                    },
+                    error: function () {
+                        alert('Error al cargar las direcciones.');
+                    }
+                });
+            } else {
+                $('#DireccionId').empty();
+                $('#DireccionId').append(new Option("Seleccione una dirección", ""));
+            }
+        }
+
+        function cargarDireccionDetalles() {
+            var direccionId = $('#DireccionId').val();
+
+            if (direccionId) {
+                $.ajax({
+                    url: '/Facturas/GetDireccionesDetails',
+                    type: 'GET',
+                    data: { direccionId: direccionId },
+                    success: function (direccion) {
+                        if (direccion) {
+                            $('#direccionUsuario').val(direccion.direccion);
+                            $('#ciudadDireccion').val(direccion.ciudad);
+                            $('#codigoPostalDireccion').val(direccion.codigoPostal);
+                        } else {
+                            $('#direccionUsuario').val('');
+                            $('#ciudadDireccion').val('');
+                            $('#codigoPostalDireccion').val('');
+                        }
+                    },
+                    error: function () {
+                        alert('Error al cargar los detalles de la dirección.');
+                    }
+                });
+            } else {
+                $('#direccionUsuario').val('');
+                $('#ciudadDireccion').val('');
+                $('#codigoPostalDireccion').val('');
+            }
+        }
+
+        function cargarPrecioProducto() {
+            var productoId = $('#ProductoId').val();
+
+            if (productoId) {
+                $.ajax({
+                    url: '/Facturas/GetProductosDetails',
+                    type: 'GET',
+                    data: { productoId: productoId },
+                    success: function (producto) {
+                        if (producto) {
+                            $('#valorUnitario').val(Math.round(producto.precio));
+                        } else {
+                            $('#valorUnitario').val('');
+                        }
+                    },
+                    error: function () {
+                        alert('Error al cargar el precio del producto.');
+                    }
+                });
+            } else {
+                $('#valorUnitario').val('');
+            }
+        }
+
+        function agregarProducto() {
+            var productoId = $('#ProductoId').val();
+            var productoNombre = $('#ProductoId option:selected').text();
+            var cantidad = parseInt($('#cantidadProducto').val());
+            var valorUnitario = parseInt($('#valorUnitario').val());
+            var detalleFactura = $('#detalleFactura');
+
+            if (productoId && cantidad > 0 && !isNaN(valorUnitario)) {
+                var valorTotal = Math.round(valorUnitario * cantidad);
+                var fila = `
+                                    <tr>
+                                        <td>${productoId}</td>
+                                        <td>${productoNombre}</td>
+                                        <td>${cantidad}</td>
+                                        <td>$${Math.round(valorUnitario)}</td>
+                                        <td>$${valorTotal}</td>
+                                        <td><button class="btn btn-danger btn-sm" onclick="eliminarFila(this)">Eliminar</button></td>
+                                    </tr>
+                                `;
+                detalleFactura.append(fila);
+                calcularTotales();
+                $('#cantidadProducto').val('');
+                $('#valorUnitario').val('');
+            } else {
+                alert('Por favor, complete todos los campos correctamente.');
+            }
+        }
+
+        function eliminarFila(boton) {
+            $(boton).closest('tr').remove();
+            calcularTotales();
+        }
+
+        function calcularTotales() {
+            var subtotal = 0;
+
+            $('#detalleFactura tr').each(function () {
+                var valorTotal = parseInt($(this).find('td').eq(4).text().replace('$', ''));
+                subtotal += valorTotal;
+            });
+
+            var iva = Math.round(subtotal * tasaIVA);
+            var total = subtotal + iva;
+
+            $('#valorSubtotal').val(`$${subtotal}`);
+            $('#valorIVA').val(`$${iva}`);
+            $('#valorTotal').val(`$${total}`);
+        }
+    </script>
+    <style>
+        body {
+            background-color: #ff0000;
+            font-family: Courier New, Courier, monospace;
+        }
+
+        .form-control, .form-select {
+            background-color: #f0fc04; 
+            border: 1px solid #ccc; 
+            color: #000; 
+        }
+
+            .form-control[readonly] {
+                background-color: #f0fc04; 
+                opacity: 1; 
+            }
+
+            .form-control:focus, .form-select:focus {
+                border-color: #ec2c80;
+                box-shadow: 0 0 5px rgba(236, 44, 128, 0.5); 
+                outline: none;
+            }
+        .table-bordered th, .table-bordered td {
+            background-color: #f0fc04; 
+            border-color: #ccc;
+            color: #000; 
+        }
+
+        .table-light {
+            background-color: #fffdfa; 
+        }
+        h5, h6, p {
+            color: #000; 
+        }
+        .btn-primary {
+            background-color: #3acaf7; 
+            border: none;
+        }
+
+            .btn-primary:hover {
+                background-color: #c51d6d
+            }
+    </style>
+
+
+   
+</body>
+
 
     <script>
         const tasaIVA = 0.19;
