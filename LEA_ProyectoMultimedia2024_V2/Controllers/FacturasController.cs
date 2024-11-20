@@ -6,20 +6,69 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
+using LEA_ProyectoMultimedia2024_V2_.Services.Repository;
 
 public class FacturasController : Controller
 {
     private readonly ICliente _clientes;
     private readonly IDireccionEnvios _direcciones;
     private readonly IProducto _productos;
+    private readonly IOrdenRepository _Compra;
 
-    public FacturasController(ICliente clientes, IDireccionEnvios direcciones, IProducto productos)
+    public FacturasController(ICliente clientes, IDireccionEnvios direcciones, IProducto productos, IOrdenRepository compra)
     {
         _clientes = clientes;
         _direcciones = direcciones;
         _productos = productos;
+        _Compra = compra;
     }
 
+    public async Task<IActionResult> GuardarFactura([FromBody] FacturaViewModel Compra)
+    {
+        // Validar si el modelo es válido
+        if (!ModelState.IsValid)
+        {
+            return Json(new { success = false, message = "Datos de la factura inválidos. Verifica los campos." });
+        }
+
+        if (Compra == null || !Compra.DetalleProductos.Any())
+        {
+            return Json(new { success = false, message = "La factura no contiene detalles." });
+        }
+        if (Compra == null)
+        {
+            return Json(new { success = false, message = "El modelo de factura es nulo." });
+        }
+
+        var nuevaOrden = new Orden
+        {
+            FechaOrden = DateOnly.FromDateTime(DateTime.Now),
+            Total = (int)Compra.PrecioTotal, // Asegúrate de hacer una conversión si es necesario
+            Estado = "Pendiente",
+            ClienteId = Compra.IdCliente
+        };
+
+
+        // Crear detalles de la orden
+        var detalleOrdens = Compra.DetalleProductos.Select(detalle => new DetalleOrden
+        {
+            ProductoId = detalle.ProductoId,
+            Cantidad = detalle.Cantidad,
+            PrecioTotal = detalle.PrecioUnitario * detalle.Cantidad
+        }).ToList();
+
+        try
+        {
+            // Guardar la orden y los detalles en la base de datos
+            await  _Compra.CreateOrdenAsync(nuevaOrden, detalleOrdens);
+
+            return Json(new { success = true, message = "Factura guardada correctamente." });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = $"Error al guardar la factura: {ex.Message}" });
+        }
+    }
     public async Task<IActionResult> Index()
     {
         var clientes = await _clientes.GetAllClientesAsync() ?? new List<Cliente>();

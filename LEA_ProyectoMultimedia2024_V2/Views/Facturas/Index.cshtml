@@ -99,174 +99,227 @@
                 <input type="text" id="valorTotal" class="form-control" readonly>
             </div>
         </div>
+            <div class="text-end mt-4">
+                <button class="btn btn-success" onclick="guardarFactura()">Guardar Factura</button>
+            </div>
+
+            <div style="background-color: #3acaf7; height: 35px; margin-top: 35px;"></div>
+        </div>
 
 
         <div style="background-color: #3acaf7; height: 35px; margin-top: 35px;"></div>
     </div>
+        <script>
+            const tasaIVA = 0.19;
 
-    <script>
-        const tasaIVA = 0.19;
+            function cargarClienteDetalles() {
+                var clienteId = $('#IdCliente').val();
 
-        function cargarClienteDetalles() {
-            var clienteId = $('#IdCliente').val();
-
-            if (clienteId) {
-                $.ajax({
-                    url: '/Facturas/GetClienteDetails',
-                    type: 'GET',
-                    data: { clienteId: clienteId },
-                    success: function (cliente) {
-                        if (cliente) {
-                            $('#Nombre').val(cliente.nombreCompleto);
-                            $('#Correo').val(cliente.correo);
-                            $('#Telefono').val(cliente.telefono);
-                        } else {
-                            $('#Nombre').val('');
-                            $('#Correo').val('');
-                            $('#Telefono').val('');
+                if (clienteId) {
+                    $.ajax({
+                        url: '/Facturas/GetClienteDetails',
+                        type: 'GET',
+                        data: { clienteId: clienteId },
+                        success: function (cliente) {
+                            if (cliente) {
+                                $('#Nombre').val(cliente.nombreCompleto);
+                                $('#Correo').val(cliente.correo);
+                                $('#Telefono').val(cliente.telefono);
+                            } else {
+                                $('#Nombre').val('');
+                                $('#Correo').val('');
+                                $('#Telefono').val('');
+                            }
+                        },
+                        error: function () {
+                            alert('Error al cargar los detalles del cliente.');
                         }
-                    },
-                    error: function () {
-                        alert('Error al cargar los detalles del cliente.');
-                    }
-                });
-            } else {
-                $('#Nombre').val('');
-                $('#Correo').val('');
-                $('#Telefono').val('');
+                    });
+                } else {
+                    $('#Nombre').val('');
+                    $('#Correo').val('');
+                    $('#Telefono').val('');
+                }
             }
-        }
 
-        function cargarDireccionesByCliente() {
-            var clienteId = $('#IdCliente').val();
+            function cargarDireccionesByCliente() {
+                var clienteId = $('#IdCliente').val();
 
-            if (clienteId) {
-                $.ajax({
-                    url: '/Facturas/GetDireccionesByCliente',
-                    type: 'GET',
-                    data: { clienteId: clienteId },
-                    success: function (direcciones) {
-                        var direccionSelect = $('#DireccionId');
-                        direccionSelect.empty();
-                        direccionSelect.append(new Option("Seleccione una dirección", ""));
+                if (clienteId) {
+                    $.ajax({
+                        url: '/Facturas/GetDireccionesByCliente',
+                        type: 'GET',
+                        data: { clienteId: clienteId },
+                        success: function (direcciones) {
+                            var direccionSelect = $('#DireccionId');
+                            direccionSelect.empty();
+                            direccionSelect.append(new Option("Seleccione una dirección", ""));
 
-                        $.each(direcciones, function (index, direccion) {
-                            direccionSelect.append(new Option(direccion.text, direccion.value));
-                        });
-                    },
-                    error: function () {
-                        alert('Error al cargar las direcciones.');
-                    }
-                });
-            } else {
-                $('#DireccionId').empty();
-                $('#DireccionId').append(new Option("Seleccione una dirección", ""));
-            }
-        }
-
-        function cargarDireccionDetalles() {
-            var direccionId = $('#DireccionId').val();
-
-            if (direccionId) {
-                $.ajax({
-                    url: '/Facturas/GetDireccionesDetails',
-                    type: 'GET',
-                    data: { direccionId: direccionId },
-                    success: function (direccion) {
-                        if (direccion) {
-                            $('#direccionUsuario').val(direccion.direccion);
-                            $('#ciudadDireccion').val(direccion.ciudad);
-                            $('#codigoPostalDireccion').val(direccion.codigoPostal);
-                        } else {
-                            $('#direccionUsuario').val('');
-                            $('#ciudadDireccion').val('');
-                            $('#codigoPostalDireccion').val('');
+                            $.each(direcciones, function (index, direccion) {
+                                direccionSelect.append(new Option(direccion.text, direccion.value));
+                            });
+                        },
+                        error: function () {
+                            alert('Error al cargar las direcciones.');
                         }
-                    },
-                    error: function () {
-                        alert('Error al cargar los detalles de la dirección.');
-                    }
-                });
-            } else {
-                $('#direccionUsuario').val('');
-                $('#ciudadDireccion').val('');
-                $('#codigoPostalDireccion').val('');
+                    });
+                } else {
+                    $('#DireccionId').empty();
+                    $('#DireccionId').append(new Option("Seleccione una dirección", ""));
+                }
             }
-        }
 
-        function cargarPrecioProducto() {
-            var productoId = $('#ProductoId').val();
+            function cargarDireccionDetalles() {
+                var direccionId = $('#DireccionId').val();
 
-            if (productoId) {
-                $.ajax({
-                    url: '/Facturas/GetProductosDetails',
-                    type: 'GET',
-                    data: { productoId: productoId },
-                    success: function (producto) {
-                        if (producto) {
-                            $('#valorUnitario').val(Math.round(producto.precio));
-                        } else {
-                            $('#valorUnitario').val('');
+                if (direccionId) {
+                    $.ajax({
+                        url: '/Facturas/GetDireccionesDetails',
+                        type: 'GET',
+                        data: { direccionId: direccionId },
+                        success: function (direccion) {
+                            if (direccion) {
+                                $('#direccionUsuario').val(direccion.direccion);
+                                $('#ciudadDireccion').val(direccion.ciudad);
+                                $('#codigoPostalDireccion').val(direccion.codigoPostal);
+                            } else {
+                                $('#direccionUsuario').val('');
+                                $('#ciudadDireccion').val('');
+                                $('#codigoPostalDireccion').val('');
+                            }
+                        },
+                        error: function () {
+                            alert('Error al cargar los detalles de la dirección.');
                         }
-                    },
-                    error: function () {
-                        alert('Error al cargar el precio del producto.');
-                    }
-                });
-            } else {
-                $('#valorUnitario').val('');
+                    });
+                } else {
+                    $('#direccionUsuario').val('');
+                    $('#ciudadDireccion').val('');
+                    $('#codigoPostalDireccion').val('');
+                }
             }
-        }
 
-        function agregarProducto() {
-            var productoId = $('#ProductoId').val();
-            var productoNombre = $('#ProductoId option:selected').text();
-            var cantidad = parseInt($('#cantidadProducto').val());
-            var valorUnitario = parseInt($('#valorUnitario').val());
-            var detalleFactura = $('#detalleFactura');
+            function cargarPrecioProducto() {
+                var productoId = $('#ProductoId').val();
 
-            if (productoId && cantidad > 0 && !isNaN(valorUnitario)) {
-                var valorTotal = Math.round(valorUnitario * cantidad);
-                var fila = `
-                                    <tr>
-                                        <td>${productoId}</td>
-                                        <td>${productoNombre}</td>
-                                        <td>${cantidad}</td>
-                                        <td>$${Math.round(valorUnitario)}</td>
-                                        <td>$${valorTotal}</td>
-                                        <td><button class="btn btn-danger btn-sm" onclick="eliminarFila(this)">Eliminar</button></td>
-                                    </tr>
-                                `;
-                detalleFactura.append(fila);
+                if (productoId) {
+                    $.ajax({
+                        url: '/Facturas/GetProductosDetails',
+                        type: 'GET',
+                        data: { productoId: productoId },
+                        success: function (producto) {
+                            if (producto) {
+                                $('#valorUnitario').val(Math.round(producto.precio));
+                            } else {
+                                $('#valorUnitario').val('');
+                            }
+                        },
+                        error: function () {
+                            alert('Error al cargar el precio del producto.');
+                        }
+                    });
+                } else {
+                    $('#valorUnitario').val('');
+                }
+            }
+
+            function agregarProducto() {
+                var productoId = $('#ProductoId').val();
+                var productoNombre = $('#ProductoId option:selected').text();
+                var cantidad = parseInt($('#cantidadProducto').val());
+                var valorUnitario = parseFloat($('#valorUnitario').val());
+                var detalleFactura = $('#detalleFactura');
+
+                if (productoId && cantidad > 0 && !isNaN(valorUnitario)) {
+                    var valorTotal = Math.round(valorUnitario * cantidad);
+                    var fila = `
+                            <tr>
+                                <td>${productoId}</td>
+                                <td>${productoNombre}</td>
+                                <td>${cantidad}</td>
+                                <td>${valorUnitario.toFixed(2)}</td>
+                                <td>${valorTotal.toFixed(2)}</td>
+                                <td><button class="btn btn-danger btn-sm" onclick="eliminarFila(this)">Eliminar</button></td>
+                            </tr>
+                        `;
+                    detalleFactura.append(fila);
+                    calcularTotales();
+                    $('#cantidadProducto').val('');
+                    $('#valorUnitario').val('');
+                } else {
+                    alert('Por favor, complete todos los campos correctamente.');
+                }
+            }
+
+            function eliminarFila(boton) {
+                $(boton).closest('tr').remove();
                 calcularTotales();
-                $('#cantidadProducto').val('');
-                $('#valorUnitario').val('');
-            } else {
-                alert('Por favor, complete todos los campos correctamente.');
             }
-        }
 
-        function eliminarFila(boton) {
-            $(boton).closest('tr').remove();
-            calcularTotales();
-        }
+            function calcularTotales() {
+                var subtotal = 0;
 
-        function calcularTotales() {
-            var subtotal = 0;
+                $('#detalleFactura tr').each(function () {
+                    var valorTotal = parseFloat($(this).find('td').eq(4).text());
+                    subtotal += valorTotal;
+                });
 
-            $('#detalleFactura tr').each(function () {
-                var valorTotal = parseInt($(this).find('td').eq(4).text().replace('$', ''));
-                subtotal += valorTotal;
-            });
+                var iva = Math.round(subtotal * tasaIVA);
+                var total = subtotal + iva;
 
-            var iva = Math.round(subtotal * tasaIVA);
-            var total = subtotal + iva;
+                $('#valorSubtotal').val(`$${subtotal.toFixed(2)}`);
+                $('#valorIVA').val(`$${iva.toFixed(2)}`);
+                $('#valorTotal').val(`$${total.toFixed(2)}`);
+            }
 
-            $('#valorSubtotal').val(`$${subtotal}`);
-            $('#valorIVA').val(`$${iva}`);
-            $('#valorTotal').val(`$${total}`);
-        }
-    </script>
+            function guardarFactura() {
+                var factura = {
+                    IdCliente: $('#IdCliente').val(),
+                    DireccionId: $('#DireccionId').val(),
+                    Subtotal: parseFloat($('#valorSubtotal').val().replace('$', '')),
+                    IVA: parseFloat($('#valorIVA').val().replace('$', '')),
+                    PrecioTotal: parseFloat($('#valorTotal').val().replace('$', '')),
+                    DetalleProductos: []
+                };
+
+                // Agregar productos de la tabla de detalles
+                $('#detalleFactura tr').each(function () {
+                    var detalle = {
+                        ProductoId: parseInt($(this).find('td').eq(0).text()),
+                        NombreProducto: $(this).find('td').eq(1).text(),
+                        Cantidad: parseInt($(this).find('td').eq(2).text()),
+                        PrecioUnitario: parseFloat($(this).find('td').eq(3).text().replace('$', '')),
+                        PrecioTotal: parseFloat($(this).find('td').eq(4).text().replace('$', ''))
+                    };
+                    factura.DetalleProductos.push(detalle);
+                });
+
+                if (!factura.DetalleProductos.length) {
+                    alert("Debe agregar al menos un producto antes de guardar la factura.");
+                    return;
+                }
+
+                $.ajax({
+                    url: '/Facturas/GuardarFactura',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(factura),
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert("Error al guardar la factura.");
+                    }
+                });
+            }
+        </script>
+
+
     <style>
         body {
             background-color: #ff0000;
@@ -315,168 +368,4 @@
    
 </body>
 
-
-    <script>
-        const tasaIVA = 0.19;
-
-        function cargarClienteDetalles() {
-            var clienteId = $('#IdCliente').val();
-
-            if (clienteId) {
-                $.ajax({
-                    url: '/Facturas/GetClienteDetails',
-                    type: 'GET',
-                    data: { clienteId: clienteId },
-                    success: function (cliente) {
-                        if (cliente) {
-                            $('#Nombre').val(cliente.nombreCompleto);
-                            $('#Correo').val(cliente.correo);
-                            $('#Telefono').val(cliente.telefono);
-                        } else {
-                            $('#Nombre').val('');
-                            $('#Correo').val('');
-                            $('#Telefono').val('');
-                        }
-                    },
-                    error: function () {
-                        alert('Error al cargar los detalles del cliente.');
-                    }
-                });
-            } else {
-                $('#Nombre').val('');
-                $('#Correo').val('');
-                $('#Telefono').val('');
-            }
-        }
-
-        function cargarDireccionesByCliente() {
-            var clienteId = $('#IdCliente').val();
-
-            if (clienteId) {
-                $.ajax({
-                    url: '/Facturas/GetDireccionesByCliente',
-                    type: 'GET',
-                    data: { clienteId: clienteId },
-                    success: function (direcciones) {
-                        var direccionSelect = $('#DireccionId');
-                        direccionSelect.empty();
-                        direccionSelect.append(new Option("Seleccione una dirección", ""));
-
-                        $.each(direcciones, function (index, direccion) {
-                            direccionSelect.append(new Option(direccion.text, direccion.value));
-                        });
-                    },
-                    error: function () {
-                        alert('Error al cargar las direcciones.');
-                    }
-                });
-            } else {
-                $('#DireccionId').empty();
-                $('#DireccionId').append(new Option("Seleccione una dirección", ""));
-            }
-        }
-
-        function cargarDireccionDetalles() {
-            var direccionId = $('#DireccionId').val();
-
-            if (direccionId) {
-                $.ajax({
-                    url: '/Facturas/GetDireccionesDetails',
-                    type: 'GET',
-                    data: { direccionId: direccionId },
-                    success: function (direccion) {
-                        if (direccion) {
-                            $('#direccionUsuario').val(direccion.direccion);
-                            $('#ciudadDireccion').val(direccion.ciudad);
-                            $('#codigoPostalDireccion').val(direccion.codigoPostal);
-                        } else {
-                            $('#direccionUsuario').val('');
-                            $('#ciudadDireccion').val('');
-                            $('#codigoPostalDireccion').val('');
-                        }
-                    },
-                    error: function () {
-                        alert('Error al cargar los detalles de la dirección.');
-                    }
-                });
-            } else {
-                $('#direccionUsuario').val('');
-                $('#ciudadDireccion').val('');
-                $('#codigoPostalDireccion').val('');
-            }
-        }
-
-        function cargarPrecioProducto() {
-            var productoId = $('#ProductoId').val();
-
-            if (productoId) {
-                $.ajax({
-                    url: '/Facturas/GetProductosDetails',
-                    type: 'GET',
-                    data: { productoId: productoId },
-                    success: function (producto) {
-                        if (producto) {
-                            $('#valorUnitario').val(Math.round(producto.precio));
-                        } else {
-                            $('#valorUnitario').val('');
-                        }
-                    },
-                    error: function () {
-                        alert('Error al cargar el precio del producto.');
-                    }
-                });
-            } else {
-                $('#valorUnitario').val('');
-            }
-        }
-
-        function agregarProducto() {
-            var productoId = $('#ProductoId').val();
-            var productoNombre = $('#ProductoId option:selected').text();
-            var cantidad = parseInt($('#cantidadProducto').val());
-            var valorUnitario = parseInt($('#valorUnitario').val());
-            var detalleFactura = $('#detalleFactura');
-
-            if (productoId && cantidad > 0 && !isNaN(valorUnitario)) {
-                var valorTotal = Math.round(valorUnitario * cantidad);
-                var fila = `
-                                    <tr>
-                                        <td>${productoId}</td>
-                                        <td>${productoNombre}</td>
-                                        <td>${cantidad}</td>
-                                        <td>$${Math.round(valorUnitario)}</td>
-                                        <td>$${valorTotal}</td>
-                                        <td><button class="btn btn-danger btn-sm" onclick="eliminarFila(this)">Eliminar</button></td>
-                                    </tr>
-                                `;
-                detalleFactura.append(fila);
-                calcularTotales();
-                $('#cantidadProducto').val('');
-                $('#valorUnitario').val('');
-            } else {
-                alert('Por favor, complete todos los campos correctamente.');
-            }
-        }
-
-        function eliminarFila(boton) {
-            $(boton).closest('tr').remove();
-            calcularTotales();
-        }
-
-        function calcularTotales() {
-            var subtotal = 0;
-
-            $('#detalleFactura tr').each(function () {
-                var valorTotal = parseInt($(this).find('td').eq(4).text().replace('$', ''));
-                subtotal += valorTotal;
-            });
-
-            var iva = Math.round(subtotal * tasaIVA);
-            var total = subtotal + iva;
-
-            $('#valorSubtotal').val(`$${subtotal}`);
-            $('#valorIVA').val(`$${iva}`);
-            $('#valorTotal').val(`$${total}`);
-        }
-    </script>
 </body>

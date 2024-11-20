@@ -16,7 +16,11 @@ builder.Services.AddScoped<IDireccionEnvios, DireccionEnviosRepository>();
 builder.Services.AddScoped<IMetodoDePago, MetodoDePagoRepository>();
 builder.Services.AddScoped<IOrden, OrdenRepository>();
 builder.Services.AddScoped<IReseñaProducto,ReseñaProductoRepository>();
+builder.Services.AddScoped<IOrdenRepository, FacturaRepository>();
 
+
+builder.Services.AddDbContext<GimnasioContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddDbContext<GimnasioContext>(
     options =>

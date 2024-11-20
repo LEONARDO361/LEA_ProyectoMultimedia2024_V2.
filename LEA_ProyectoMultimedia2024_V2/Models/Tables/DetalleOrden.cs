@@ -20,7 +20,7 @@ public partial class DetalleOrden
 
     public int Cantidad { get; set; }
 
-    [Column(TypeName = "decimal(18, 0)")]
+    [Column(TypeName = "decimal(18, 2)")]
     public decimal PrecioTotal { get; set; }
 
     [ForeignKey("OrdenId")]
