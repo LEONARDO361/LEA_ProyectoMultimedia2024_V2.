@@ -3,6 +3,7 @@ using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 using LEA_ProyectoMultimedia2024_V2_.Services.Repository;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,30 @@ builder.Services.AddDbContext<GimnasioContext>(
 
     });
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    options.LoginPath = "/Home/Recividor"; // Ruta de la página de inicio de sesión
+    options.LogoutPath = "/Home/Logout"; // Ruta de la página de cierre de sesión
+    options.AccessDeniedPath = "/Home/Rechazo";
+    options.SlidingExpiration = true;
+    options.Cookie.HttpOnly = true;
+});
+
+builder.Services.AddAuthorization(options =>
+{
+
+    options.AddPolicy("Pomprador", policy => policy.RequireRole("Cliente", "Vendedor", "Mantenedor", "Admin"));
+    options.AddPolicy("Vendedor", policy => policy.RequireRole("Vendedor", "Admin"));
+    options.AddPolicy("Mantenedor", policy => policy.RequireRole("Mantenedor", "Admin"));
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

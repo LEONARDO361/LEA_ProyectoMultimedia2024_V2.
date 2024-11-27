@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 using LEA_ProyectoMultimedia2024_V2_.Services.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 public class FacturasController : Controller
 {
@@ -69,6 +70,8 @@ public class FacturasController : Controller
             return Json(new { success = false, message = $"Error al guardar la factura: {ex.Message}" });
         }
     }
+
+    [Authorize(Policy = "Vendedor")]
     public async Task<IActionResult> Index()
     {
         var clientes = await _clientes.GetAllClientesAsync() ?? new List<Cliente>();
@@ -90,8 +93,8 @@ public class FacturasController : Controller
         productos = productos.Where(p => p != null && p.ProductoId != 0 && !string.IsNullOrEmpty(p.Nombre)).ToList();
 
         // Pasar datos a la vista usando ViewData
-        ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "Nombre");  // Cambiado a ClienteId
-        ViewData["Productos"] = new SelectList(productos, "ProductoId", "Nombre"); // Cambiado a ProductoId
+        ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "Nombre");  
+        ViewData["Productos"] = new SelectList(productos, "ProductoId", "Nombre"); 
 
         var viewModel = new FacturaViewModel
         {

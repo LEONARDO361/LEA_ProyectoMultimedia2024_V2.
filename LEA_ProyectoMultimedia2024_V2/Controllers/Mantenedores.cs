@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
@@ -6,6 +7,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
     public class Mantenedores : Controller
     {
         // GET: Mantenedores
+        [Authorize(Policy = "Mantenedor")]
         public ActionResult Index()
         {
             return View();
