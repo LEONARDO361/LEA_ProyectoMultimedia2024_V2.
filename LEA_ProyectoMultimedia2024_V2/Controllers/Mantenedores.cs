@@ -12,7 +12,6 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         {
             return View();
         }
-
         // GET: Mantenedores/Details/5
         public ActionResult Details(int id)
         {

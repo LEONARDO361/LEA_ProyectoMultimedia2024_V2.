@@ -193,3 +193,14 @@ header {
     padding: 15px 10px;
     cursor: pointer;
 }
+.login-button {
+    width: 120px; /* Ajusta el ancho */
+    height: 120px; /* Ajusta la altura */
+    cursor: pointer; /* Cambia el cursor a modo clic */
+    transition: transform 0.5s; /* Animación al pasar el mouse */
+}
+
+    .login-button:hover {
+        transform: scale(1.1); /* Aumenta el tamaño al pasar el mouse */
+    }
+

@@ -16,16 +16,19 @@ public partial class GimnasioContext : DbContext
     {
     }
 
+    public virtual DbSet<Canasta> Canasta { get; set; }
+
     public virtual DbSet<Categoria> Categoria { get; set; }
 
     public virtual DbSet<Cliente> Cliente { get; set; }
 
     public virtual DbSet<Descuento> Descuento { get; set; }
 
+    public virtual DbSet<DetalleCanasta> DetalleCanasta { get; set; }
+
     public virtual DbSet<DetalleOrden> DetalleOrden { get; set; }
 
     public virtual DbSet<DireccionEnvio> DireccionEnvio { get; set; }
-
 
     public virtual DbSet<MetodoPago> MetodoPago { get; set; }
 
@@ -36,11 +39,21 @@ public partial class GimnasioContext : DbContext
     public virtual DbSet<ReseñaProducto> ReseñaProducto { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server= LAPTOP-7O2LALR3; Database= Gimnasio;TrustServerCertificate=True;Trusted_Connection=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Canasta>(entity =>
+        {
+            entity.Property(e => e.CanastaId).ValueGeneratedNever();
+            entity.Property(e => e.ClienteId).ValueGeneratedOnAdd();
+
+            entity.HasOne(d => d.Cliente).WithMany(p => p.Canasta)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Canasta_Cliente");
+        });
+
         modelBuilder.Entity<Categoria>(entity =>
         {
             entity.HasKey(e => e.CategoriaId).HasName("PK_Producto_Fuerza");
@@ -61,6 +74,20 @@ public partial class GimnasioContext : DbContext
         modelBuilder.Entity<Descuento>(entity =>
         {
             entity.Property(e => e.TipoDescuento).IsFixedLength();
+        });
+
+        modelBuilder.Entity<DetalleCanasta>(entity =>
+        {
+            entity.Property(e => e.DetalleCanastaId).ValueGeneratedNever();
+            entity.Property(e => e.SubTotal).ValueGeneratedOnAdd();
+
+            entity.HasOne(d => d.Canasta).WithMany(p => p.DetalleCanasta)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DetalleCanasta_Canasta");
+
+            entity.HasOne(d => d.Producto).WithMany(p => p.DetalleCanasta)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DetalleCanasta_Producto");
         });
 
         modelBuilder.Entity<DetalleOrden>(entity =>
@@ -85,8 +112,6 @@ public partial class GimnasioContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_DireccionEnvio_Cliente");
         });
-
-       
 
         modelBuilder.Entity<MetodoPago>(entity =>
         {

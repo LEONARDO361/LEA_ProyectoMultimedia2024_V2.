@@ -6,28 +6,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 
-public partial class DetalleOrden
+public partial class DetalleCanasta
 {
     [Key]
-    [Column("DetalleID")]
-    public int DetalleId { get; set; }
+    [Column("DetalleCanastaID")]
+    public int DetalleCanastaId { get; set; }
 
-    [Column("OrdenID")]
-    public int OrdenId { get; set; }
+    [Column("CanastaID")]
+    public int CanastaId { get; set; }
 
     [Column("ProductoID")]
     public int ProductoId { get; set; }
 
     public int Cantidad { get; set; }
 
-    [Column(TypeName = "decimal(18, 0)")]
-    public decimal PrecioTotal { get; set; }
+    public int PrecioUni { get; set; }
 
-    [ForeignKey("OrdenId")]
-    [InverseProperty("DetalleOrden")]
-    public virtual Orden Orden { get; set; }
+    public int SubTotal { get; set; }
+
+    [ForeignKey("CanastaId")]
+    [InverseProperty("DetalleCanasta")]
+    public virtual Canasta Canasta { get; set; }
 
     [ForeignKey("ProductoId")]
-    [InverseProperty("DetalleOrden")]
+    [InverseProperty("DetalleCanasta")]
     public virtual Producto Producto { get; set; }
 }

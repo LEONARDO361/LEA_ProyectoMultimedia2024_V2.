@@ -37,6 +37,9 @@ public partial class Cliente
     public int Edad { get; set; }
 
     [InverseProperty("Cliente")]
+    public virtual ICollection<Canasta> Canasta { get; set; } = new List<Canasta>();
+
+    [InverseProperty("Cliente")]
     public virtual ICollection<DireccionEnvio> DireccionEnvio { get; set; } = new List<DireccionEnvio>();
 
     [InverseProperty("Cliente")]

@@ -39,6 +39,11 @@ namespace LEA_ProyectoMultimedia2024.Controllers
         {
             return View();
         }
+        public IActionResult Login()
+        {
+            return View();
+        }
+
         public IActionResult Recividor(int id)
             {
                 var claims = new List<Claim> { };

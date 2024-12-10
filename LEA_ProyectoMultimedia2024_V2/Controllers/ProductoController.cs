@@ -9,6 +9,7 @@ using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 using LEA_ProyectoMultimedia2024_V2_.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
@@ -27,6 +28,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: Productoes
+        [Authorize(Policy = "Cliente")]
         public async Task<IActionResult> Index()
         {
             var gimnasioContext = await _producto.GetProductosAsync();
@@ -39,6 +41,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: Productoes/Details/5
+        [Authorize(Policy = "Cliente")]
         public async Task<IActionResult> PVDetails(int? id)
         {
             ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre");

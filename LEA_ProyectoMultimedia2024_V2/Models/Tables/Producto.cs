@@ -51,6 +51,9 @@ public partial class Producto
     public virtual Descuento Descuento { get; set; }
 
     [InverseProperty("Producto")]
+    public virtual ICollection<DetalleCanasta> DetalleCanasta { get; set; } = new List<DetalleCanasta>();
+
+    [InverseProperty("Producto")]
     public virtual ICollection<DetalleOrden> DetalleOrden { get; set; } = new List<DetalleOrden>();
 
     [InverseProperty("Producto")]

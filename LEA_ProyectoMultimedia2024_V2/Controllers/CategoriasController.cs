@@ -9,6 +9,7 @@ using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 using LEA_ProyectoMultimedia2024_V2_.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
@@ -27,7 +28,6 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
 
-
         // GET: Categorias
         public async Task<IActionResult> Index()
         {
@@ -41,6 +41,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: Categorias/Details/5
+        
         public async Task<IActionResult> PVDetails(int? id)
         {
 
