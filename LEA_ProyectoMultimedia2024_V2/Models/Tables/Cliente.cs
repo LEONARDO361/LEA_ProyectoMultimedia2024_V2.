@@ -36,11 +36,18 @@ public partial class Cliente
 
     public int Edad { get; set; }
 
+    [Column("LogUsuarioID")]
+    public int LogUsuarioId { get; set; }
+
     [InverseProperty("Cliente")]
     public virtual ICollection<Canasta> Canasta { get; set; } = new List<Canasta>();
 
     [InverseProperty("Cliente")]
     public virtual ICollection<DireccionEnvio> DireccionEnvio { get; set; } = new List<DireccionEnvio>();
+
+    [ForeignKey("LogUsuarioId")]
+    [InverseProperty("Cliente")]
+    public virtual LogUsuario LogUsuario { get; set; }
 
     [InverseProperty("Cliente")]
     public virtual ICollection<MetodoPago> MetodoPago { get; set; } = new List<MetodoPago>();

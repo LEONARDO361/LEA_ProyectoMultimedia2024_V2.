@@ -34,6 +34,15 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
             var gimnasioContext = await _producto.GetProductosAsync();
             return View(gimnasioContext);
         }
+
+        // GET: Productoes
+        
+        public async Task<IActionResult> CatalogoProductos() 
+        { 
+            var productos = await _producto.GetProductosAsync(); 
+            return View("CatalogoProductos", productos); 
+        }
+
         public async Task<IActionResult> listaProducto()
         {
             var gimnasioContext = await _producto.GetProductosAsync();

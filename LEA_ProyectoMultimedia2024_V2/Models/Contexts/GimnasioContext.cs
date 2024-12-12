@@ -30,6 +30,8 @@ public partial class GimnasioContext : DbContext
 
     public virtual DbSet<DireccionEnvio> DireccionEnvio { get; set; }
 
+    public virtual DbSet<LogUsuario> LogUsuario { get; set; }
+
     public virtual DbSet<MetodoPago> MetodoPago { get; set; }
 
     public virtual DbSet<Orden> Orden { get; set; }
@@ -40,7 +42,7 @@ public partial class GimnasioContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server= LAPTOP-7O2LALR3; Database= Gimnasio;TrustServerCertificate=True;Trusted_Connection=True;");
+        => optionsBuilder.UseSqlServer("Server=CRIS; Database=Gimnasio;TrustServerCertificate=True;Trusted_Connection=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -69,6 +71,10 @@ public partial class GimnasioContext : DbContext
             entity.Property(e => e.Direccion).IsFixedLength();
             entity.Property(e => e.Nombre).IsFixedLength();
             entity.Property(e => e.Sexo).IsFixedLength();
+
+            entity.HasOne(d => d.LogUsuario).WithMany(p => p.Cliente)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Cliente_LogUsuario");
         });
 
         modelBuilder.Entity<Descuento>(entity =>
@@ -111,6 +117,11 @@ public partial class GimnasioContext : DbContext
             entity.HasOne(d => d.Cliente).WithMany(p => p.DireccionEnvio)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_DireccionEnvio_Cliente");
+        });
+
+        modelBuilder.Entity<LogUsuario>(entity =>
+        {
+            entity.Property(e => e.Contrasena).IsFixedLength();
         });
 
         modelBuilder.Entity<MetodoPago>(entity =>

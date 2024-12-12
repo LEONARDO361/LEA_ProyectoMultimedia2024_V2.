@@ -39,7 +39,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddCookie(options =>
 {
-    options.LoginPath = "/Home/Recividor"; // Ruta de la página de inicio de sesión
+    options.LoginPath = "/Home/Login"; // Ruta de la página de inicio de sesión
     options.LogoutPath = "/Home/Logout"; // Ruta de la página de cierre de sesión
     options.AccessDeniedPath = "/Home/Rechazo";
     options.SlidingExpiration = true;
@@ -49,7 +49,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization(options =>
 {
 
-    options.AddPolicy("Pomprador", policy => policy.RequireRole("Cliente", "Vendedor", "Mantenedor", "Admin"));
+    options.AddPolicy("Comprador", policy => policy.RequireRole("Comprador", "Vendedor", "Mantenedor", "Admin"));
     options.AddPolicy("Vendedor", policy => policy.RequireRole("Vendedor", "Admin"));
     options.AddPolicy("Mantenedor", policy => policy.RequireRole("Mantenedor", "Admin"));
     options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
