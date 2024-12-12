@@ -16,7 +16,12 @@
                     <p class="card-text">Precio: @item.Precio</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Agregar al carrito</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary add-to-cart"
+                                    data-id="@item.ProductoId"
+                                    data-nombre="@item.Nombre"
+                                    data-precio="@item.Precio">
+                                Agregar a la canasta
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -24,3 +29,31 @@
         </div>
     }
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        document.querySelectorAll(".add-to-cart").forEach(button => {
+            button.addEventListener("click", () => {
+                const id = button.getAttribute("data-id");
+                const nombre = button.getAttribute("data-nombre");
+                const precio = parseFloat(button.getAttribute("data-precio"));
+
+                // Verifica si el producto ya está en el carrito
+                const existingProduct = cart.find(product => product.id === id);
+                if (existingProduct) {
+                    existingProduct.cantidad += 1; // Incrementa la cantidad
+                    existingProduct.subtotal = existingProduct.cantidad * existingProduct.precio;
+                } else {
+                    // Agrega un nuevo producto
+                    cart.push({ id, nombre, precio, cantidad: 1, subtotal: precio });
+                }
+
+                // Guarda en localStorage
+                localStorage.setItem("cart", JSON.stringify(cart));
+                alert(`${nombre} se ha añadido a la canasta.`);
+            });
+        });
+    });
+</script>

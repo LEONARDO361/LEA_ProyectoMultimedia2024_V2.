@@ -48,9 +48,6 @@ public partial class GimnasioContext : DbContext
     {
         modelBuilder.Entity<Canasta>(entity =>
         {
-            entity.Property(e => e.CanastaId).ValueGeneratedNever();
-            entity.Property(e => e.ClienteId).ValueGeneratedOnAdd();
-
             entity.HasOne(d => d.Cliente).WithMany(p => p.Canasta)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Canasta_Cliente");

@@ -1,6 +1,7 @@
 
 using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
+using LEA_ProyectoMultimedia2024_V2_.Repositories;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 using LEA_ProyectoMultimedia2024_V2_.Services.Repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -18,6 +19,7 @@ builder.Services.AddScoped<IMetodoDePago, MetodoDePagoRepository>();
 builder.Services.AddScoped<IOrden, OrdenRepository>();
 builder.Services.AddScoped<IReseñaProducto,ReseñaProductoRepository>();
 builder.Services.AddScoped<IOrdenRepository, FacturaRepository>();
+builder.Services.AddScoped<ICanastas, CanastasRepository>();
 
 
 builder.Services.AddDbContext<GimnasioContext>(options =>
@@ -30,6 +32,7 @@ builder.Services.AddDbContext<GimnasioContext>(
         options.UseSqlServer(builder.Configuration.GetConnectionString("BD"));
 
     });
+
 
 builder.Services.AddAuthentication(options =>
 {

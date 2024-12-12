@@ -61,6 +61,32 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Repository
         {
             return await _context.Orden.FindAsync(id);
         }
+
+        public async Task CreateOrdenAsync(Orden orden, List<DetalleOrden> detalles)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // Guardar la orden
+                _context.Orden.Add(orden);
+                await _context.SaveChangesAsync();
+
+                // Guardar los detalles de la orden
+                foreach (var detalle in detalles)
+                {
+                    detalle.OrdenId = orden.OrdenId; // Relacionar con la orden creada
+                    _context.DetalleOrden.Add(detalle);
+                }
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
     }
 
 }

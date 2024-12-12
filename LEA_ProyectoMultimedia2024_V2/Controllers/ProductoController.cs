@@ -28,7 +28,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: Productoes
-        [Authorize(Policy = "Cliente")]
+        [Authorize(Policy = "Mantenedor")]
         public async Task<IActionResult> Index()
         {
             var gimnasioContext = await _producto.GetProductosAsync();
@@ -36,11 +36,11 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         }
 
         // GET: Productoes
-        
-        public async Task<IActionResult> CatalogoProductos() 
-        { 
-            var productos = await _producto.GetProductosAsync(); 
-            return View("CatalogoProductos", productos); 
+
+        public async Task<IActionResult> CatalogoProductos()
+        {
+            var productos = await _producto.GetProductosAsync();
+            return View("CatalogoProductos", productos);
         }
 
         public async Task<IActionResult> listaProducto()
@@ -55,11 +55,11 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         {
             ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre");
             var producto = await _producto.GetProductoByIdAsync(id.Value);
-           return PartialView(producto);
+            return PartialView(producto);
         }
 
         // GET: Productoes/Create
-        public async Task< IActionResult> PVCreate()
+        public async Task<IActionResult> PVCreate()
         {
             ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre");
             return PartialView();
@@ -85,7 +85,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 else
                 {
                     TempData["SuccessMessage"] = "Producto creado exitosamente";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Mantenedores");
                 }
             }
             else
@@ -118,7 +118,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         {
             var producto = await _producto.BuscadorProduct(id.Value);
             ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre", producto.CategoriaId);
- 
+
             var ProductoDto = producto.toDto();
             return PartialView(ProductoDto);
         }
@@ -190,7 +190,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 
 
             await _producto.DeleteProductoAsync(id);
-            return RedirectToAction("Index","Mantenedores");
+            return RedirectToAction("Index", "Mantenedores");
         }
 
 

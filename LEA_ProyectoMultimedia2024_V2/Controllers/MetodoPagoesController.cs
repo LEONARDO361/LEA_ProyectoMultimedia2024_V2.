@@ -146,7 +146,7 @@
             public async Task<IActionResult> DeleteConfirmed(int id)
             {
                 await _metodoDePago.DeleteMetodoPagoAsync(id);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Mantenedores");
             }
         }
     }

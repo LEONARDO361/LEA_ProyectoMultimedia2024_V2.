@@ -9,6 +9,9 @@ using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
 using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
 using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
 using LEA_ProyectoMultimedia2024_V2_.Models.DTOs;
+using LEA_ProyectoMultimedia2024_V2_.Repositories;
+using LEA_ProyectoMultimedia2024_V2_.Services.Repository;
+using System.Security.Claims;
 
 namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 {
@@ -16,14 +19,24 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
     {
 
         private readonly IOrden _Orden;
+        private readonly ICanastas _canastas;
 
-        public OrdensController(GimnasioContext context, IOrden orden)
+        public OrdensController(GimnasioContext context, IOrden orden, ICanastas canastas)
         {
 
             _Orden = orden;
+            _canastas = canastas;
         }
 
-
+        private int GetClienteId()
+        {
+            var clienteIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            if (clienteIdClaim != null && int.TryParse(clienteIdClaim.Value, out int clienteId))
+            {
+                return clienteId;
+            }
+            throw new UnauthorizedAccessException("No se pudo obtener el ID del cliente. Por favor, inicie sesión nuevamente.");
+        }
 
         // GET: Ordens
         public async Task<IActionResult> Index()
@@ -170,6 +183,55 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
 
             await _Orden.DeleteOrdenAsync(id);
             return RedirectToAction("Index","Mantenedores");
+        }
+
+        [HttpPost]
+        [Route("Ordenes/GenerarPedido")]
+        public async Task<IActionResult> GenerarPedido()
+        {
+            try
+            {
+                int clienteId = GetClienteId(); // Obtener el cliente logueado
+
+                // Obtener la canasta activa del cliente
+                var canasta = await _canastas.ObtenerCanastaActiva(clienteId);
+                if (canasta == null || !canasta.DetalleCanasta.Any())
+                {
+                    return Json(new { success = false, message = "No hay productos en la canasta para generar un pedido." });
+                }
+
+                // Crear la orden
+                var nuevaOrden = new Orden
+                {
+                    FechaOrden = DateOnly.FromDateTime(DateTime.Now),
+                    Total = canasta.Total,
+                    Estado = "Pendiente",
+                    ClienteId = clienteId
+                };
+
+                // Transformar los detalles de la canasta en detalles de la orden
+                var detallesOrden = canasta.DetalleCanasta.Select(detalle => new DetalleOrden
+                {
+                    ProductoId = detalle.ProductoId,
+                    Cantidad = detalle.Cantidad,
+                    PrecioTotal = detalle.SubTotal
+                }).ToList();
+
+                // Guardar la orden y sus detalles
+                await _Orden.CreateOrdenAsync(nuevaOrden, detallesOrden);
+
+                // Vaciar la canasta
+                await _canastas.EliminarDetallesCanasta(canasta.DetalleCanasta);
+                canasta.Estado = "Finalizada";
+                canasta.Total = 0;
+                await _canastas.ActualizarCanasta(canasta);
+
+                return Json(new { success = true, message = "Pedido generado correctamente." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error al generar el pedido: {ex.Message}" });
+            }
         }
 
 

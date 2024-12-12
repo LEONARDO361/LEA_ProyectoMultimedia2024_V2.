@@ -48,8 +48,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About_Us">About Us</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated && (User.IsInRole("Comprador") || User.IsInRole("Admin")))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Producto" asp-action="CatalogoProductos">Catálogo</a>
+                            </li>
+                        }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Producto" asp-action="CatalogoProductos">Catálogo</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Canastas" asp-action="Index">Canasta</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav">

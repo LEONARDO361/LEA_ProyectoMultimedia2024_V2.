@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi carrito de compras</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+
+        .total-summary {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+            .total-summary div {
+                margin-bottom: 10px;
+            }
+
+        .generate-order {
+            background-color: blue;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mi carrito de compras</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Cant</th>
+                <th>SubTotal</th>
+                <th>Quitar</th>
+            </tr>
+        </thead>
+        <tbody id="cart-body">
+            <!-- Aquí se agregarán los productos desde localStorage -->
+        </tbody>
+    </table>
+    <div class="total-summary">
+        <div>SubTotal: $<span id="subtotal">0.00</span></div>
+        <div>Impuesto: $<span id="impuesto">0.00</span></div>
+        <div>Total: $<span id="total">0.00</span></div>
+    </div>
+    <div class="generate-order" onclick="generarPedido()">Generar mi pedido</div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const cartBody = document.getElementById("cart-body");
+            const subtotalEl = document.getElementById("subtotal");
+            const impuestoEl = document.getElementById("impuesto");
+            const totalEl = document.getElementById("total");
+
+            function renderCart() {
+                cartBody.innerHTML = ""; // Limpia la tabla
+                let subtotal = 0;
+
+                cart.forEach((item, index) => {
+                    subtotal += item.subtotal;
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                                <td>${item.id}</td>
+                                <td>${item.nombre}</td>
+                                <td>$${item.precio.toFixed(2)}</td>
+                                <td>
+                                    <button class="decrease" data-index="${index}">-</button>
+                                    ${item.cantidad}
+                                    <button class="increase" data-index="${index}">+</button>
+                                </td>
+                                <td>$${item.subtotal.toFixed(2)}</td>
+                                <td><button class="remove" data-index="${index}">🗑</button></td>
+                            `;
+                    cartBody.appendChild(row);
+                });
+
+                const impuesto = subtotal * 0.13;
+                const total = subtotal + impuesto;
+
+                subtotalEl.textContent = subtotal.toFixed(2);
+                impuestoEl.textContent = impuesto.toFixed(2);
+                totalEl.textContent = total.toFixed(2);
+            }
+
+            // Eventos de aumentar, disminuir y quitar
+            cartBody.addEventListener("click", (event) => {
+                const index = event.target.getAttribute("data-index");
+                if (event.target.classList.contains("increase")) {
+                    cart[index].cantidad += 1;
+                    cart[index].subtotal = cart[index].cantidad * cart[index].precio;
+                } else if (event.target.classList.contains("decrease")) {
+                    if (cart[index].cantidad > 1) {
+                        cart[index].cantidad -= 1;
+                        cart[index].subtotal = cart[index].cantidad * cart[index].precio;
+                    }
+                } else if (event.target.classList.contains("remove")) {
+                    cart.splice(index, 1); // Elimina el producto
+                }
+
+                localStorage.setItem("cart", JSON.stringify(cart));
+                renderCart();
+            });
+
+            renderCart();
+        });
+    </script>
+    <script>
+        function generarPedido() {
+            fetch('/Ordenes/GenerarPedido', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert(result.message);
+                        localStorage.removeItem("cart"); // Limpia el carrito
+                        location.reload(); // Recarga la página
+                    } else {
+                        alert("Error: " + result.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Ocurrió un error al generar el pedido.");
+                });
+        }
+    </script>
+</body>
+</html>

@@ -11,9 +11,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Interfaces
         Task DeleteOrdenAsync(int id);
         Task<bool> OrdenExistsAsync(int id);
 
-       Task <List<Cliente>> GetAllOrdensAsync();
+        Task<List<Cliente>> GetAllOrdensAsync();
 
         Task<Orden> BuscOrden(int id);
+
+        Task CreateOrdenAsync(Orden orden, List<DetalleOrden> detalles);
+
     }
 
 }

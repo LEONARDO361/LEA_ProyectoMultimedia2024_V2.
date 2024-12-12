@@ -1,62 +1,92 @@
-﻿
-using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
-using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
-using LEA_ProyectoMultimedia2024_V2_.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using LEA_ProyectoMultimedia2024_V2_.Models.Tables;
+using LEA_ProyectoMultimedia2024_V2_.Models.Contexts;
+using LEA_ProyectoMultimedia2024_V2_.Repositories;
+
 namespace LEA_ProyectoMultimedia2024_V2_.Services.Repository
 {
-    public class CategoriasRepository : ICategorias
+    public class CanastasRepository : ICanastas
     {
         private readonly GimnasioContext _context;
 
-        public CategoriasRepository(GimnasioContext context)
+        public CanastasRepository(GimnasioContext context)
         {
             _context = context;
         }
 
-        public async Task<List<Categoria>> GetCategoriasAsync()
+        public async Task<Canasta> ObtenerCanastaActiva(int clienteId)
         {
-            var a = await _context.Categoria.ToListAsync();
-            return a;
+            return await _context.Canasta
+                .Include(c => c.DetalleCanasta) // Incluir los detalles
+                .FirstOrDefaultAsync(c => c.ClienteId == clienteId && c.Estado == "Activa");
         }
 
-        public async Task<Categoria> GetCategoriaByIdAsync(int id)
+        // Implementación de los otros métodos (agregar, actualizar, eliminar detalles y canasta)
+        public async Task AgregarCanasta(Canasta canasta)
         {
-            return await _context.Categoria.FindAsync(id);
-        }
-
-        public async Task AddCategoriaAsync(Categoria categoria)
-        {
-            _context.Categoria.Add(categoria);
+            await _context.Canasta.AddAsync(canasta);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateCategoriaAsync(Categoria categoria)
+        public async Task<DetalleCanasta> ObtenerDetalleCanasta(int canastaId, int productoId)
         {
-            _context.Update(categoria);
+            return await _context.DetalleCanasta
+                .FirstOrDefaultAsync(dc => dc.CanastaId == canastaId && dc.ProductoId == productoId);
+        }
+
+        public async Task<DetalleCanasta> ObtenerDetalleCanastaPorId(int detalleCanastaId)
+        {
+            return await _context.DetalleCanasta
+                .FirstOrDefaultAsync(dc => dc.DetalleCanastaId == detalleCanastaId);
+        }
+
+        public async Task<List<DetalleCanasta>> ObtenerDetallesPorCanastaId(int canastaId)
+        {
+            return await _context.DetalleCanasta
+                .Where(dc => dc.CanastaId == canastaId)
+                .ToListAsync();
+        }
+
+        public async Task AgregarDetalleCanasta(DetalleCanasta detalle)
+        {
+            await _context.DetalleCanasta.AddAsync(detalle);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteCategoriaAsync(int id)
+        public async Task ActualizarDetalleCanasta(DetalleCanasta detalle)
         {
-            var categoria = await _context.Categoria.FindAsync(id);
-            if (categoria != null)
-            {
-                _context.Categoria.Remove(categoria);
-                await _context.SaveChangesAsync();
-            }
-        }
-        public async Task <Categoria> GetDetails(int id)
-        {
-                 return await _context.Categoria
-                .FirstOrDefaultAsync(m => m.CategoriaId == id);
+            _context.DetalleCanasta.Update(detalle);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task <bool> CategoriaExists(int id)
+        public async Task ActualizarCanasta(Canasta canasta)
         {
-            return await _context.Categoria.AnyAsync(e => e.CategoriaId == id);
+            _context.Canasta.Update(canasta);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EliminarDetalleCanasta(DetalleCanasta detalle)
+        {
+            _context.DetalleCanasta.Remove(detalle);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EliminarDetallesCanasta(IEnumerable<DetalleCanasta> detalles)
+        {
+            _context.DetalleCanasta.RemoveRange(detalles);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Producto>> ObtenerProductosDisponibles()
+        {
+            return await _context.Producto.Where(p => p.Cantidad > 0).ToListAsync();
+        }
+
+        public async Task<Producto> ObtenerProductoPorId(int productoId)
+        {
+            return await _context.Producto.FirstOrDefaultAsync(p => p.ProductoId == productoId);
         }
     }
-
 }
