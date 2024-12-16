@@ -67,7 +67,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 var DTO = categoria.toOriginal();
                 await _categorias.AddCategoriaAsync(DTO);
                 TempData["SuccessMessage"] = "Cliente creado exitosamente";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Mantenedores");
             }
             else
             {
@@ -106,7 +106,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 else
                 {
                     TempData["SuccessMessage"] = "Cliente actualizado exitosamente";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Mantenedores");
                 }
             }
             else
