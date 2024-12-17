@@ -33,16 +33,24 @@
             text-align: center;
         }
 
-        /* Botón de logout */
-        .btn-logout {
+        /* Botón de login */
+        .btn-login {
             border: 1px solid #ffffff;
             color: #ffffff;
+            margin-right: 10px;
         }
 
-            .btn-logout:hover {
+            .btn-login:hover {
                 background-color: #dddddd;
                 color: #0b0b0b;
             }
+
+        .navbar-brand img {
+            height: 50px; /* Tamaño fijo para la altura */
+            width: auto; /* Mantener proporciones */
+            object-fit: contain; /* Asegura que la imagen se ajuste sin deformarse */
+            margin-right: 10px; /* Espacio entre el logo y el texto */
+        }
     </style>
 </head>
 <body>
@@ -50,7 +58,13 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ChadStore</a>
+              
+
+                <!-- Logo y Nombre de la Página -->
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/ultimo logov2.png" /> ChadStore
+                </a>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -80,30 +94,37 @@
                                 <a class="nav-link" asp-area="" asp-controller="Mantenedores" asp-action="Index">Mantenedores</a>
                             </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About_Us">About Us</a>
-                        </li>
                         @if (User.Identity.IsAuthenticated && (User.IsInRole("Comprador") || User.IsInRole("Admin")))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Producto" asp-action="CatalogoProductos">Catálogo</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Canastas" asp-action="Index">Canasta</a>
+                            </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Canastas" asp-action="Index">Canasta</a>
-                        </li>
+                        
                     </ul>
+
                     <ul class="navbar-nav ms-auto">
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <!-- Mostrar nombre de usuario y botón de cerrar sesión si está autenticado -->
                             <li class="nav-item">
                                 <span class="navbar-text me-3">Bienvenido, @User.Identity.Name</span>
                             </li>
                             <li class="nav-item">
                                 <form method="post" action="/Home/Logout" class="d-inline">
                                     @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-logout btn-sm">Cerrar Sesión</button>
+                                    <button type="submit" class="btn btn-outline-light">Cerrar Sesión</button>
                                 </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <!-- Mostrar botón de login si no está autenticado -->
+                            <li class="nav-item">
+                                <a class="btn btn-outline-light btn-lg" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
                             </li>
                         }
                     </ul>
@@ -119,11 +140,11 @@
         </main>
     </div>
 
-    <!-- Pie de página -->
-    <footer class="footer mt-4">
-        <div class="container">
-            <p>© 2024 ChadStore - Todos los derechos reservados.</p>
-            <p>Contacto: soporte@chadstore.com</p>
+ 
+
+    <footer class="w-100 mt-5">
+        <div class="container-fluid">
+            &copy; 2024 ChadStore. Todos los derechos reservados. - <a asp-area="" asp-controller="Home" asp-action="About_Us">about us</a>
         </div>
     </footer>
 

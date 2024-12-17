@@ -61,9 +61,9 @@
             </div>
         </div>
         <div class="text-end mt-2">
-            <button class="btn btn-primary" onclick="agregarProducto()">Agregar Producto</button>
+                <button type="button" class="btn btn-outline-light" onclick="agregarProducto()">Agregar Producto</button>
         </div>
-
+            
         <hr>
 
         <!-- Tabla de detalles -->
@@ -100,7 +100,7 @@
             </div>
         </div>
             <div class="text-end mt-4">
-                <button class="btn btn-success" onclick="guardarFactura()">Guardar Factura</button>
+                <button class="btn btn-outline-light" onclick="guardarFactura()">Guardar Factura</button>
             </div>
 
             <div style="background-color: #3acaf7; height: 35px; margin-top: 35px;"></div>
@@ -317,49 +317,64 @@
         </script>
 
 
-    <style>
-        body {
-                background-color: #605567;
-            font-family: Courier New, Courier, monospace;
-        }
-
-        .form-control, .form-select {
-            background-color: #f0fc04; 
-            border: 1px solid #ccc; 
-            color: #000; 
-        }
-
-            .form-control[readonly] {
-                background-color: #f0fc04; 
-                opacity: 1; 
+        <style>
+            /* Fondo General */
+            body {
+                background-color: #282424; /* Gris oscuro */
+                font-family: Arial, sans-serif;
+                color: #ffffff;
             }
 
-            .form-control:focus, .form-select:focus {
-                border-color: #ec2c80;
-                box-shadow: 0 0 5px rgba(236, 44, 128, 0.5); 
-                outline: none;
+            /* Encabezado */
+            h4, h5, h6, p, label {
+                color: #ffffff; /* Letras blancas */
             }
-        .table-bordered th, .table-bordered td {
-            background-color: #f0fc04; 
-            border-color: #ccc;
-            color: #000; 
-        }
 
-        .table-light {
-            background-color: #fffdfa; 
-        }
-        h5, h6, p {
-            color: #000; 
-        }
-        .btn-primary {
-            background-color: #3acaf7; 
-            border: none;
-        }
-
-            .btn-primary:hover {
-                background-color: #c51d6d
+            /* Inputs y Selects */
+            .form-control, .form-select {
+                background-color: #0b0b0b !important; 
+                color: #ffffff !important; 
+                border: 1px solid #444444; 
             }
-    </style>
+
+                .form-control:focus, .form-select:focus {
+                    background-color: #0b0b0b !important; /* Negro siempre al seleccionar */
+                    color: #ffffff !important; /* Letras blancas */
+                    border-color: #555555;
+                    box-shadow: none; /* Elimina el efecto de sombra */
+                    outline: none;
+                }
+
+            option {
+                background-color: #0b0b0b; /* Negro para las opciones del select */
+                color: #ffffff; /* Letras blancas */
+            }
+
+            
+
+                .btn-primary:hover {
+                    background-color: #333333; /* Gris más oscuro */
+                    color: #ffffff;
+                }
+
+            /* Tabla */
+            .table {
+                background-color: #0b0b0b;
+                color: #ffffff;
+            }
+
+            .table-bordered th, .table-bordered td {
+                background-color: #0b0b0b; /* Negro */
+                color: #ffffff; /* Letras blancas */
+                border-color: #444444; /* Borde gris oscuro */
+            }
+
+            /* Quitar las líneas celestes */
+            div[style*="background-color: #3acaf7"] {
+                display: none;
+            }
+        </style>
+
 
 
    
