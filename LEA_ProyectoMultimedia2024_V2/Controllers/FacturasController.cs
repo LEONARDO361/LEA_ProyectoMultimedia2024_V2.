@@ -61,7 +61,7 @@ public class FacturasController : Controller
         try
         {
             // Guardar la orden y los detalles en la base de datos
-            await  _Compra.CreateOrdenAsync(nuevaOrden, detalleOrdens);
+            await _Compra.CreateOrdenAsync(nuevaOrden, detalleOrdens);
 
             return Json(new { success = true, message = "Factura guardada correctamente." });
         }
@@ -93,8 +93,8 @@ public class FacturasController : Controller
         productos = productos.Where(p => p != null && p.ProductoId != 0 && !string.IsNullOrEmpty(p.Nombre)).ToList();
 
         // Pasar datos a la vista usando ViewData
-        ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "Nombre");  
-        ViewData["Productos"] = new SelectList(productos, "ProductoId", "Nombre"); 
+        ViewData["ClienteId"] = new SelectList(clientes, "ClienteId", "Nombre");
+        ViewData["Productos"] = new SelectList(productos, "ProductoId", "Nombre");
 
         var viewModel = new FacturaViewModel
         {

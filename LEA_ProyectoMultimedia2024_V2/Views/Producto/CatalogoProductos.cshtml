@@ -19,7 +19,8 @@
                             <button type="button" class="btn btn-sm btn-outline-secondary add-to-cart"
                                     data-id="@item.ProductoId"
                                     data-nombre="@item.Nombre"
-                                    data-precio="@item.Precio">
+                                    data-precio="@item.Precio"
+                                    data-bs-toggle="modal" data-bs-target="#cartModal">
                                 Agregar a la canasta
                             </button>
                         </div>
@@ -28,6 +29,25 @@
             </div>
         </div>
     }
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cartModalLabel" style="color: black;">Producto agregado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="color: black;">
+                ¡El producto ha sido añadido a tu canasta!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Seguir comprando</button>
+                <a href="/Canastas/Index" class="btn btn-secondary">Ir a la canasta</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -52,7 +72,6 @@
 
                 // Guarda en localStorage
                 localStorage.setItem("cart", JSON.stringify(cart));
-                alert(`${nombre} se ha añadido a la canasta.`);
             });
         });
     });

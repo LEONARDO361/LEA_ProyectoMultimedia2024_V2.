@@ -53,7 +53,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         [Authorize(Policy = "Cliente")]
         public async Task<IActionResult> PVDetails(int? id)
         {
-            ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre");
+            ViewData["CategoriaId"] = new SelectList(await _producto.GetCategoriasAsync(), "CategoriaId", "Nombre");
             var producto = await _producto.GetProductoByIdAsync(id.Value);
             return PartialView(producto);
         }
@@ -61,7 +61,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         // GET: Productoes/Create
         public async Task<IActionResult> PVCreate()
         {
-            ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre");
+            ViewData["CategoriaId"] = new SelectList(await _producto.GetCategoriasAsync(), "CategoriaId", "Nombre");
+
             return PartialView();
         }
 
@@ -117,7 +118,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
         public async Task<IActionResult> PVEdit(int? id)
         {
             var producto = await _producto.BuscadorProduct(id.Value);
-            ViewData["CategoriaId"] = new SelectList(await _producto.GetProductosAsync(), "CategoriaId", "Nombre", producto.CategoriaId);
+            ViewData["CategoriaId"] = new SelectList(await _producto.GetCategoriasAsync(), "CategoriaId", "Nombre");
 
             var ProductoDto = producto.toDto();
             return PartialView(ProductoDto);

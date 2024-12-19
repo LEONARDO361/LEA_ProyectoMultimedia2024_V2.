@@ -4,12 +4,10 @@
     ViewData["Title"] = "Categorías";
 }
 
-<h1>Categorías</h1>
-<div>
-    <p>
-        <a asp-action="PVCreate" id="BotonC" class="btn btn-success d-grid gap-2 d-grid">Crea una categoría</a>
-    </p>
-</div>
+
+<p class="text-end mt-4">
+    <button asp-action="PVCreate" id="BotonC" class="btn btn-success">Crear una categoría</button>
+</p>
 <table class="table" id="TablaCategoria">
     <thead>
         <tr>
@@ -55,10 +53,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="deleteModalLabelCategoria">Eliminar Categoría</h2>
+                <h2 class="modal-title"style="color: black;" id="deleteModalLabelCategoria">Eliminar Categoría</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body"style="color: black;"
                 <h3>¿Estás seguro de que quieres eliminar la categoría <strong class="text-danger" id="Nombre"></strong>?</h3>
                 <form id="deleteFormCategoria" method="post" class="mt-5">
                     <input type="hidden" id="categoriaId" name="CategoriaId" />

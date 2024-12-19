@@ -4,10 +4,10 @@
     ViewData["Title"] = "Productos en Descuentos";
 }
 
-<h1>Productos en Descuentos</h1>
 
-<p>
-    <a asp-action="PVCreate" id="BotonC" class="btn btn-success d-grid gap-2 d-grid">Crear un Descuento en producto</a>
+
+<p class="text-end mt-4">
+    <button asp-action="PVCreate" id="BotonC" class="btn btn-success">Crear un Descuento en producto</button>
 </p>
 <table class="table" id="TablaDescuento">
     <thead>
@@ -44,10 +44,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="deleteModalLabelDescuento">Eliminar Descuento</h2>
+                <h2 class="modal-title"style="color: black;" id="deleteModalLabelDescuento">Eliminar Descuento</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body"style="color: black;"
                 <h3>¿Estás seguro de que quieres eliminar el descuento con porcentaje <strong class="text-danger" id="descuentoName"></strong>?</h3>
                 <form id="deleteFormDescuento" method="post" class="mt-5">
                     <input type="hidden" id="descuentoId" name="DescuentoId" />
@@ -75,4 +75,4 @@
             $('#deleteModalDescuento').modal('show'); // Muestra el modal
         }
     </script>
-}
+

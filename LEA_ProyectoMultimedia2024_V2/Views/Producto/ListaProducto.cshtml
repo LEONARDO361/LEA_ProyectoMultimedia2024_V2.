@@ -4,10 +4,10 @@
     ViewData["Title"] = "Producto";
 }
 
-<h1>Producto</h1>
 
-<p>
-    <button asp-action="PVCreate" id="BotonC" class="btn btn-success d-grid gap-2 d-grid">Crear producto</button>
+
+<p class="text-end mt-4">
+    <button asp-action="PVCreate" id="BotonC" class="btn btn-success">Crear producto</button>
 </p>
 <table class="table" id="TablaProducto">
     <thead>
@@ -23,6 +23,8 @@
             <th>@Html.DisplayNameFor(model => model.Categoria.Pesokg)</th>
             <th>@Html.DisplayNameFor(model => model.Descuento.PorcentajeDescuento)</th>
             <th>@Html.DisplayNameFor(model => model.Descuento.FechaFin)</th>
+            <th>@Html.DisplayNameFor(model => model.Imagen)</th>
+
             <th></th>
         </tr>
     </thead>
@@ -41,6 +43,7 @@
                 <td>@Html.DisplayFor(modelItem => item.Categoria.Pesokg)</td>
                 <td>@Html.DisplayFor(modelItem => item.Descuento.PorcentajeDescuento)</td>
                 <td>@Html.DisplayFor(modelItem => item.Descuento.FechaFin)</td>
+                <th>@Html.DisplayNameFor(model => model.Imagen)</th>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button class="btn btn-sm btn-info me-2" onclick="EditProductos(@item.ProductoId)">Editar</button>
@@ -58,10 +61,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="deleteModalLabelProducto">Eliminar Producto</h2>
+                <h2 class="modal-title<div class="style="color: black;" id="deleteModalLabelProducto">Eliminar Producto</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body"style="color: black;"
                 <h3>¿Estás seguro de que quieres eliminar el producto <strong class="text-danger" id="Nombre"></strong>?</h3>
                 <form id="deleteFormProducto" method="post" class="mt-5">
                     <input type="hidden" id="productoId" name="ProductoId" />
@@ -89,4 +92,4 @@
             $('#deleteModalProducto').modal('show'); // Muestra el modal
         }
     </script>
-}
+

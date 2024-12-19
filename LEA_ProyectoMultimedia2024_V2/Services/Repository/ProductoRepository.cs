@@ -15,6 +15,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Repository
         {
             _gamnasioContext = gimnasioContext;
         }
+        public async Task<List<Categoria>> GetCategoriasAsync()
+        {
+            return await _gamnasioContext.Categoria.ToListAsync();
+        }
 
         public async Task<List<Producto>> GetProductosAsync()
         {

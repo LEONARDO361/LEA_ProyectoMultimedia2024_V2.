@@ -4,10 +4,9 @@
     ViewData["Title"] = "Metodos de pago";
 }
 
-<h1>Metodos de pago</h1>
 
-<p>
-    <a asp-action="PVCreate" id="BotonC" class="btn btn-success d-grid gap-2 d-grid">Crear metodo de pago</a>
+<p class="text-end mt-4">
+    <button asp-action="PVCreate" id="BotonC" class="btn btn-success">Crear metodo de pago</button>
 </p>
 <table class="table" id="TablaMetodoDePago">
     <thead>
@@ -66,10 +65,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="deleteModalLabelMetodoPago">Eliminar Metodo de Pago</h2>
+                <h2 class="modal-title"<div style="color: black;" id="deleteModalLabelMetodoPago">Eliminar Metodo de Pago</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body"style="color: black;"
                 <h3>¿Estás seguro de que quieres eliminar el metodo de pago <strong class="text-danger" id="metodoPagoName"></strong>?</h3>
                 <form id="deleteFormMetodoPago" method="post" class="mt-5">
                     <input type="hidden" id="metodoPagoId" name="MetodoPagoId" />

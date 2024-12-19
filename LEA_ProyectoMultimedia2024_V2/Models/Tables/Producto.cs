@@ -39,6 +39,10 @@ public partial class Producto
     [Column("CategoriaID")]
     public int CategoriaId { get; set; }
 
+    [Column("imagen")]
+    [MaxLength(250)]
+    public byte[] Imagen { get; set; }
+
     [Column("DescuentoID")]
     public int? DescuentoId { get; set; }
 

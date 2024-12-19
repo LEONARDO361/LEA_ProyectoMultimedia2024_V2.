@@ -102,6 +102,9 @@
             });
 
 
+
+
+
             // Crear VPCategorias
             $(document).on('click', '#BotonC', function (e) {
                 e.preventDefault();
@@ -125,7 +128,7 @@
                 $('#Carga_VPMetodoDePago').load('@Url.Action("PVCreate", "MetodoPagoes")');
             });
 
-
+        });
             //crear VPOrden
             $(document).on('click', '#BotonC', function (e) {
                 e.preventDefault();
@@ -147,7 +150,7 @@
                 $('#Carga_VPReseñas').load('@Url.Action("PVCreate", "ReseñaProducto")');
             });
 //------------------------------------------------Cargar_Crear--------------------------------------------------------------
-        });
+       
         //editar categorias
         function EditCategorias(id) {
             $("#Carga_VPCategorias").load('@Url.Action("PVEdit", "Categorias")' + '?id=' + id);
@@ -229,14 +232,15 @@
             setTimeout(function () {
                 $("#Carga_VPReseñas").load('@Url.Action("ListaReseña", "ReseñaProducto")', function () {
                     $('#TablaReseña').wrap('<div class="table-responsive"></div>').DataTable({
+                        "scrollY": "300px", // Ajusta según la altura deseada
+                        "scrollCollapse": true,
+                        "autoWidth":true,
+                        "paging": false, // Desactiva la paginación
+                        "info": false, // Oculta el pie de tabla con el conteo de registros
                         "language": {
                             "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
                         },
-                        "paging": false, // elimina la paginacion
-                        "scrollY": "400px", // define el scroll vertical
-                        "scrollX": true,   // activa el scroll horizontal
-                        "searching": false, // elimina el buscador individual por tabla
-                        "info": false // saca la informacion de abajo de la tabla
+                        "dom": 'rt' // Solo muestra la tabla sin buscador ni controles extra
                     });
                 });
             }, 3000);
@@ -244,78 +248,129 @@
 
         function Carga_VPProducto() {
             $("#Carga_VPProducto").load('@Url.Action("ListaProducto", "Producto")', function () {
-                $('#TablaProducto').wrap('<div class="table-responsive"></div>').DataTable({
+                $('#TablaProducto').DataTable({
+                    "scrollY": "300px", // Ajusta según la altura deseada
+                    "scrollCollapse": true,
+                    "autoWidth": true,
+                    "paging": false, // Desactiva la paginación
+                    "info": false, // Oculta el pie de tabla con el conteo de registros
                     "language": {
                         "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
                     },
-                    "paging": false,
-                    "scrollY": "400px",
-                    "scrollX": true,
-                    "searching": false, // elimina el buscador individual por tabla
-                    "info": false
+                    "dom": 'rt' // Solo muestra la tabla sin buscador ni controles extra
                 });
             });
         }
 
+        
+
         function Carga_VPDescuentos() {
             $("#Carga_VPDescuentos").load('@Url.Action("ListaDescuento", "Descuento")', function () {
                 $('#TablaDescuento').wrap('<div class="table-responsive"></div>').DataTable({
+                    "scrollY": "300px", // Ajusta según la altura deseada
+                    "scrollCollapse": true,
+                    "autoWidth": true,
+                    "paging": false, // Desactiva la paginación
+                    "info": false, // Oculta el pie de tabla con el conteo de registros
                     "language": {
                         "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
                     },
-                    "paging": false,
-                    "scrollY": "400px",
-                    "scrollX": true,
-                    "searching": false, // elimina el buscador individual por tabla
-                    "info": false
+                    "dom": 'rt' // Solo muestra la tabla sin buscador ni controles extra
                 });
             });
         }
 
         function Carga_VPCategorias() {
-            $("#Carga_VPCategorias").load('@Url.Action("ListaCategoria", "Categorias")', function () {
-                $('#TablaCategoria').wrap('<div class="table-responsive"></div>').DataTable({
-                    "language": {
-                        "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-                    },
-                    "paging": false,
-                    "scrollY": "400px",
-                    "scrollX": true,
-                    "searching": false, // elimina el buscador individual por tabla
-                    "info": false
-                });
-            });
+    $("#Carga_VPCategorias").load('@Url.Action("ListaCategoria", "Categorias")', function () {
+        // Destruye cualquier DataTable existente antes de reinicializar
+        if ($.fn.DataTable.isDataTable('#TablaCategoria')) {
+            $('#TablaCategoria').DataTable().destroy();
         }
+
+        // Inicializa DataTable
+        $('#TablaCategoria').DataTable({
+            "scrollX": true,       // Activa el desplazamiento horizontal
+            "scrollY": "300px",    // Ajusta la altura del scroll vertical
+            "scrollCollapse": true,
+            "paging": false,       // Desactiva la paginación
+            "info": false,         // Oculta el pie de tabla
+            "autoWidth":true,    // Evita el ajuste automático de ancho
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            },
+            "dom": 'rt'            // Solo muestra la tabla sin controles extra
+        });
+    });
+}
 
         function Carga_VPMetodoDePago() {
             $("#Carga_VPMetodoDePago").load('@Url.Action("ListaMetodoDePago", "MetodoPagoes")', function () {
-                $('#TablaMetodoDePago1').wrap('<div class="table-responsive"></div>').DataTable({
+                $('#TablaMetodoDePago').wrap('<div class="table-responsive"></div>').DataTable({
+                    "scrollY": "300px", // Ajusta según la altura deseada
+                    "scrollCollapse": true,
+                    "autoWidth": true,
+                    "paging": false, // Desactiva la paginación
+                    "info": false, // Oculta el pie de tabla con el conteo de registros
                     "language": {
                         "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
                     },
-                    "paging": false,
-                    "scrollY": "400px",
-                    "scrollX": true,
-                    "searching": false, // elimina el buscador individual por tabla
-                    "info": false
+                    "dom": 'rt' // Solo muestra la tabla sin buscador ni controles extra
                 });
             });
         }
 
         function Carga_VPOrden() {
             $("#Carga_VPOrden").load('@Url.Action("ListaOrden", "Ordens")', function () {
-                $('#TablaOrden').wrap('<div class="table-responsive"></div>').DataTable({
+                // Verifica si la tabla ya existe y la destruye para evitar conflictos
+                if ($.fn.DataTable.isDataTable('#TablaOrden')) {
+                    $('#TablaOrden').DataTable().destroy();
+                }
+
+                // Inicializa la tabla
+                var tabla = $('#TablaOrden').DataTable({
+                    "scrollY": "300px",
+                    "scrollX": true,
+                    "scrollCollapse": true,
+                    "paging": false,
+                    "info": false,
+                    "autoWidth": false,
                     "language": {
                         "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
                     },
-                    "paging": false,
-                    "scrollY": "400px",
-                    "scrollX": true,
-                    "searching": false, // elimina el buscador individual por tabla
-                    "info": false
+                    "dom": 'rt'
                 });
+
+                // Redibuja la tabla al completar la carga
+                setTimeout(function () {
+                    tabla.columns.adjust().draw();
+                }, 10);
             });
         }
+
+        $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var tabId = $(e.target).attr('id');
+
+            switch (tabId) {
+                case 'nav-Reseñas-tab':
+                    Carga_VPReseñas();
+                    break;
+                case 'nav-Productos-tab':
+                    Carga_VPProducto();
+                    break;
+                case 'nav-Descuentos-tab':
+                    Carga_VPDescuentos();
+                    break;
+                case 'nav-Categorias-tab':
+                    Carga_VPCategorias();
+                    break;
+                case 'nav-Orden-tab':
+                    Carga_VPOrden();
+                    break;
+                case 'nav-MetodoDePago-tab':
+                    Carga_VPMetodoDePago();
+                    break;
+            }
+        });
         function Desabilitar() {
             $('#nav-Reseñas-tab').addClass('disabled');
             $('#nav-Productos-tab').addClass('disabled');
@@ -420,41 +475,7 @@
             }
         }
 
-        // Funciones de carga para cada pestaña
-        function Carga_VPReseñas() {
-            $("#Carga_VPReseñas").load('@Url.Action("ListaReseña", "ReseñaProducto")', function () {
-                // Configuración de DataTable aquí
-            });
-        }
-
-        function Carga_VPProducto() {
-            $("#Carga_VPProducto").load('@Url.Action("ListaProducto", "Producto")', function () {
-                // Configuración de DataTable aquí
-            });
-        }
-
-        function Carga_VPDescuentos() {
-            $("#Carga_VPDescuentos").load('@Url.Action("ListaDescuento", "Descuento")', function () {
-                // Configuración de DataTable aquí
-            });
-        }
-
-        function Carga_VPCategorias() {
-            $("#Carga_VPCategorias").load('@Url.Action("ListaCategoria", "Categorias")', function () {
-                // Configuración de DataTable aquí
-            });
-        }
-
-        function Carga_VPOrden() {
-            $("#Carga_VPOrden").load('@Url.Action("ListaOrden", "Ordens")', function () {
-                // Configuración de DataTable aquí
-            });
-        }
-
-        function Carga_VPMetodoDePago() {
-            $("#Carga_VPMetodoDePago").load('@Url.Action("ListaMetodoDePago", "MetodoPagoes")', function () {
-            // Configuración de DataTable aquí
-        });
+        
     }
 
     function Desabilitar() {
@@ -468,4 +489,3 @@
     </script>
 
 }
-

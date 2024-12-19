@@ -4,10 +4,10 @@
     ViewData["Title"] = "Reseñas";
 }
 
-<h1>Reseñas </h1>
 
-<p>
-    <a asp-action="PVCreate" id="BotonC" class="btn btn-success d-grid gap-2 d-grid">Añadir reseña</a>
+
+<p class="text-end mt-4">
+    <button asp-action="PVCreate" id="BotonC" class="btn btn-success">Añadir reseña</button>
 </p>
 <table class="table" id="TablaReseña">
     <thead>
@@ -48,11 +48,11 @@
 <div class="modal fade" id="deleteModalReseña" tabindex="-1" aria-labelledby="deleteModalLabelReseña" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header"style="color: black;"
                 <h2 class="modal-title" id="deleteModalLabelReseña">Eliminar Reseña</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="color: black;">
                 <h3>¿Estás seguro de que quieres eliminar la reseña con el comentario <strong class="text-danger" id="Comentario"></strong>?</h3>
                 <form id="deleteFormReseña" method="post" class="mt-5">
                     <input type="hidden" id="reseñaId" name="ReseñaId" />
@@ -81,4 +81,4 @@
             $('#deleteModalReseña').modal('show'); // Muestra el modal
         }
     </script>
-}
+

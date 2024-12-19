@@ -220,11 +220,10 @@ namespace LEA_ProyectoMultimedia2024_V2_.Controllers
                 // Guardar la orden y sus detalles
                 await _Orden.CreateOrdenAsync(nuevaOrden, detallesOrden);
 
-                // Vaciar la canasta
-                await _canastas.EliminarDetallesCanasta(canasta.DetalleCanasta);
+                // Finalizar la canasta
                 canasta.Estado = "Finalizada";
                 canasta.Total = 0;
-                await _canastas.ActualizarCanasta(canasta);
+                await _Orden.ActualizarCanastaAsync(canasta);
 
                 return Json(new { success = true, message = "Pedido generado correctamente." });
             }

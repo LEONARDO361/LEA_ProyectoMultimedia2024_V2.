@@ -4,10 +4,8 @@
     ViewData["Title"] = "Orden";
 }
 
-<h1>Orden</h1>
-
-<p>
-    <a asp-action="PVCreate" id="BotonC" class="btn btn-success d-grid gap-2 d-grid">Crear una Orden</a>
+<p class="text-end mt-4">
+    <button asp-action="PVCreate" id="BotonC" class="btn btn-success">Crear una Orden</button>
 </p>
 <table class="table" id="TablaOrden">
     <thead>
@@ -27,7 +25,7 @@
                 <td>@Html.DisplayFor(modelItem => item.Total)</td>
                 <td>@Html.DisplayFor(modelItem => item.Estado)</td>
                 <td>@Html.DisplayFor(modelItem => item.Cliente.Nombre)</td>
-                <td>
+                <td class="text-center">
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button class="btn btn-sm btn-info me-2" onclick="EditOrden(@item.OrdenId)">Editar</button>
                         <button class="btn btn-sm btn-primary me-2" onclick="DetailsOrden(@item.OrdenId)">Detalles</button>
@@ -43,11 +41,12 @@
 <div class="modal fade" id="deleteModalOrden" tabindex="-1" aria-labelledby="deleteModalLabelOrden" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header <div class="style="color: black;">
+                
                 <h2 class="modal-title" id="deleteModalLabelOrden">Eliminar Orden</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="color: black;">
                 <h3>¿Estás seguro de que quieres eliminar la orden de <strong class="text-danger" id="ordenCliente"></strong>?</h3>
                 <form id="deleteFormOrden" method="post" class="mt-5">
                     <input type="hidden" id="ordenId" name="OrdenId" />
@@ -65,15 +64,17 @@
     </div>
 </div>
 
-    <script>
+<script>
+    function openDeleteModalOrden(ordenId, clienteNombre) {
+        $('#ordenCliente').text(clienteNombre); // Asigna el nombre del cliente al modal
+        $('#ordenId').val(ordenId); // Asigna el id de la orden al input oculto
+        $('#deleteFormOrden').attr('action', '/Ordens/Delete/' + ordenId); // Configura la acción del formulario de eliminación
+        $('#deleteModalOrden').modal('show'); // Muestra el modal
+    }
+</script>
 
-
-        // abre el modal
-        function openDeleteModalOrden(ordenId, clienteNombre) {
-            $('#ordenCliente').text(clienteNombre); // Asigna el nombre del cliente al modal
-            $('#ordenId').val(ordenId); // Asigna el id de la orden al input oculto
-            $('#deleteFormOrden').attr('action', '/Ordens/Delete/' + ordenId); // Configura la acción del formulario de eliminación
-            $('#deleteModalOrden').modal('show'); // Muestra el modal
-        }
-    </script>
-}
+<style>
+    #TablaOrden td.text-center {
+        vertical-align: middle; /* Asegura que los botones estén alineados verticalmente al centro */
+    }
+</style>

@@ -16,6 +16,8 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Interfaces
         Task<Orden> BuscOrden(int id);
 
         Task CreateOrdenAsync(Orden orden, List<DetalleOrden> detalles);
+        Task ActualizarCanastaAsync(Canasta canasta);
+
 
     }
 

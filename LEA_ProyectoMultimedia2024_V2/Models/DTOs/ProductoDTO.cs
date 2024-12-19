@@ -37,6 +37,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Models.DTOs
         [Required(ErrorMessage = "Falta el campo Marca")]
         [StringLength(500)]
         public string Marca { get; set; }
+        public IFormFile Imagen { get; set; } // Campo para manejar la imagen cargada
 
         [Column("CategoriaID")]
         public int CategoriaId { get; set; }

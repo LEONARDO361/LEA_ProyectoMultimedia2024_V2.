@@ -3,44 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi carrito de compras</title>
+    <title>Mi Canasta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
+        body {
+            background-color: #1e1e1e;
+            color: #f2f2f2;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: #ffffff;
+            margin-top: 20px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            color: #ffffff;
+            background-color: #2c2c2c;
         }
 
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #444;
             padding: 8px;
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #3c3c3c;
             text-align: left;
         }
 
         .total-summary {
             margin-top: 20px;
-            border: 1px solid #ddd;
+            border: 1px solid #444;
             padding: 10px;
+            background-color: #2c2c2c;
         }
 
             .total-summary div {
                 margin-bottom: 10px;
             }
 
+        .btn-outline-secondary {
+            border-color: #8c8c8c;
+            color: #f2f2f2;
+        }
+
+            .btn-outline-secondary:hover {
+                background-color: #6c757d;
+                color: #ffffff;
+            }
+
         .generate-order {
-            background-color: blue;
-            color: white;
-            padding: 10px;
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .footer {
+            background-color: #0b0b0b; /* Pie de página negro */
+            color: #ffffff;
+            padding: 20px 0;
             text-align: center;
-            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>Mi carrito de compras</h1>
+    <h1>Mi Canasta</h1>
     <table>
         <thead>
             <tr>
@@ -57,11 +87,13 @@
         </tbody>
     </table>
     <div class="total-summary">
-        <div>SubTotal: $<span id="subtotal">0.00</span></div>
-        <div>Impuesto: $<span id="impuesto">0.00</span></div>
-        <div>Total: $<span id="total">0.00</span></div>
+        <div>SubTotal: $<span id="subtotal">0</span></div>
+        <div>Impuesto: $<span id="impuesto">0</span></div>
+        <div>Total: $<span id="total">0</span></div>
     </div>
-    <div class="generate-order" onclick="generarPedido()">Generar mi pedido</div>
+    <div class="generate-order mt-3">
+        <button type="button" class="btn btn-outline-light" onclick="generarFactura()">Ir a la Factura</button>
+    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -71,36 +103,41 @@
             const impuestoEl = document.getElementById("impuesto");
             const totalEl = document.getElementById("total");
 
-            function renderCart() {
-                cartBody.innerHTML = ""; // Limpia la tabla
-                let subtotal = 0;
+                   function renderCart() {
+            cartBody.innerHTML = ""; // Limpia la tabla
+            let subtotal = 0;
 
-                cart.forEach((item, index) => {
-                    subtotal += item.subtotal;
+            cart.forEach((item, index) => {
+                subtotal += item.subtotal;
 
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                                <td>${item.id}</td>
-                                <td>${item.nombre}</td>
-                                <td>$${item.precio.toFixed(2)}</td>
-                                <td>
-                                    <button class="decrease" data-index="${index}">-</button>
-                                    ${item.cantidad}
-                                    <button class="increase" data-index="${index}">+</button>
-                                </td>
-                                <td>$${item.subtotal.toFixed(2)}</td>
-                                <td><button class="remove" data-index="${index}">🗑</button></td>
-                            `;
-                    cartBody.appendChild(row);
-                });
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.id}</td>
+                    <td>${item.nombre}</td>
+                    <td>$${Math.round(item.precio)}</td>
+                    <td>
+                        <button type="button" class="btn btn-outline-secondary decrease" data-index="${index}">-</button>
+                        ${item.cantidad}
+                        <button type="button" class="btn btn-outline-secondary increase" data-index="${index}">+</button>
+                    </td>
+                    <td>$${Math.round(item.subtotal)}</td>
+                    <td>
+                        <button type="button" class="btn btn-outline-secondary remove" data-index="${index}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                cartBody.appendChild(row);
+            });
 
-                const impuesto = subtotal * 0.13;
-                const total = subtotal + impuesto;
+            const impuesto = subtotal * 0.19;
+            const total = subtotal + impuesto;
 
-                subtotalEl.textContent = subtotal.toFixed(2);
-                impuestoEl.textContent = impuesto.toFixed(2);
-                totalEl.textContent = total.toFixed(2);
-            }
+            subtotalEl.textContent = Math.round(subtotal); 
+            impuestoEl.textContent = Math.round(impuesto); 
+            totalEl.textContent = Math.round(total); 
+        }
+
 
             // Eventos de aumentar, disminuir y quitar
             cartBody.addEventListener("click", (event) => {
@@ -113,7 +150,7 @@
                         cart[index].cantidad -= 1;
                         cart[index].subtotal = cart[index].cantidad * cart[index].precio;
                     }
-                } else if (event.target.classList.contains("remove")) {
+                } else if (event.target.closest(".remove")) {
                     cart.splice(index, 1); // Elimina el producto
                 }
 
@@ -123,29 +160,33 @@
 
             renderCart();
         });
-    </script>
-    <script>
-        function generarPedido() {
-            fetch('/Ordenes/GenerarPedido', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success) {
-                        alert(result.message);
-                        localStorage.removeItem("cart"); // Limpia el carrito
-                        location.reload(); // Recarga la página
+
+             function generarFactura() {
+            const canasta = JSON.parse(localStorage.getItem("cart")) || [];
+
+            if (canasta.length === 0) {
+                alert("El carrito está vacío. Agregue productos antes de continuar.");
+                return;
+            }
+
+            // Enviar los datos del carrito al servidor para generar la factura
+            $.ajax({
+                url: '/Facturas/GenerarFactura',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(canasta),
+                success: function (response) {
+                    if (response.success) {
+                        alert("Factura generada exitosamente. Redirigiendo...");
+                        window.location.href = "/Facturas/Index";
                     } else {
-                        alert("Error: " + result.message);
+                        alert(response.message);
                     }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("Ocurrió un error al generar el pedido.");
-                });
+                },
+                error: function () {
+                    alert("Error al generar la factura.");
+                }
+            });
         }
     </script>
 </body>

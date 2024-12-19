@@ -11,6 +11,7 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Interfaces
         Task DeleteProductoAsync(int id);
         Task<bool> ProductExists(int id);
         Task<Producto> BuscadorProduct(int id);
+        Task<List<Categoria>> GetCategoriasAsync();
     }
 
 }

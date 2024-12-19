@@ -13,6 +13,12 @@ namespace LEA_ProyectoMultimedia2024_V2_.Services.Repository
         {
             _context = context;
         }
+        public async Task ActualizarCanastaAsync(Canasta canasta)
+        {
+            _context.Canasta.Update(canasta);
+            await _context.SaveChangesAsync();
+        }
+
 
         public async Task<List<Orden>> GetAllOrdenesAsync()
         {

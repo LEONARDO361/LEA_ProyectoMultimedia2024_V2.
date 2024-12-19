@@ -46,6 +46,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.Descuento.FechaFin)
             </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Imagen)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -85,6 +89,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Descuento.FechaFin)
             </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.Imagen)
+                </th>
             <td>
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.ProductoId">Editar</a>

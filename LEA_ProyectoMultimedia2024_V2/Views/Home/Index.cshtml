@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model LEA_ProyectoMultimedia2024_V2_.Models.Tables.Canasta
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,14 +8,13 @@
     <title>Tienda</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        body{
-        background-color: #282424; /* Fondo gris oscuro */
-        color: #ffffff;
+        body {
+            background-color: #282424; /* Fondo gris oscuro */
+            color: #ffffff;
         }
 
         header {
             background-color: #0b0b0b;
-            
             text-align: center;
         }
 
@@ -52,7 +53,7 @@
                 color: #0b0b0b;
             }
 
-      
+
 
         footer {
             background-color: #0b0b0b;
@@ -71,29 +72,49 @@
 
     <!-- Encabezado -->
     <header class="w-100">
-        <h1>Productos Destacados</h1>
+        <h1></h1>
     </header>
 
     <!-- Banner Principal -->
     <section class="container-fluid p-0">
-        <div class="row">
-            <div class="col-12">
-                <img src="https://via.placeholder.com/1920x400" class="img-fluid w-100" alt="Banner Principal">
+        <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/imagen para carruzel 1.jpg" class="d-block w-100" alt="Imagen 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="/imagen para carruzel 2.jpg" class="d-block w-100" alt="Imagen 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="/imagen para carruzel 3.jpg" class="d-block w-100" alt="Imagen 3">
+                </div>
             </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
         </div>
     </section>
 
     <!-- Productos Destacados -->
+
     <section class="container-fluid mt-5">
         <div class="row gx-4 gy-4 justify-content-center">
+            <header class="w-100">
+                <h1>Productos Destacados</h1>
+            </header>
             <!-- Producto 1 -->
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="card text-center">
-                    <img src="https://via.placeholder.com/300" alt="Pesa 1.5KG">
+                    <img src="/pesa de 15 kg.jpg" alt="Pesa 1.5KG">
                     <div class="card-body">
                         <h5 class="card-title">Pesa individual 1.5KG</h5>
                         <p class="fw-bold">$10.990</p>
-                        <button class="btn btn-add w-100">Añadir al carrito</button>
+                        <button class="btn btn-outline-light w-100 add-to-cart" data-id="1" data-nombre="Pesa individual 1.5KG" data-precio="10990">Añadir al carrito</button>
                     </div>
                 </div>
             </div>
@@ -101,11 +122,11 @@
             <!-- Producto 2 -->
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="card text-center">
-                    <img src="https://via.placeholder.com/300" alt="Mancuernas Hexagonales">
+                    <img src="/mancuernas exagonales .jpg" alt="Mancuernas Hexagonales">
                     <div class="card-body">
                         <h5 class="card-title">Mancuernas Hexagonales</h5>
                         <p class="fw-bold">$13.980</p>
-                        <button class="btn btn-add w-100">Añadir al carrito</button>
+                        <button class="btn btn-outline-light w-100 add-to-cart" data-id="2" data-nombre="Mancuernas Hexagonales" data-precio="13980">Añadir al carrito</button>
                     </div>
                 </div>
             </div>
@@ -113,11 +134,11 @@
             <!-- Producto 3 -->
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="card text-center">
-                    <img src="https://via.placeholder.com/300" alt="Discos Olímpicos">
+                    <img src="/discos olimpicos.jpg" alt="Discos Olímpicos">
                     <div class="card-body">
                         <h5 class="card-title">Discos Olímpicos</h5>
                         <p class="fw-bold">$7.990</p>
-                        <button class="btn btn-add w-100">Añadir al carrito</button>
+                        <button class="btn btn-outline-light w-100 add-to-cart" data-id="3" data-nombre="Discos Olímpicos" data-precio="7990">Añadir al carrito</button>
                     </div>
                 </div>
             </div>
@@ -125,49 +146,68 @@
             <!-- Producto 4 -->
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="card text-center">
-                    <img src="https://via.placeholder.com/300" alt="Pack Barra Olímpica">
+                    <img src="/pack barra olimpica.png" alt="Pack Barra Olímpica">
                     <div class="card-body">
                         <h5 class="card-title">Pack Barra Olímpica</h5>
                         <p class="fw-bold">$159.990</p>
-                        <button class="btn btn-add w-100">Añadir al carrito</button>
+                        <button class="btn btn-outline-light w-100 add-to-cart" data-id="4" data-nombre="Pack Barra Olímpica" data-precio="159990">Añadir al carrito</button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Sección de Ofertas -->
-    <section class="container-fluid mt-5">
-        <h2 class="text-center mb-4">Ofertas</h2>
-        <div class="row gx-4 gy-4 justify-content-center">
-            <!-- Oferta 1 -->
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="card text-center">
-                    <img src="https://via.placeholder.com/300" alt="Oferta 1">
-                    <div class="card-body">
-                        <h5 class="card-title">Roller Training</h5>
-                        <p class="fw-bold text-danger">$7.990</p>
-                    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel" style="color: black;">Producto agregado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </div>
-
-            <!-- Oferta 2 -->
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="card text-center">
-                    <img src="https://via.placeholder.com/300" alt="Oferta 2">
-                    <div class="card-body">
-                        <h5 class="card-title">Trotadora Xterra</h5>
-                        <p class="fw-bold text-danger">$309.990</p>
-                    </div>
+                <div class="modal-body" style="color: black;">
+                    ¡El producto ha sido añadido a tu canasta!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Seguir comprando</button>
+                    <a href="/Canastas/Index" class="btn btn-secondary">Ir a la canasta</a>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
+            document.querySelectorAll(".add-to-cart").forEach(button => {
+                button.addEventListener("click", () => {
+                    const id = button.getAttribute("data-id");
+                    const nombre = button.getAttribute("data-nombre");
+                    const precio = parseFloat(button.getAttribute("data-precio"));
+
+                    // Verifica si el producto ya está en el carrito
+                    const existingProduct = cart.find(product => product.id === id);
+                    if (existingProduct) {
+                        existingProduct.cantidad += 1; // Incrementa la cantidad
+                        existingProduct.subtotal = existingProduct.cantidad * existingProduct.precio;
+                    } else {
+                        // Agrega un nuevo producto
+                        cart.push({ id, nombre, precio, cantidad: 1, subtotal: precio });
+                    }
+
+                    // Guarda en localStorage
+                    localStorage.setItem("cart", JSON.stringify(cart));
+
+                    // Muestra el modal
+                    const modal = new bootstrap.Modal(document.getElementById('cartModal'));
+                    modal.show();
+                });
+            });
+        });
+    </script>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
 </html>
